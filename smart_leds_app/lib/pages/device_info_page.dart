@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:smart_leds_app/models/device.dart';
 import 'package:smart_leds_app/models/device_info.dart';
 import 'package:smart_leds_app/widgets/navigation_drawer.dart';

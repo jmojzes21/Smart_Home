@@ -15,6 +15,6 @@ abstract class Device {
 
   static Device? _currentDevice;
 
-  static void set currentDevice(Device? device) => _currentDevice = device;
+  static set currentDevice(Device? device) => _currentDevice = device;
   static Device get currentDevice => _currentDevice!;
 }
