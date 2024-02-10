@@ -2,7 +2,9 @@ import 'package:smart_leds_app/models/device_info.dart';
 
 import 'device.dart';
 
-class VirtualDevice implements Device {
+class VirtualDevice extends Device {
+  VirtualDevice({required super.name, required super.ipAddress});
+
   @override
   Future<DeviceInfo> getDeviceInfo() {
     return Future.delayed(

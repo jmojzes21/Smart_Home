@@ -4,11 +4,18 @@ import '../models/real_device.dart';
 import '../models/virtual_device.dart';
 
 class DeviceFactory {
-  Device createDevice(DiscoveredDevice discoveredDevice) {
-    if (discoveredDevice.isVirtual) {
-      return VirtualDevice();
+  Device createDevice(DiscoveredDevice device) {
+    if (device.isVirtual) {
+      return VirtualDevice(
+        name: device.name,
+        ipAddress: device.ipAddress,
+      );
     }
 
-    return RealDevice();
+    return RealDevice(
+      name: device.name,
+      ipAddress: device.ipAddress,
+      httpPort: device.httpPort,
+    );
   }
 }

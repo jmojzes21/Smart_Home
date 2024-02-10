@@ -45,8 +45,12 @@ class DeviceDiscovery {
                 srv.name.substring(0, srv.name.length - serviceName.length - 1);
 
             log('Pronađen uređaj $deviceName, IP: ${ip.address.address}');
-            streamController.sink
-                .add(DiscoveredDevice(name: deviceName, ipAddress: ip.address));
+
+            streamController.sink.add(DiscoveredDevice(
+              name: deviceName,
+              ipAddress: ip.address,
+              httpPort: srv.port,
+            ));
           }
         }
       }
