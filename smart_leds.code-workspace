@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "smart_leds_app"
+		},
+		{
+			"path": "smart_leds_esp32"
+		}
+	],
+    "settings": {}
+}
