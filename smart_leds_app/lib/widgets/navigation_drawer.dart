@@ -3,6 +3,8 @@ import 'package:smart_leds_app/pages/device_discovery_page.dart';
 import 'package:smart_leds_app/pages/device_info_page.dart';
 import 'package:smart_leds_app/pages/home_page.dart';
 
+import '../models/device.dart';
+
 class AppNavigationDrawer extends StatelessWidget {
   const AppNavigationDrawer({super.key});
 
@@ -58,6 +60,8 @@ class AppNavigationDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var device = Device.currentDevice;
+
     return Drawer(
       width: 300,
       child: Padding(
@@ -75,16 +79,17 @@ class AppNavigationDrawer extends StatelessWidget {
               onTap: () => openEnergyPage(context),
             ),
             ListTile(
-              title: Text('O uređaju'),
-              leading: Icon(Icons.devices),
-              onTap: () => openDeviceInfo(context),
-            ),
-            ListTile(
               title: Text('Postavke'),
               leading: Icon(Icons.settings),
               onTap: () => openSettings(context),
             ),
             Spacer(),
+            ListTile(
+              title: Text('Uređaj'),
+              subtitle: Text(device.ipAddress.address),
+              leading: Icon(Icons.devices),
+              onTap: () => openDeviceInfo(context),
+            ),
             ListTile(
               title: Text('Zatvori uređaj'),
               leading: Icon(Icons.logout),
