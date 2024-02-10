@@ -38,27 +38,17 @@ void loop() {
 
 void setupRestApi() {
 
-    httpServer.on("/status", HTTP_GET, [](AsyncWebServerRequest* req) {
+    httpServer.on("/device", HTTP_GET, [](AsyncWebServerRequest* req) {
 
         AsyncResponseStream* res = req->beginResponseStream("application/json");
         
         JsonDocument doc;
+        doc["name"] = deviceName;
         doc["version"] = firmwareVersion;
-        doc["ip"] = WiFi.localIP();
+        doc["ip"] = WiFi.localIP().toString();
+        doc["mac"] = WiFi.macAddress();
         doc["ssid"] = WiFi.SSID();
         doc["rssi"] = WiFi.RSSI();
-        doc["free_heap"] = ESP.getFreeHeap();
-
-        serializeJson(doc, *res);
-        req->send(res);
-    });
-
-    httpServer.on("/version", HTTP_GET, [](AsyncWebServerRequest* req) {
-
-        AsyncResponseStream* res = req->beginResponseStream("application/json");
-        
-        JsonDocument doc;
-        doc["version"] = firmwareVersion;
 
         serializeJson(doc, *res);
         req->send(res);
