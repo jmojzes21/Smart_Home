@@ -1,7 +1,9 @@
-import 'package:http/http.dart';
-import 'package:smart_leds_app/models/device_info.dart';
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 
 import 'device.dart';
+import 'device_info.dart';
 
 class RealDevice extends Device {
   int httpPort;
@@ -13,8 +15,12 @@ class RealDevice extends Device {
   });
 
   @override
-  Future<DeviceInfo> getDeviceInfo() {
-    // TODO: implement getDeviceInfo
-    throw UnimplementedError();
+  Future<DeviceInfo> getDeviceInfo() async {
+    var res = await http.get(Uri.http(ipAddress.address, '/device'));
+
+    var json = jsonDecode(res.body);
+    var info = DeviceInfo.fromJson(json);
+
+    return info;
   }
 }

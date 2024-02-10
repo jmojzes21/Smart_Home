@@ -13,10 +13,10 @@ class VirtualDevice extends Device {
         return DeviceInfo(
           name: 'Virtualni uređaj',
           firmwareVersion: '1.0.0',
-          ipAddress: '0.0.0.0',
-          macAddress: '00:00:00:00:00:00',
-          wifiSSID: 'WiFi Network SSID',
-          wifiRSSI: -50,
+          ipAddress: '127.0.0.1',
+          macAddress: 'FF:FF:FF:FF:FF:FF',
+          wifiSSID: 'WiFi Network',
+          wifiRSSI: -20,
         );
       },
     );

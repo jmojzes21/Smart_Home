@@ -46,17 +46,39 @@ class _DeviceInfoPageState extends State<DeviceInfoPage> {
         ),
       );
     }
+
+    var theme = Theme.of(context).textTheme;
+    var titleStyle = theme.titleMedium;
+    var bodyStyle = theme.bodyMedium;
+    const spacing = 10.0;
+
     return Padding(
       padding: const EdgeInsets.all(40),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Naziv: ${deviceInfo?.name}'),
-          Text('Verzija: ${deviceInfo?.firmwareVersion}'),
-          Text('WiFi mreža: ${deviceInfo?.wifiSSID}'),
-          Text('WiFi RSSI: ${deviceInfo?.wifiRSSI}'),
-          Text('IP adresa: ${deviceInfo?.ipAddress}'),
-          Text('MAC adresa: ${deviceInfo?.macAddress}'),
+          Text('Naziv', style: titleStyle),
+          Text(deviceInfo!.name, style: bodyStyle),
+          SizedBox(height: spacing),
+          Text('Verzija', style: titleStyle),
+          Text(deviceInfo!.firmwareVersion, style: bodyStyle),
+          SizedBox(height: spacing),
+          Text('WiFi mreža', style: titleStyle),
+          Text(deviceInfo!.wifiSSID, style: bodyStyle),
+          SizedBox(height: spacing),
+          Text('WiFi RSSI', style: titleStyle),
+          Text('${deviceInfo!.wifiRSSI} dBm', style: bodyStyle),
+          SizedBox(height: spacing),
+          Text('IP adresa', style: titleStyle),
+          Text(deviceInfo!.ipAddress, style: bodyStyle),
+          SizedBox(height: spacing),
+          Text('MAC adresa', style: titleStyle),
+          Text(deviceInfo!.macAddress, style: bodyStyle),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () => getDeviceInfo(),
+            child: Text('Osvježi'),
+          ),
         ],
       ),
     );
