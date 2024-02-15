@@ -1,14 +1,13 @@
 name: smart_leds_tools
 description: A sample command-line application.
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
 
 environment:
   sdk: ^3.2.6
 
-# Add regular dependencies here.
 dependencies:
-  # path: ^1.8.0
+  path: ^1.9.0
+  crypto: ^3.0.3
 
 dev_dependencies:
   lints: ^2.1.0
