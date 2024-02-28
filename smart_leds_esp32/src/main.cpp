@@ -5,8 +5,12 @@
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h>
 #include <ArduinoJson.h>
+#include <AsyncJson.h>
 #include <ESPmDNS.h>
 #include <LittleFS.h>
+
+#include "rest_common.h"
+#include "ota_update.h"
 
 const char* firmwareVersion = "0.0.1";
 const char* deviceHostname = "smart_leds";
@@ -14,6 +18,7 @@ const char* deviceName = "Moje pametne LEDice";
 const int httpPort = 80;
 
 AsyncWebServer httpServer(httpPort);
+OtaUpdate otaUpdate;
 
 void connectToWiFi();
 void setupMdns();
@@ -29,6 +34,8 @@ void setup() {
     connectToWiFi();
     setupRestApi();
     setupMdns();
+
+    otaUpdate.setup(&httpServer);
 
 }
 
