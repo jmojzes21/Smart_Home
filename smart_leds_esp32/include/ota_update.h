@@ -2,8 +2,6 @@
 #pragma once
 
 #include <ESPAsyncWebServer.h>
-#include <ArduinoJson.h>
-#include <AsyncJson.h>
 #include <Update.h>
 #include <Ticker.h>
 
@@ -12,14 +10,10 @@
 
 #include "rest_common.h"
 
-#define OTA_UPDATE_STATE_IDLE 10
-#define OTA_UPDATE_STATE_READY 20
-#define OTA_UPDATE_STATE_UPLOAD_FIRMWARE 21
-#define OTA_UPDATE_STATE_DONE 22
-#define OTA_UPDATE_STATE_ERROR 12
-
-#define OTA_UPDATE_ERROR_NOT_READY 1
-#define OTA_UPDATE_ERROR_BAD_HMAC 2
+#define OTA_UPDATE_STATE_READY 10
+#define OTA_UPDATE_STATE_UPLOAD_FIRMWARE 11
+#define OTA_UPDATE_STATE_DONE 12
+#define OTA_UPDATE_STATE_ERROR 20
 
 static const size_t _hmacSecretLength = 32;
 static const uint8_t _hmacSecret[_hmacSecretLength] = {
@@ -32,8 +26,8 @@ class OtaUpdate {
     private:
 
     AsyncWebServer* _httpServer = nullptr;
-    int _otaState = OTA_UPDATE_STATE_IDLE;
-    int _errorCode = 0;
+    int _otaState = OTA_UPDATE_STATE_READY;
+    std::string _errorMessage = "";
 
     uint32_t _firmwareSize = 0;
 
@@ -51,64 +45,73 @@ class OtaUpdate {
         if(_httpServer != nullptr) return;
         _httpServer = httpServer;
 
-        // POST /update_prepare
+        // POST /firmware_update
 
-        auto prepareUpdateHandler = new AsyncCallbackJsonWebHandler("/update_prepare", nullptr);
-        prepareUpdateHandler->setMethod(HTTP_POST);
+        auto updateHandler = new AsyncCallbackWebHandler();
+        updateHandler->setUri("/firmware_update");
+        updateHandler->setMethod(HTTP_POST);
 
-        prepareUpdateHandler->onRequest([&](AsyncWebServerRequest *request, JsonVariant &json) {
-            _prepareUpdateRequest(request, json);
+        updateHandler->onBody([&](AsyncWebServerRequest* request, uint8_t* data, size_t len, size_t index, size_t total) {
+            _handleUpdateBody(request, data, len, index, total);
         });
 
-        _httpServer->addHandler(prepareUpdateHandler);
-
-        // POST /update
-
-        auto firmwareUploadHandler = new AsyncCallbackWebHandler();
-        firmwareUploadHandler->setUri("/update");
-        firmwareUploadHandler->setMethod(HTTP_POST);
-
-        firmwareUploadHandler->onRequest([&](AsyncWebServerRequest *request) {
-            _finishFirmwareUploadRequest(request);
+        updateHandler->onRequest([&](AsyncWebServerRequest* request) {
+            _handleUpdateRequest(request);
         });
 
-        firmwareUploadHandler->onBody([&](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total) {
-            _handleFirmwareUploadRequest(request, data, len, index, total);
-        });
-
-        _httpServer->addHandler(firmwareUploadHandler);
+        _httpServer->addHandler(updateHandler);
 
     }
 
     private:
 
-    void _prepareUpdateRequest(AsyncWebServerRequest *request, JsonVariant &json) {
+    void _prepareUpdate(AsyncWebServerRequest* request) {
 
-        if(_otaState != OTA_UPDATE_STATE_IDLE) {
-            respondMessage(request, 400, "OTA update je u tijeku");
+        if(_otaState != OTA_UPDATE_STATE_READY) {
+            _otaState = OTA_UPDATE_STATE_ERROR;
+            _errorMessage = "OTA Update is not ready";
             return;
         }
 
-        uint32_t size = json["size"];
-        std::string hmac = json["hmac"];
+        auto sizeHeader = request->getHeader("Firmware-Size");
+        auto hmacHeader = request->getHeader("Firmware-HMAC");
 
-        if(size == 0 || size >= 4 * 1024 * 1024 || hmac.length() == 0) {
-            respondMessage(request, 400, "Pogrešni podaci");
+        if(sizeHeader == nullptr) {
+            _otaState = OTA_UPDATE_STATE_ERROR;
+            _errorMessage = "No Firmware-Size header";
+            return;
+        }
+
+        if(hmacHeader == nullptr) {
+            _otaState = OTA_UPDATE_STATE_ERROR;
+            _errorMessage = "No Firmware-HMAC header";
+            return;
+        }
+
+        uint32_t size = sizeHeader->value().toInt();
+        if(size == 0 || size > 2 * 1024 * 1024) {
+            _otaState = OTA_UPDATE_STATE_ERROR;
+            _errorMessage = "Invalid Firmware size";
+            return;
+        }
+
+        String hmac = hmacHeader->value();
+        if(hmac.length() == 0 || hmac.length() > 60) {
+            _otaState = OTA_UPDATE_STATE_ERROR;
+            _errorMessage = "Invalid Firmware HMAC";
             return;
         }
 
         _firmwareSize = size;
-        _firmwareHmac = hmac;
+        _firmwareHmac = std::string(hmac.c_str());
 
-        _otaState = OTA_UPDATE_STATE_READY;
-        respondMessage(request, 201, "OK");
+        _otaState = OTA_UPDATE_STATE_UPLOAD_FIRMWARE;
     }
 
     void _beginUpdate() {
 
-        if(_otaState != OTA_UPDATE_STATE_READY) {
+        if(_otaState != OTA_UPDATE_STATE_UPLOAD_FIRMWARE) {
             _otaState = OTA_UPDATE_STATE_ERROR;
-            _errorCode = OTA_UPDATE_ERROR_NOT_READY;
             return;
         }
 
@@ -117,6 +120,7 @@ class OtaUpdate {
 
         if(Update.hasError()) {
             _otaState = OTA_UPDATE_STATE_ERROR;
+            _errorMessage = Update.errorString();
             return;
         }
 
@@ -135,6 +139,7 @@ class OtaUpdate {
 
         if(written != length || Update.hasError()) {
             _otaState = OTA_UPDATE_STATE_ERROR;
+            _errorMessage = Update.errorString();
         }
 
     }
@@ -151,7 +156,7 @@ class OtaUpdate {
         if(actualHmac != _firmwareHmac) {
             Update.abort();
             _otaState = OTA_UPDATE_STATE_ERROR;
-            _errorCode = OTA_UPDATE_ERROR_BAD_HMAC;
+            _errorMessage = "Firmware HMAC check failed";
             return;
         }
 
@@ -159,6 +164,7 @@ class OtaUpdate {
 
         if(Update.hasError()) {
             _otaState = OTA_UPDATE_STATE_ERROR;
+            _errorMessage = Update.errorString();
             return;
         }
 
@@ -166,11 +172,12 @@ class OtaUpdate {
 
     }
 
-    void _handleFirmwareUploadRequest(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total) {
+    void _handleUpdateBody(AsyncWebServerRequest* request, uint8_t* data, size_t len, size_t index, size_t total) {
         
         if(_otaState == OTA_UPDATE_STATE_ERROR) return;
 
         if(index == 0) {
+            _prepareUpdate(request);
             _beginUpdate();
         }
 
@@ -182,25 +189,31 @@ class OtaUpdate {
 
     }
 
-    void _finishFirmwareUploadRequest(AsyncWebServerRequest *request) {
+    void _handleUpdateRequest(AsyncWebServerRequest* request) {
 
-        if(_otaState == OTA_UPDATE_STATE_DONE) {
-            respondMessage(request, 200, "OK");
-            _restart();
-            return;
+        switch (_otaState) {
+
+            case OTA_UPDATE_STATE_DONE:
+                respondMessage(request, 200, "DONE");
+                _restart();
+                return;
+
+            case OTA_UPDATE_STATE_ERROR:
+                if(_errorMessage.length() == 0) _errorMessage = "Unknown error";
+                respondMessage(request, 400, _errorMessage.c_str());
+                _restart();
+                return;
+            
+            case OTA_UPDATE_STATE_READY:
+                respondMessage(request, 400, "No body");
+                return;
+
+            case OTA_UPDATE_STATE_UPLOAD_FIRMWARE:
+                respondMessage(request, 200, "OTA did not finish");
+                _restart();
+                return;
         }
 
-        if(_otaState == OTA_UPDATE_STATE_ERROR) {
-            if(_errorCode != 0) {
-                respondMessage(request, 400, _err2string(_errorCode));
-            }else{
-                respondMessage(request, 400, Update.errorString());
-            }
-        }else{
-            respondMessage(request, 400, "Nepoznata greška");
-        }
-
-        _restart();
     }
 
     void _setupHmac() {
@@ -237,17 +250,6 @@ class OtaUpdate {
         _restartTicker.once_ms(2000, []() {
             ESP.restart();
         });
-    }
-
-    const char* _err2string(int code) {
-        switch (code) {
-        case OTA_UPDATE_ERROR_NOT_READY:
-            return "OTA update nije spreman";
-        case OTA_UPDATE_ERROR_BAD_HMAC:
-            return "Program nije valjani";
-        default:
-            return "Nepoznata greška";
-        }
     }
 
 };
