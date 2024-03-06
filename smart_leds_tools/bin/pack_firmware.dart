@@ -7,7 +7,7 @@ import 'package:smart_leds_tools/firmware.dart';
 
 void main() {
   String outputPath = p.join(p.current, 'out', 'firmware.bin');
-  print('Zapakiraj firmware');
+  print('Zapakiraj ugradbeni program');
 
   Firmware firmware = loadFirmware();
   Uint8List bytes = packFirmware(firmware);
