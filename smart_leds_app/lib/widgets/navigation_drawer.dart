@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_leds_app/pages/device_discovery_page.dart';
 import 'package:smart_leds_app/pages/device_info_page.dart';
 import 'package:smart_leds_app/pages/home_page.dart';
+import 'package:smart_leds_app/pages/settings_page.dart';
 
 import '../models/device.dart';
 
@@ -42,7 +43,7 @@ class AppNavigationDrawer extends StatelessWidget {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) {
-          return HomePage();
+          return SettingsPage();
         },
       ),
     );
