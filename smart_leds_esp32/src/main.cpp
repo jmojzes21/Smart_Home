@@ -10,7 +10,7 @@
 #include "rest_common.h"
 #include "ota_update.h"
 
-const char* firmwareVersion = "0.0.2_B8";
+const char* firmwareVersion = "0.0.1_1";
 const char* deviceHostname = "smart_leds";
 const char* deviceType = "Smart LEDs L24";
 const char* deviceName = "Moje pametne LEDice";
