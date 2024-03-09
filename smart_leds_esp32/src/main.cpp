@@ -12,8 +12,9 @@
 #include "rest_common.h"
 #include "ota_update.h"
 
-const char* firmwareVersion = "0.0.1";
+const char* firmwareVersion = "0.0.2_B6";
 const char* deviceHostname = "smart_leds";
+const char* deviceType = "Smart LEDs L24";
 const char* deviceName = "Moje pametne LEDice";
 const int httpPort = 80;
 
@@ -29,13 +30,14 @@ void setup() {
     Serial.begin(115200);
     Serial.println("Smart LEDs");
 
-    LittleFS.begin(true);
+    //LittleFS.begin(true);
 
     connectToWiFi();
     setupRestApi();
     setupMdns();
 
-    otaUpdate.setup(&httpServer);
+    otaUpdate.setup(&httpServer, deviceType);
+    httpServer.begin();
 
 }
 
@@ -52,6 +54,7 @@ void setupRestApi() {
         JsonDocument doc;
         doc["name"] = deviceName;
         doc["version"] = firmwareVersion;
+        doc["type"] = deviceType;
         doc["ip"] = WiFi.localIP().toString();
         doc["mac"] = WiFi.macAddress();
         doc["ssid"] = WiFi.SSID();
@@ -61,13 +64,13 @@ void setupRestApi() {
         req->send(res);
     });
 
-    httpServer.begin();
-
 }
 
 void connectToWiFi() {
 
     // učitaj wifi postavke
+
+    LittleFS.begin(true);
 
     File f = LittleFS.open("/wifi", FILE_READ);
 
@@ -79,17 +82,23 @@ void connectToWiFi() {
 
     f.close();
 
+    LittleFS.end();
+
     // poveži se
 
     log_i("Poveži se na WiFi mrežu: %s (%s)", ssid.c_str(), pass.c_str());
 
+    WiFi.disconnect(true);
     WiFi.begin(ssid, pass);
+    
     uint32_t start = millis();
     while(WiFi.status() != WL_CONNECTED) {
-        delay(10);
+        Serial.print(".");
+        delay(100);
     }
     uint32_t end = millis();
 
+    Serial.println();
     Serial.printf("WIFI CONNECT Elapsed %d ms\n", (int)(end - start));
     log_i("Povezano, IP: %s", WiFi.localIP().toString().c_str());
 

@@ -26,6 +26,8 @@ class OtaUpdate {
     private:
 
     AsyncWebServer* _httpServer = nullptr;
+    std::string _deviceType = "";
+
     int _otaState = OTA_UPDATE_STATE_READY;
     std::string _errorMessage = "";
 
@@ -40,10 +42,11 @@ class OtaUpdate {
 
     OtaUpdate() {}
 
-    void setup(AsyncWebServer* httpServer) {
+    void setup(AsyncWebServer* httpServer, const char* deviceType) {
         
         if(_httpServer != nullptr) return;
         _httpServer = httpServer;
+        _deviceType = deviceType;
 
         // POST /firmware_update
 
@@ -73,8 +76,15 @@ class OtaUpdate {
             return;
         }
 
+        auto deviceTypeHeader = request->getHeader("Device-Type");
         auto sizeHeader = request->getHeader("Firmware-Size");
         auto hmacHeader = request->getHeader("Firmware-HMAC");
+
+        if(deviceTypeHeader == nullptr) {
+            _otaState = OTA_UPDATE_STATE_ERROR;
+            _errorMessage = "No Device type header";
+            return;
+        }
 
         if(sizeHeader == nullptr) {
             _otaState = OTA_UPDATE_STATE_ERROR;
@@ -85,6 +95,13 @@ class OtaUpdate {
         if(hmacHeader == nullptr) {
             _otaState = OTA_UPDATE_STATE_ERROR;
             _errorMessage = "No Firmware-HMAC header";
+            return;
+        }
+
+        std::string deviceType = std::string(deviceTypeHeader->value().c_str());
+        if(deviceType != _deviceType) {
+            _otaState = OTA_UPDATE_STATE_ERROR;
+            _errorMessage = "Wrong device";
             return;
         }
 
@@ -135,9 +152,9 @@ class OtaUpdate {
         }
 
         _updateHmac(data, length);
-        size_t written = Update.write(data, length);
+        Update.write(data, length);
 
-        if(written != length || Update.hasError()) {
+        if(Update.hasError()) {
             _otaState = OTA_UPDATE_STATE_ERROR;
             _errorMessage = Update.errorString();
         }
@@ -194,7 +211,7 @@ class OtaUpdate {
         switch (_otaState) {
 
             case OTA_UPDATE_STATE_DONE:
-                respondMessage(request, 200, "DONE");
+                respondMessage(request, 201, "Done");
                 _restart();
                 return;
 
@@ -209,7 +226,7 @@ class OtaUpdate {
                 return;
 
             case OTA_UPDATE_STATE_UPLOAD_FIRMWARE:
-                respondMessage(request, 200, "OTA did not finish");
+                respondMessage(request, 400, "OTA did not finish");
                 _restart();
                 return;
         }
