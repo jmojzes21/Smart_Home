@@ -1,0 +1,35 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Upload firmware",
+      "type": "shell",
+      "command": "dart",
+      "args": [
+        "run",
+        "bin/upload_firmware.dart",
+        "${input:device_ip}"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/../smart_leds_tools/"
+      },
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      
+    }
+  ],
+  "inputs": [
+    {
+      "id": "device_ip",
+      "type": "promptString",
+      "description": "IP adresa uređaja"
+    }
+  ]
+}
