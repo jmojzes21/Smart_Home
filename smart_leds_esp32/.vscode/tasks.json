@@ -2,6 +2,26 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "Pack firmware",
+      "type": "shell",
+      "command": "echo hello",
+      "args": [],
+      "options": {
+        "cwd": "${workspaceFolder}/../smart_leds_tools/"
+      },
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "dependsOrder": "sequence",
+      "dependsOn": ["PlatformIO: Build"]
+    },
+    {
       "label": "Upload firmware",
       "type": "shell",
       "command": "dart",
@@ -18,11 +38,12 @@
         "echo": true,
         "reveal": "always",
         "focus": false,
-        "panel": "new",
-        "showReuseMessage": true,
+        "panel": "dedicated",
+        "showReuseMessage": false,
         "clear": false
       },
-      
+      "dependsOrder": "sequence",
+      "dependsOn": ["PlatformIO: Build"]
     }
   ],
   "inputs": [
