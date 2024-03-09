@@ -1,6 +1,4 @@
 
-#define CORE_DEBUG_LEVEL 4
-
 #include <Arduino.h>
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h>
@@ -12,7 +10,7 @@
 #include "rest_common.h"
 #include "ota_update.h"
 
-const char* firmwareVersion = "0.0.2_B6";
+const char* firmwareVersion = "0.0.2_B8";
 const char* deviceHostname = "smart_leds";
 const char* deviceType = "Smart LEDs L24";
 const char* deviceName = "Moje pametne LEDice";
@@ -64,6 +62,14 @@ void setupRestApi() {
         req->send(res);
     });
 
+    static Ticker _restartTicker;
+    httpServer.on("/restart", HTTP_POST, [](AsyncWebServerRequest* req) {
+        respondMessage(req, 201, "Ok");
+        _restartTicker.once_ms(2000, []() {
+            ESP.restart();
+        });
+    });
+
 }
 
 void connectToWiFi() {
@@ -93,7 +99,6 @@ void connectToWiFi() {
     
     uint32_t start = millis();
     while(WiFi.status() != WL_CONNECTED) {
-        Serial.print(".");
         delay(100);
     }
     uint32_t end = millis();
