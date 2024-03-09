@@ -1,4 +1,8 @@
+import 'dart:math';
+
 import 'package:smart_leds_app/models/device_info.dart';
+import 'package:smart_leds_app/models/exceptions.dart';
+import 'package:smart_leds_app/models/firmware.dart';
 
 import 'device.dart';
 
@@ -20,5 +24,15 @@ class VirtualDevice extends Device {
         );
       },
     );
+  }
+
+  @override
+  Future<void> updateFirmware(Firmware firmware) async {
+    await Future.delayed(Duration(milliseconds: 4000));
+
+    var random = Random();
+    if (random.nextDouble() < 0.3) {
+      throw FirmwareUpdateException('Nepoznata greška.');
+    }
   }
 }
