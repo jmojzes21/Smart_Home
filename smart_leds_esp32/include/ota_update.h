@@ -9,17 +9,12 @@
 #include <mbedtls/base64.h>
 
 #include "rest_common.h"
+#include "secret.h"
 
 #define OTA_UPDATE_STATE_READY 10
 #define OTA_UPDATE_STATE_UPLOAD_FIRMWARE 11
 #define OTA_UPDATE_STATE_DONE 12
 #define OTA_UPDATE_STATE_ERROR 20
-
-static const size_t _hmacSecretLength = 32;
-static const uint8_t _hmacSecret[_hmacSecretLength] = {
-    72, 4, 232, 223, 231, 86, 70, 190, 236, 105, 77, 223, 246, 182, 30, 25, 74,
-    56, 46, 220, 149, 246, 4, 222, 9, 218, 211, 62, 152, 170, 22, 141
-};
 
 class OtaUpdate {
 
@@ -240,7 +235,7 @@ class OtaUpdate {
         mbedtls_md_init(&_ctx);
         mbedtls_md_setup(&_ctx, mbedtls_md_info_from_type(md_type), 1);
 
-        mbedtls_md_hmac_starts(&_ctx, _hmacSecret, _hmacSecretLength);
+        mbedtls_md_hmac_starts(&_ctx, hmacSecret, hmacSecretLength);
 
     }
 
