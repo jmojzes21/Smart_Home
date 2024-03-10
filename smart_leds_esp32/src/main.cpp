@@ -7,15 +7,20 @@
 #include <ESPmDNS.h>
 #include <LittleFS.h>
 
+#include "device.h"
+#include "wifi_net.h"
+
+#include "wifi_manager.h"
 #include "rest_common.h"
 #include "ota_update.h"
 
-const char* firmwareVersion = "0.0.1_1";
+const char* firmwareVersion = "0.0.2";
 const char* deviceHostname = "smart_leds";
 const char* deviceType = "Smart LEDs L24";
-const char* deviceName = "Moje pametne LEDice";
 const int httpPort = 80;
 
+Device device;
+WifiManager wifiManager;
 AsyncWebServer httpServer(httpPort);
 OtaUpdate otaUpdate;
 
@@ -25,10 +30,18 @@ void setupRestApi();
 
 void setup() {
 
+    #ifdef DEBUG
     Serial.begin(115200);
     Serial.println("Smart LEDs");
+    #endif
 
-    //LittleFS.begin(true);
+    Settings settings;
+    settings.open();
+
+    device.name = settings.deviceName;
+    device.password = settings.devicePassword;
+
+    settings.close();
 
     connectToWiFi();
     setupRestApi();
@@ -50,7 +63,7 @@ void setupRestApi() {
         AsyncResponseStream* res = req->beginResponseStream("application/json");
         
         JsonDocument doc;
-        doc["name"] = deviceName;
+        doc["name"] = device.name;
         doc["version"] = firmwareVersion;
         doc["type"] = deviceType;
         doc["ip"] = WiFi.localIP().toString();
@@ -111,6 +124,6 @@ void connectToWiFi() {
 
 void setupMdns() {
     MDNS.begin(deviceHostname);
-    MDNS.setInstanceName(deviceName);
+    MDNS.setInstanceName(device.name.c_str());
     MDNS.addService("http", "tcp", httpPort);
 }
