@@ -7,8 +7,8 @@ void Settings::load() {
 
     if(LittleFS.exists(_settingsPath) == false) {
         _loadInitial();
-        save();
         _isLoaded = true;
+        save();
         return;
     }
 
@@ -48,18 +48,18 @@ void Settings::save() {
 
     JsonDocument document;
 
-    JsonObject device = document["device"].as<JsonObject>();
+    JsonObject device = document["device"].to<JsonObject>();
 
     device["name"] = deviceName;
     device["password"] = devicePassword;
 
-    JsonObject wifi = document["wifi"].as<JsonObject>();
+    JsonObject wifi = document["wifi"].to<JsonObject>();
     wifi["preferred"] = preferredWifiNetwork;
 
-    JsonArray networks = wifi["networks"].as<JsonArray>();
+    JsonArray networks = wifi["networks"].to<JsonArray>();
     for(int i = 0; i < wifiNetworks.size(); i++) {
 
-        JsonObject net = networks[i].as<JsonObject>();
+        JsonObject net = networks[i].to<JsonObject>();
         WifiNetwork& wnet = wifiNetworks[i];
 
         net["ssid"] = wnet.ssid;
