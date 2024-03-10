@@ -16,17 +16,3 @@ class WifiNetwork {
     }
 
 };
-
-class DiscoveredWifiNetwork {
-    
-    public:
-    
-    std::string ssid;
-    int rssi;
-
-    DiscoveredWifiNetwork(std::string& ssid, int rssi) {
-        this->ssid = ssid;
-        this->rssi = rssi;
-    }
-
-};

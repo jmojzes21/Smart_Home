@@ -1,12 +1,13 @@
 
 #include "ota_update.h"
+#include "rest_api.h"
+
+#include "secret.h"
 
 #define OTA_UPDATE_STATE_READY 10
 #define OTA_UPDATE_STATE_UPLOAD_FIRMWARE 11
 #define OTA_UPDATE_STATE_DONE 12
 #define OTA_UPDATE_STATE_ERROR 20
-
-#include "secret.h"
 
 OtaUpdate::OtaUpdate() {
     _otaState = OTA_UPDATE_STATE_READY;

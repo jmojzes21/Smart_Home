@@ -52,19 +52,8 @@ class WifiManager {
 
         WiFi.mode(WIFI_STA);
         WiFi.disconnect();
-
         int n = WiFi.scanNetworks();
-        std::vector<DiscoveredWifiNetwork> availableNetworks;
-
-        for(int i = 0; i < n; i++) {
-            availableNetworks.emplace_back(WiFi.SSID(i), WiFi.RSSI(i));
-        }
-
-        WiFi.scanDelete();
-
-
-
-
+        
     }
 
     private:
@@ -95,7 +84,7 @@ class WifiManager {
         WiFi.disconnect();
         WiFi.softAP(_device->name.c_str());
     }
-
+    /*
     int _findBestNetwork(std::vector<DiscoveredWifiNetwork>& availableNetworks, std::vector<WifiNetwork>& networks, int preferred) {
 
         std::sort(availableNetworks.begin(), availableNetworks.end(), [](DiscoveredWifiNetwork& a, DiscoveredWifiNetwork& b) {
@@ -107,6 +96,6 @@ class WifiManager {
         WiFi.RSSI(0);
 
         return 0;
-    }
+    }*/
 
 };
