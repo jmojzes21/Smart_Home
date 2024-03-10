@@ -6,6 +6,7 @@
 #include <AsyncJson.h>
 #include <ESPmDNS.h>
 #include <LittleFS.h>
+#include <Ticker.h>
 
 #include "device.h"
 
@@ -27,6 +28,7 @@ AsyncWebServer httpServer(httpPort);
 DeviceRestApi restApi;
 OtaUpdate otaUpdate;
 
+Ticker restartTicker;
 void requestRestart();
 
 void setup() {
@@ -72,5 +74,7 @@ void loop() {
 }
 
 void requestRestart() {
-
+    restartTicker.once_ms(2000, []() {
+        ESP.restart();
+    });
 }
