@@ -37,6 +37,7 @@ void setup() {
 
     // učitaj postavke
 
+    LittleFS.begin(true);
     Settings settings;
     settings.load();
 
@@ -58,6 +59,7 @@ void setup() {
     otaUpdate.setup(&httpServer, &device, requestRestart);
 
     // poveži se na wifi mrežu
+    wifiManager.connectToWifi();
 
     // postavi mdns
     MDNS.begin(deviceHostname);
