@@ -11,7 +11,7 @@
 #include "wifi_net.h"
 
 #include "wifi_manager.h"
-#include "rest_common.h"
+#include "common.h"
 #include "ota_update.h"
 
 const char* firmwareVersion = "0.0.2";
@@ -47,7 +47,9 @@ void setup() {
     setupRestApi();
     setupMdns();
 
-    otaUpdate.setup(&httpServer, deviceType);
+    otaUpdate.setup(&httpServer, &device, []() {
+        // restart
+    });
     httpServer.begin();
 
 }
