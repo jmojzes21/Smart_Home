@@ -1,5 +1,6 @@
 
 #include "rest_api.h"
+#include "log.h"
 
 void respondJson(AsyncWebServerRequest* request, int code, JsonDocument& doc) {
     AsyncResponseStream* response = request->beginResponseStream("application/json");
@@ -39,6 +40,20 @@ void DeviceRestApi::setup(AsyncWebServer* httpServer, Device* device, VoidCallba
 
         serializeJson(doc, *res);
         req->send(res);
+    });
+
+    // GET /logs
+
+    _httpServer->on("/logs", HTTP_GET, [&](AsyncWebServerRequest* req) {
+        std::string logs = Log.getLogs();
+        req->send(200, "text/plain", logs.c_str());
+    });
+
+    // DELETE /logs
+
+    _httpServer->on("/logs", HTTP_DELETE, [&](AsyncWebServerRequest* req) {
+        Log.clear();
+        req->send(201);
     });
 
     // POST /restart
