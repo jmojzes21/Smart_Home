@@ -45,14 +45,14 @@ void DeviceRestApi::setup(AsyncWebServer* httpServer, Device* device, VoidCallba
     // GET /logs
 
     _httpServer->on("/logs", HTTP_GET, [&](AsyncWebServerRequest* req) {
-        std::string logs = Log.getLogs();
+        std::string logs = qlog_get_logs();
         req->send(200, "text/plain", logs.c_str());
     });
 
     // DELETE /logs
 
     _httpServer->on("/logs", HTTP_DELETE, [&](AsyncWebServerRequest* req) {
-        Log.clear();
+        qlog_clear();
         req->send(201);
     });
 
