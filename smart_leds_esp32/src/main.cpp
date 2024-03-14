@@ -9,6 +9,7 @@
 #include <Ticker.h>
 
 #include "device.h"
+#include "pattern_manager.h"
 
 #include "wifi_manager.h"
 #include "rest_api.h"
@@ -21,12 +22,9 @@ const char* firmwareVersion = "0.0.2";
 const char* deviceHostname = "smart_leds";
 const char* deviceType = "Smart LEDs L24";
 const int httpPort = 80;
-const int ledDataPin = 26;
 
 Device device;
-
-const int ledCount = 7;
-CRGB leds[ledCount];
+PatternManager patternManager;
 
 WifiManager wifiManager;
 AsyncWebServer httpServer(httpPort);
@@ -63,11 +61,9 @@ void setup() {
     qlog("Uređaj naziv: %s, verzija: %s, tip: %s", device.name.c_str(), device.version, device.deviceType);
 
     // postavi FastLED
-    FastLED.addLeds<WS2812B, ledDataPin, GRB>(leds, ledCount);
-    FastLED.clear(true);
-    FastLED.setBrightness(40);
+    patternManager.setup();
 
-    leds[0] = CRGB::Green;
+    patternManager.leds[0] = CRGB::Green;
     FastLED.show();
 
     // postavi senzor struje
@@ -77,7 +73,7 @@ void setup() {
     wifiManager.setup(&device);
 
     // postavi rest api
-    restApi.setup(&httpServer, &device, requestRestart);
+    restApi.setup(&httpServer, &device, &patternManager, requestRestart);
 
     // postavi ota update
     otaUpdate.setup(&httpServer, &device, requestRestart);
@@ -96,27 +92,7 @@ void setup() {
 }
 
 void loop() {
-
-    float shuntvoltage = 0;
-    float busvoltage = 0;
-    float current_mA = 0;
-    float loadvoltage = 0;
-    float power_mW = 0;
-
-    shuntvoltage = powerSensor.getShuntVoltage_mV();
-    busvoltage = powerSensor.getBusVoltage_V();
-    current_mA = powerSensor.getCurrent_mA();
-    power_mW = powerSensor.getPower_mW();
-    loadvoltage = busvoltage + (shuntvoltage / 1000);
-    
-    Serial.print("Bus Voltage:   "); Serial.print(busvoltage); Serial.println(" V");
-    Serial.print("Shunt Voltage: "); Serial.print(shuntvoltage); Serial.println(" mV");
-    Serial.print("Load Voltage:  "); Serial.print(loadvoltage); Serial.println(" V");
-    Serial.print("Current:       "); Serial.print(current_mA); Serial.println(" mA");
-    Serial.print("Power:         "); Serial.print(power_mW); Serial.println(" mW");
-    Serial.println("");
-
-    delay(2000);
+    patternManager.loop();
 }
 
 void requestRestart() {

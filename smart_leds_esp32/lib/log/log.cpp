@@ -79,7 +79,7 @@ void qlog_write(const char* format, ...) {
 std::string qlog_get_logs() {
     
     std::string logs = "";
-    if(!qlog_context.ready) return;
+    if(!qlog_context.ready) return logs;
 
     if(xSemaphoreTake(qlog_context.mutex, portMAX_DELAY) == pdTRUE) {
         logs = std::string(qlog_context.buffer, qlog_context.length);

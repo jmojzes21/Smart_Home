@@ -17,10 +17,11 @@ void respondMessage(AsyncWebServerRequest* request, int code, const char* messag
     respondJson(request, code, doc);
 }
 
-void DeviceRestApi::setup(AsyncWebServer* httpServer, Device* device, VoidCallback onRestart) {
+void DeviceRestApi::setup(AsyncWebServer* httpServer, Device* device, PatternManager* patternManager, VoidCallback onRestart) {
     
     _httpServer = httpServer;
     _device = device;
+    _patternManager = patternManager;
     _onRestart = onRestart;
 
     // GET /device
@@ -41,6 +42,33 @@ void DeviceRestApi::setup(AsyncWebServer* httpServer, Device* device, VoidCallba
         serializeJson(doc, *res);
         req->send(res);
     });
+
+    // POST /pattern
+    // PUT /pattern
+
+    auto patternHandler = new AsyncCallbackJsonWebHandler("/pattern", nullptr);
+    patternHandler->setMethod(HTTP_POST | HTTP_PUT);
+    patternHandler->onRequest([&](AsyncWebServerRequest* request, JsonVariant& json) {
+
+        auto method = request->method();
+        JsonObject pattern = json.as<JsonObject>();
+
+        bool result;
+        if(method == HTTP_POST) {
+            result = _patternManager->changePattern(pattern);
+        }else{
+            result = _patternManager->updatePattern(pattern);
+        }
+
+        if(result) {
+            respondMessage(request, 201, "Ok");
+        }else{
+            respondMessage(request, 400, "Error");
+        }
+
+    });
+    _httpServer->addHandler(patternHandler);
+
 
     // GET /logs
 
