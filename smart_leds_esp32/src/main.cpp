@@ -39,11 +39,14 @@ void requestRestart();
 
 void setup() {
 
+    #ifdef SERIAL_DEBUG
     Serial.begin(115200);
-    Log.setup(2048);
+    #endif
+
+    qlog_setup(2048);
 
     // učitaj postavke
-    Log.info("Učitaj postavke\n");
+    qlog("Učitaj postavke");
 
     LittleFS.begin(true);
     Settings settings;
@@ -57,7 +60,7 @@ void setup() {
     device.version = firmwareVersion;
     device.deviceType = deviceType;
 
-    Log.info("Uređaj naziv: %s, verzija: %s, tip: %s\n", device.name.c_str(), device.version, device.deviceType);
+    qlog("Uređaj naziv: %s, verzija: %s, tip: %s", device.name.c_str(), device.version, device.deviceType);
 
     // postavi FastLED
     FastLED.addLeds<WS2812B, ledDataPin, GRB>(leds, ledCount);
