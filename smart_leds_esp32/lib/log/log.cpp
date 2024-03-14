@@ -1,85 +1,102 @@
 
 #include "log.h"
 
-void LogClass::setup(size_t bufferCapacity) {
-    
-    if(bufferCapacity < 256) {
-        bufferCapacity = 256;
+struct {
+
+    SemaphoreHandle_t mutex;
+    bool ready = false;
+
+    char* buffer = nullptr;
+    size_t capacity = 0;
+    size_t length = 0;
+
+} qlog_context;
+
+void qlog_setup(size_t capacity) {
+
+    if(qlog_context.ready) return;
+
+    if(capacity < 256) {
+        capacity = 256;
     }
 
-    _mutex = xSemaphoreCreateMutex();
+    qlog_context.mutex = xSemaphoreCreateMutex();
 
-    _bufferCapacity = bufferCapacity;
-    _bufferLength = 0;
+    qlog_context.capacity = capacity;
+    qlog_context.length = 0;
 
-    _buffer = new char[_bufferCapacity];
-    memset(_buffer, 0, _bufferCapacity);
+    qlog_context.buffer = new char[qlog_context.capacity];
+    memset(qlog_context.buffer, 0, qlog_context.capacity);
 
-    _ready = true;
+    qlog_context.ready = true;
 
 }
 
-void LogClass::info(const char* format, ...) {
+void qlog_write(const char* format, ...) {
 
-    if(_ready == false) return;
+    if(!qlog_context.ready) return;
 
-    if(xSemaphoreTake(_mutex, portMAX_DELAY) == pdTRUE) {
+    if(xSemaphoreTake(qlog_context.mutex, portMAX_DELAY) == pdTRUE) {
         
         va_list args;
         va_start(args, format);
 
-        char* start = _buffer + _bufferLength;
-        int remain = _bufferCapacity - _bufferLength;
+        char* start = qlog_context.buffer + qlog_context.length;
+        int available = qlog_context.capacity - qlog_context.length;
 
-        if(remain < 48) {
-            _clear();
-            start = _buffer;
-            remain = _bufferCapacity;
+        if(available < 32) {
+            qlog_context.buffer[0] = 0;
+            qlog_context.length = 0;
+
+            start = qlog_context.buffer;
+            available = qlog_context.capacity;
         }
 
-        int n = vsnprintf(start, remain, format, args);
-        _bufferLength += n;
+        int n = vsnprintf(start, available, format, args);
+        qlog_context.length += n;
 
-        if(n + 1 > remain) {
-            _clear();
-            start = _buffer;
-            remain = _bufferCapacity;
-            vsnprintf(start, remain, format, args);
-            _bufferLength = n;
+        if(n + 1 > available) {
+            qlog_context.buffer[0] = 0;
+            qlog_context.length = 0;
+
+            start = qlog_context.buffer;
+            available = qlog_context.capacity;
+
+            n = vsnprintf(start, available, format, args);
+            qlog_context.length = n;
         }
+
+        #ifdef SERIAL_DEBUG
+        Serial.write(start, n);
+        #endif
 
         va_end(args);
-        xSemaphoreGive(_mutex);
+        xSemaphoreGive(qlog_context.mutex);
     }
 
 }
 
-std::string LogClass::getLogs() {
-
+std::string qlog_get_logs() {
+    
     std::string logs = "";
-    if(_ready == false) return logs;
+    if(!qlog_context.ready) return;
 
-    if(xSemaphoreTake(_mutex, portMAX_DELAY) == pdTRUE) {
-        logs = std::string(_buffer, _bufferLength);
-        xSemaphoreGive(_mutex);
+    if(xSemaphoreTake(qlog_context.mutex, portMAX_DELAY) == pdTRUE) {
+        logs = std::string(qlog_context.buffer, qlog_context.length);
+        xSemaphoreGive(qlog_context.mutex);
     }
 
     return logs;
 }
 
-void LogClass::clear() {
+void qlog_clear() {
 
-    if(_ready == false) return;
+    if(!qlog_context.ready) return;
 
-    if(xSemaphoreTake(_mutex, portMAX_DELAY) == pdTRUE) {
-        _clear();
-        xSemaphoreGive(_mutex);
+    if(xSemaphoreTake(qlog_context.mutex, portMAX_DELAY) == pdTRUE) {
+        qlog_context.buffer[0] = 0;
+        qlog_context.length = 0;
+        xSemaphoreGive(qlog_context.mutex);
     }
-}
 
-void LogClass::_clear() {
-    _buffer[0] = 0;
-    _bufferLength = 0;
 }
-
-LogClass Log;

@@ -4,29 +4,11 @@
 #include <Arduino.h>
 #include <string>
 
-class LogClass {
+#define qlog(format, ...) qlog_write("[%u] " format "\n", millis(), ##__VA_ARGS__)
 
-    private:
+void qlog_setup(size_t capacity);
 
-    SemaphoreHandle_t _mutex;
-    bool _ready = false;
+void qlog_write(const char* format, ...);
+std::string qlog_get_logs();
 
-    char* _buffer = nullptr;
-    size_t _bufferCapacity = 0;
-    size_t _bufferLength = 0;
-
-    public:
-
-    void setup(size_t bufferCapacity);
-    void info(const char* format, ...);
-
-    std::string getLogs();
-    void clear();
-
-    private:
-
-    void _clear();
-
-};
-
-extern LogClass Log;
+void qlog_clear();
