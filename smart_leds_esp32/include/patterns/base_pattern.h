@@ -20,7 +20,7 @@ class BasePattern {
 
     virtual void setup() {}
     virtual void loop() {}
-    virtual bool update(JsonObject& p) { return true; }
+    virtual void update(JsonObject p) {}
     virtual void dispose() {}
 
 };

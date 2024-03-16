@@ -35,6 +35,8 @@ Adafruit_INA219 powerSensor;
 Ticker restartTicker;
 void requestRestart();
 
+Ticker powerSensorTicker;
+
 void setup() {
 
     #ifdef SERIAL_DEBUG
@@ -63,9 +65,6 @@ void setup() {
     // postavi FastLED
     patternManager.setup();
 
-    patternManager.leds[0] = CRGB::Green;
-    FastLED.show();
-
     // postavi senzor struje
     powerSensor.begin();
 
@@ -88,6 +87,12 @@ void setup() {
 
     // pokreni http server
     httpServer.begin();
+
+    // temp
+    powerSensorTicker.attach_ms(4000, []() {
+        float current_mA = powerSensor.getCurrent_mA();
+        Serial.printf("I: %.1f mA\n", current_mA);
+    });
 
 }
 
