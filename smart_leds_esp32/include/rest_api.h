@@ -3,7 +3,6 @@
 
 #include <ArduinoJson.h>
 #include <ESPAsyncWebServer.h>
-#include <AsyncJson.h>
 
 #include "types.h"
 #include "device.h"

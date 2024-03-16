@@ -1,4 +1,6 @@
 
+#include <AsyncJson.h>
+
 #include "rest_api.h"
 #include "log.h"
 
@@ -44,31 +46,28 @@ void DeviceRestApi::setup(AsyncWebServer* httpServer, Device* device, PatternMan
     });
 
     // POST /pattern
-    // PUT /pattern
 
     auto patternHandler = new AsyncCallbackJsonWebHandler("/pattern", nullptr);
-    patternHandler->setMethod(HTTP_POST | HTTP_PUT);
+    patternHandler->setMethod(HTTP_POST);
     patternHandler->onRequest([&](AsyncWebServerRequest* request, JsonVariant& json) {
-
-        auto method = request->method();
-        JsonObject pattern = json.as<JsonObject>();
-
-        bool result;
-        if(method == HTTP_POST) {
-            result = _patternManager->changePattern(pattern);
-        }else{
-            result = _patternManager->updatePattern(pattern);
-        }
-
-        if(result) {
-            respondMessage(request, 201, "Ok");
-        }else{
-            respondMessage(request, 400, "Error");
-        }
-
+        _patternManager->updatePattern(json);
+        request->send(201);
     });
     _httpServer->addHandler(patternHandler);
 
+    // POST /brightness
+
+    auto brightnessHandler = new AsyncCallbackJsonWebHandler("/brightness", nullptr);
+    brightnessHandler->setMethod(HTTP_POST);
+    brightnessHandler->onRequest([&](AsyncWebServerRequest* request, JsonVariant& json) {
+
+        JsonObject object = json.as<JsonObject>();
+        int value = object["value"];
+
+        _patternManager->setBrightness(value);
+        request->send(201);
+    });
+    _httpServer->addHandler(brightnessHandler);
 
     // GET /logs
 
@@ -81,6 +80,12 @@ void DeviceRestApi::setup(AsyncWebServer* httpServer, Device* device, PatternMan
 
     _httpServer->on("/logs", HTTP_DELETE, [&](AsyncWebServerRequest* req) {
         qlog_clear();
+        req->send(201);
+    });
+
+    // POST /enable_direct_access
+    _httpServer->on("/enable_direct_access", HTTP_POST, [&](AsyncWebServerRequest* req) {
+        _patternManager->enableDirectAccess();
         req->send(201);
     });
 
