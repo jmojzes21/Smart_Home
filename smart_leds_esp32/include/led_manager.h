@@ -8,7 +8,7 @@
 #define LED_COUNT 7
 #define LED_DATA_PIN 26
 
-class PatternManager {
+class LedManager {
 
     private:
 

@@ -6,7 +6,7 @@
 
 extern AsyncWebServer httpServer;
 extern Device device;
-extern PatternManager patternManager;
+extern LedManager ledManager;
 extern VoidCallback onDeviceRestart;
 
 void respondJson(AsyncWebServerRequest* request, int code, JsonDocument& doc) {
@@ -51,7 +51,7 @@ void DeviceRestApi::setup() {
     patternHandler->setMethod(HTTP_POST);
     patternHandler->onRequest([&](AsyncWebServerRequest* request, JsonVariant& json) {
         JsonObject p = json.as<JsonObject>();
-        patternManager.updatePattern(p);
+        ledManager.updatePattern(p);
         request->send(201);
     });
     httpServer.addHandler(patternHandler);
@@ -65,7 +65,7 @@ void DeviceRestApi::setup() {
         JsonObject object = json.as<JsonObject>();
         int value = object["value"];
 
-        patternManager.setBrightness(value);
+        ledManager.setBrightness(value);
         request->send(201);
     });
     httpServer.addHandler(brightnessHandler);
@@ -86,7 +86,7 @@ void DeviceRestApi::setup() {
 
     // POST /enable_direct_access
     httpServer.on("/enable_direct_access", HTTP_POST, [&](AsyncWebServerRequest* req) {
-        patternManager.enableDirectAccess();
+        ledManager.enableDirectAccess();
         req->send(201);
     });
 

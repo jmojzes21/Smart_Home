@@ -1,5 +1,5 @@
 
-#include "pattern_manager.h"
+#include "led_manager.h"
 
 #include "patterns/base_pattern.h"
 #include "patterns/solid_color.h"
@@ -7,7 +7,7 @@
 
 #include "log.h"
 
-void PatternManager::setup() {
+void LedManager::setup() {
 
     _mutex = xSemaphoreCreateMutex();
 
@@ -22,7 +22,7 @@ void PatternManager::setup() {
 
 }
 
-void PatternManager::loop() {
+void LedManager::loop() {
 
     xSemaphoreTake(_mutex, portMAX_DELAY);
 
@@ -34,7 +34,7 @@ void PatternManager::loop() {
 
 }
 
-void PatternManager::updatePattern(JsonObject json) {
+void LedManager::updatePattern(JsonObject json) {
 
     xSemaphoreTake(_mutex, portMAX_DELAY);
 
@@ -52,7 +52,7 @@ void PatternManager::updatePattern(JsonObject json) {
 
 }
 
-void PatternManager::setBrightness(uint8_t value) {
+void LedManager::setBrightness(uint8_t value) {
 
     xSemaphoreTake(_mutex, portMAX_DELAY);
 
@@ -65,7 +65,7 @@ void PatternManager::setBrightness(uint8_t value) {
 
 }
 
-void PatternManager::enableDirectAccess() {
+void LedManager::enableDirectAccess() {
 
     xSemaphoreTake(_mutex, portMAX_DELAY);
 
@@ -75,7 +75,7 @@ void PatternManager::enableDirectAccess() {
 
 }
 
-void PatternManager::_changePattern(JsonObject json) {
+void LedManager::_changePattern(JsonObject json) {
 
     std::string name = json["name"];
 
@@ -94,7 +94,7 @@ void PatternManager::_changePattern(JsonObject json) {
     
 }
 
-void PatternManager::_updatePattern(JsonObject json) {
+void LedManager::_updatePattern(JsonObject json) {
     
     if(_currentPattern == nullptr);
 
@@ -102,7 +102,7 @@ void PatternManager::_updatePattern(JsonObject json) {
 
 }
 
-void PatternManager::_enableDirectAccess() {
+void LedManager::_enableDirectAccess() {
 
     if(_directAccess) return;
 
@@ -119,7 +119,7 @@ void PatternManager::_enableDirectAccess() {
 
 }
 
-void PatternManager::_onUdpPacket(AsyncUDPPacket& packet) {
+void LedManager::_onUdpPacket(AsyncUDPPacket& packet) {
 
     uint8_t* data = packet.data();
     int length = packet.length();
@@ -147,7 +147,7 @@ void PatternManager::_onUdpPacket(AsyncUDPPacket& packet) {
 
 }
 
-BasePattern* PatternManager::_createPattern(std::string& name) {
+BasePattern* LedManager::_createPattern(std::string& name) {
 
     if(name == "solid") {
         return new SolidColorPattern(_leds, _ledCount);

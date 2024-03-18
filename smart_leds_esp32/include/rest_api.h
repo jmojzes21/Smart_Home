@@ -6,7 +6,7 @@
 
 #include "types.h"
 #include "device.h"
-#include "pattern_manager.h"
+#include "led_manager.h"
 
 void respondJson(AsyncWebServerRequest* request, int code, JsonDocument& doc);
 void respondMessage(AsyncWebServerRequest* request, int code, const char* message);

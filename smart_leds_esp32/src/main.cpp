@@ -9,7 +9,7 @@
 #include <Ticker.h>
 
 #include "device.h"
-#include "pattern_manager.h"
+#include "led_manager.h"
 
 #include "wifi_manager.h"
 #include "rest_api.h"
@@ -24,7 +24,7 @@ const char* deviceType = "Smart LEDs L24";
 const int httpPort = 80;
 
 Device device;
-PatternManager patternManager;
+LedManager ledManager;
 
 WifiManager wifiManager;
 AsyncWebServer httpServer(httpPort);
@@ -64,7 +64,7 @@ void setup() {
     qlog("Uređaj naziv: %s, verzija: %s, tip: %s", device.name.c_str(), device.version, device.deviceType);
 
     // postavi FastLED
-    patternManager.setup();
+    ledManager.setup();
 
     // postavi senzor struje
     powerSensor.begin();
@@ -99,7 +99,7 @@ void setup() {
 }
 
 void loop() {
-    patternManager.loop();
+    ledManager.loop();
 }
 
 void requestRestart() {
