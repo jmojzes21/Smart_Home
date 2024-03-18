@@ -34,21 +34,23 @@ void LedManager::loop() {
 
 }
 
-void LedManager::updatePattern(JsonObject json) {
+bool LedManager::updatePattern(JsonObject json) {
 
     xSemaphoreTake(_mutex, portMAX_DELAY);
 
+    bool result = false;
     if(_directAccess == false) {
 
         if(json.containsKey("name")) {
-            _changePattern(json);
+            result = _changePattern(json);
         }else{
-            _updatePattern(json);
+            result = _updatePattern(json);
         }
 
     }
     
     xSemaphoreGive(_mutex);
+    return result;
 
 }
 
@@ -65,25 +67,32 @@ void LedManager::setBrightness(uint8_t value) {
 
 }
 
-void LedManager::enableDirectAccess() {
+bool LedManager::enableDirectAccess() {
 
     xSemaphoreTake(_mutex, portMAX_DELAY);
 
-    _enableDirectAccess();
+    bool result = _enableDirectAccess();
     
     xSemaphoreGive(_mutex);
+    return result;
 
 }
 
-void LedManager::_changePattern(JsonObject json) {
+bool LedManager::_changePattern(JsonObject json) {
 
     std::string name = json["name"];
 
     BasePattern* newPattern = _createPattern(name);
-    if(newPattern == nullptr) return;
+    if(newPattern == nullptr) return false;
 
     newPattern->setup();
-    newPattern->update(json);
+
+    bool result = newPattern->update(json);
+    if(result == false) {
+        newPattern->dispose();
+        delete newPattern;
+        return false;
+    }
 
     if(_currentPattern != nullptr) {
         _currentPattern->dispose();
@@ -91,20 +100,21 @@ void LedManager::_changePattern(JsonObject json) {
     }
 
     _currentPattern = newPattern;
+    return true;
     
 }
 
-void LedManager::_updatePattern(JsonObject json) {
+bool LedManager::_updatePattern(JsonObject json) {
     
-    if(_currentPattern == nullptr);
+    if(_currentPattern == nullptr) return false;
 
-    _currentPattern->update(json);
+    return _currentPattern->update(json);
 
 }
 
-void LedManager::_enableDirectAccess() {
+bool LedManager::_enableDirectAccess() {
 
-    if(_directAccess) return;
+    if(_directAccess) return false;
 
     if(_currentPattern != nullptr) {
         _currentPattern->dispose();
@@ -116,6 +126,7 @@ void LedManager::_enableDirectAccess() {
 
     _udp.listen(7000);
     _directAccess = true;
+    return true;
 
 }
 

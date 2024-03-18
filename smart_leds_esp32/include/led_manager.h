@@ -26,17 +26,17 @@ class LedManager {
     void setup();
     void loop();
 
-    void updatePattern(JsonObject json);
+    bool updatePattern(JsonObject json);
     void setBrightness(uint8_t value);
 
-    void enableDirectAccess();
+    bool enableDirectAccess();
 
     private:
 
-    void _changePattern(JsonObject json);
-    void _updatePattern(JsonObject json);
+    bool _changePattern(JsonObject json);
+    bool _updatePattern(JsonObject json);
 
-    void _enableDirectAccess();
+    bool _enableDirectAccess();
     void _onUdpPacket(AsyncUDPPacket& packet);
 
     BasePattern* _createPattern(std::string& name);

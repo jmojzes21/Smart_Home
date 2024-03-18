@@ -30,9 +30,10 @@ class FadePattern : public BasePattern {
         
     }
 
-    void update(JsonObject p) override {
+    bool update(JsonObject p) override {
         int rgb = p["color"];
         color = CRGB(rgb);
+        return true;
     }
 
     void dispose() override {

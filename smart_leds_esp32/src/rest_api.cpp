@@ -51,8 +51,8 @@ void DeviceRestApi::setup() {
     patternHandler->setMethod(HTTP_POST);
     patternHandler->onRequest([&](AsyncWebServerRequest* request, JsonVariant& json) {
         JsonObject p = json.as<JsonObject>();
-        ledManager.updatePattern(p);
-        request->send(201);
+        bool result = ledManager.updatePattern(p);
+        request->send(result ? 201 : 400);
     });
     httpServer.addHandler(patternHandler);
 
@@ -64,6 +64,11 @@ void DeviceRestApi::setup() {
 
         JsonObject object = json.as<JsonObject>();
         int value = object["value"];
+
+        if(value < 0 || value > 255) {
+            request->send(400);
+            return;
+        }
 
         ledManager.setBrightness(value);
         request->send(201);
@@ -86,8 +91,8 @@ void DeviceRestApi::setup() {
 
     // POST /enable_direct_access
     httpServer.on("/enable_direct_access", HTTP_POST, [&](AsyncWebServerRequest* req) {
-        ledManager.enableDirectAccess();
-        req->send(201);
+        bool result = ledManager.enableDirectAccess();
+        req->send(result ? 201 : 400);
     });
 
     // POST /restart
