@@ -14,10 +14,6 @@ class PatternManager {
 
     SemaphoreHandle_t _mutex;
 
-    uint8_t _updateCode = 0;
-    JsonDocument _patternJson;
-    uint8_t _brightness;
-
     bool _directAccess = false;
     AsyncUDP _udp;
 
@@ -30,17 +26,15 @@ class PatternManager {
     void setup();
     void loop();
 
-    void updatePattern(JsonVariant& json);
-    void setBrightness(int value);
+    void updatePattern(JsonObject json);
+    void setBrightness(uint8_t value);
 
     void enableDirectAccess();
 
     private:
 
-    void _handleUpdate();
-
-    void _changePattern();
-    void _updatePattern();
+    void _changePattern(JsonObject json);
+    void _updatePattern(JsonObject json);
 
     void _enableDirectAccess();
     void _onUdpPacket(AsyncUDPPacket& packet);

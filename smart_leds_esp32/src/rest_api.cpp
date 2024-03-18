@@ -50,7 +50,8 @@ void DeviceRestApi::setup() {
     auto patternHandler = new AsyncCallbackJsonWebHandler("/pattern", nullptr);
     patternHandler->setMethod(HTTP_POST);
     patternHandler->onRequest([&](AsyncWebServerRequest* request, JsonVariant& json) {
-        patternManager.updatePattern(json);
+        JsonObject p = json.as<JsonObject>();
+        patternManager.updatePattern(p);
         request->send(201);
     });
     httpServer.addHandler(patternHandler);

@@ -7,13 +7,6 @@
 
 #include "log.h"
 
-#define UPDATE_CODE_DIRECT_ACCESS 1
-#define UPDATE_CODE_PATTERN 2
-#define UPDATE_CODE_BRIGHTNESS 3
-#define UPDATE_CODE_ENABLE_DIRECT_ACCESS 4
-
-#define LED_DATA_PAYLOAD_SIZE (LED_COUNT * 3)
-
 void PatternManager::setup() {
 
     _mutex = xSemaphoreCreateMutex();
@@ -31,106 +24,66 @@ void PatternManager::setup() {
 
 void PatternManager::loop() {
 
-    if(xSemaphoreTake(_mutex, portMAX_DELAY) == pdTRUE) {
+    xSemaphoreTake(_mutex, portMAX_DELAY);
 
-        if(_updateCode != 0) {
-            _handleUpdate();
-        }
-
-        if(_currentPattern != nullptr) {
-            _currentPattern->loop();
-        }
-        
-        xSemaphoreGive(_mutex);
+    if(_currentPattern != nullptr) {
+        _currentPattern->loop();
     }
+    
+    xSemaphoreGive(_mutex);
 
 }
 
-void PatternManager::updatePattern(JsonVariant& json) {
+void PatternManager::updatePattern(JsonObject json) {
 
-    if(xSemaphoreTake(_mutex, portMAX_DELAY) == pdTRUE) {
-        
-        if(_directAccess == false) {
-            _updateCode = UPDATE_CODE_PATTERN;
-            _patternJson = json;
+    xSemaphoreTake(_mutex, portMAX_DELAY);
+
+    if(_directAccess == false) {
+
+        if(json.containsKey("name")) {
+            _changePattern(json);
+        }else{
+            _updatePattern(json);
         }
-        
-        xSemaphoreGive(_mutex);
+
     }
+    
+    xSemaphoreGive(_mutex);
 
 }
 
-void PatternManager::setBrightness(int value) {
+void PatternManager::setBrightness(uint8_t value) {
 
-    if(xSemaphoreTake(_mutex, portMAX_DELAY) == pdTRUE) {
+    xSemaphoreTake(_mutex, portMAX_DELAY);
 
-        if(_directAccess == false) {
-            _updateCode = UPDATE_CODE_BRIGHTNESS;
-            _brightness = value;
-        }
-        
-        xSemaphoreGive(_mutex);
+    if(_directAccess == false) {
+        if(value > 80) value = 80;
+        FastLED.setBrightness(value);
     }
+    
+    xSemaphoreGive(_mutex);
 
 }
 
 void PatternManager::enableDirectAccess() {
 
-    if(xSemaphoreTake(_mutex, portMAX_DELAY) == pdTRUE) {
+    xSemaphoreTake(_mutex, portMAX_DELAY);
 
-        if(_directAccess == false) {
-            _updateCode = UPDATE_CODE_ENABLE_DIRECT_ACCESS;
-        }
-        
-        xSemaphoreGive(_mutex);
-    }
+    _enableDirectAccess();
+    
+    xSemaphoreGive(_mutex);
 
 }
 
-void PatternManager::_handleUpdate() {
+void PatternManager::_changePattern(JsonObject json) {
 
-    switch (_updateCode) {
-
-        case UPDATE_CODE_DIRECT_ACCESS:
-            FastLED.show();
-            break;
-
-        case UPDATE_CODE_PATTERN:
-            if(_patternJson.containsKey("name")) {
-                _changePattern();
-            }else{
-                _updatePattern();
-            }
-            _patternJson.clear();
-
-            break;
-
-        case UPDATE_CODE_BRIGHTNESS:
-            if(_brightness > 80) _brightness = 80;
-            FastLED.setBrightness(_brightness);
-            _brightness = 0;
-            break;
-
-        case UPDATE_CODE_ENABLE_DIRECT_ACCESS:
-            _enableDirectAccess();
-            break;
-
-    }
-
-    _updateCode = 0;
-
-}
-
-void PatternManager::_changePattern() {
-
-    JsonObject p = _patternJson.as<JsonObject>();
-    std::string name = p["name"];
+    std::string name = json["name"];
 
     BasePattern* newPattern = _createPattern(name);
     if(newPattern == nullptr) return;
 
     newPattern->setup();
-    newPattern->update(p);
+    newPattern->update(json);
 
     if(_currentPattern != nullptr) {
         _currentPattern->dispose();
@@ -141,16 +94,17 @@ void PatternManager::_changePattern() {
     
 }
 
-void PatternManager::_updatePattern() {
+void PatternManager::_updatePattern(JsonObject json) {
     
     if(_currentPattern == nullptr);
 
-    JsonObject p = _patternJson.as<JsonObject>();
-    _currentPattern->update(p);
+    _currentPattern->update(json);
 
 }
 
 void PatternManager::_enableDirectAccess() {
+
+    if(_directAccess) return;
 
     if(_currentPattern != nullptr) {
         _currentPattern->dispose();
@@ -170,15 +124,26 @@ void PatternManager::_onUdpPacket(AsyncUDPPacket& packet) {
     uint8_t* data = packet.data();
     int length = packet.length();
 
-    if(xSemaphoreTake(_mutex, portMAX_DELAY) == pdTRUE) {
-        
-        if(_directAccess && length >= sizeof(_leds)) {
-            memcpy(_leds, data, sizeof(_leds));
-            _updateCode = UPDATE_CODE_DIRECT_ACCESS;
+    xSemaphoreTake(_mutex, portMAX_DELAY);
+    
+    if(_directAccess) {
+
+        uint8_t cmd = data[0];
+        switch (cmd) {
+            case 10:
+                if(length >= sizeof(_leds) + 1) {
+                    memcpy(_leds, data + 1, sizeof(_leds));
+                    FastLED.show();
+                }
+                break;
+            case 20:
+                FastLED.clear(true);
+                break;
         }
 
-        xSemaphoreGive(_mutex);
     }
+
+    xSemaphoreGive(_mutex);
 
 }
 
