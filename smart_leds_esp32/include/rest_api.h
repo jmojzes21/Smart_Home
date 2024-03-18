@@ -13,15 +13,8 @@ void respondMessage(AsyncWebServerRequest* request, int code, const char* messag
 
 class DeviceRestApi {
 
-    private:
-
-    AsyncWebServer* _httpServer = nullptr;
-    Device* _device = nullptr;
-    PatternManager* _patternManager = nullptr;
-    VoidCallback _onRestart = nullptr;
-
     public:
 
-    void setup(AsyncWebServer* httpServer, Device* device, PatternManager* patternManager, VoidCallback onRestart);
+    void setup();
     
 };

@@ -9,16 +9,16 @@
 #define OTA_UPDATE_STATE_DONE 12
 #define OTA_UPDATE_STATE_ERROR 20
 
+extern AsyncWebServer httpServer;
+extern Device device;
+extern VoidCallback onDeviceRestart;
+
 OtaUpdate::OtaUpdate() {
     _otaState = OTA_UPDATE_STATE_READY;
 }
 
-void OtaUpdate::setup(AsyncWebServer* httpServer, Device* device, VoidCallback onRestart) {
+void OtaUpdate::setup() {
     
-    _httpServer = httpServer;
-    _device = device;
-    _onRestart = onRestart;
-
     // POST /firmware_update
 
     auto updateHandler = new AsyncCallbackWebHandler();
@@ -33,7 +33,7 @@ void OtaUpdate::setup(AsyncWebServer* httpServer, Device* device, VoidCallback o
         _handleUpdateRequest(request);
     });
 
-    _httpServer->addHandler(updateHandler);
+    httpServer.addHandler(updateHandler);
 
 }
 
@@ -68,7 +68,7 @@ void OtaUpdate::_prepareUpdate(AsyncWebServerRequest* request) {
     }
 
     std::string deviceType = std::string(deviceTypeHeader->value().c_str());
-    if(deviceType != _device->deviceType) {
+    if(deviceType != device.deviceType) {
         _otaState = OTA_UPDATE_STATE_ERROR;
         _errorMessage = "Wrong device";
         return;
@@ -233,5 +233,5 @@ std::string OtaUpdate::_finishHmac() {
 }
 
 void OtaUpdate::_restart() {
-    _onRestart();
+    onDeviceRestart();
 }

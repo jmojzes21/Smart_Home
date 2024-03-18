@@ -8,13 +8,9 @@
 
 class WifiManager {
 
-    private:
-
-    Device* _device = nullptr;
-
     public:
 
-    void setup(Device* device);
+    void setup();
 
     void connectToWifi();
 

@@ -31,6 +31,7 @@ AsyncWebServer httpServer(httpPort);
 DeviceRestApi restApi;
 OtaUpdate otaUpdate;
 Adafruit_INA219 powerSensor;
+VoidCallback onDeviceRestart;
 
 Ticker restartTicker;
 void requestRestart();
@@ -69,13 +70,13 @@ void setup() {
     powerSensor.begin();
 
     // postavi wifi manager
-    wifiManager.setup(&device);
+    wifiManager.setup();
 
     // postavi rest api
-    restApi.setup(&httpServer, &device, &patternManager, requestRestart);
+    restApi.setup();
 
     // postavi ota update
-    otaUpdate.setup(&httpServer, &device, requestRestart);
+    otaUpdate.setup();
 
     // poveži se na wifi mrežu
     wifiManager.connectToWifi();
@@ -88,6 +89,7 @@ void setup() {
     // pokreni http server
     httpServer.begin();
 
+    onDeviceRestart = requestRestart;
     // temp
     powerSensorTicker.attach_ms(4000, []() {
         float current_mA = powerSensor.getCurrent_mA();

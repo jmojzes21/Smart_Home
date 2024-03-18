@@ -3,9 +3,9 @@
 
 static const int wifiConnectTimeout = 4000;
 
-void WifiManager::setup(Device* device) {
-    _device = device;
-}
+extern Device device;
+
+void WifiManager::setup() {}
 
 void WifiManager::connectToWifi() {
 
@@ -139,7 +139,7 @@ void WifiManager::_startAccessPoint() {
     WiFi.disconnect();
     WiFi.mode(WIFI_AP);
 
-    std::string& ssid = _device->name;
+    std::string& ssid = device.name;
     Serial.println(ssid.c_str());
 
     WiFi.softAP(ssid.c_str());

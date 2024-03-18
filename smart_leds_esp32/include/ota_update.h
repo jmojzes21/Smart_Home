@@ -14,9 +14,6 @@ class OtaUpdate {
 
     private:
 
-    AsyncWebServer* _httpServer = nullptr;
-    Device* _device = nullptr;
-
     int _otaState = 0;
     std::string _errorMessage = "";
 
@@ -25,13 +22,11 @@ class OtaUpdate {
     mbedtls_md_context_t _ctx;
     std::string _firmwareHmac = "";
 
-    VoidCallback _onRestart = nullptr;
-
     public:
 
     OtaUpdate();
 
-    void setup(AsyncWebServer* httpServer, Device* device, VoidCallback onRestart);
+    void setup();
 
     private:
 
