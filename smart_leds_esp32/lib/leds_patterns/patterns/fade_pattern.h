@@ -7,13 +7,14 @@ class FadePattern : public BasePattern {
 
     public:
 
-    CRGB color;
+    Color color;
     bool value = true;
 
-    FadePattern(CRGB* leds, int ledCount) : BasePattern(leds, ledCount) {}
+    FadePattern() {}
 
     void setup() override {
-        color = CRGB::Black;
+        color = Colors::Black;
+        leds.show();
     }
 
     void loop() override {
@@ -21,9 +22,9 @@ class FadePattern : public BasePattern {
         EVERY_N_MILLIS(500) {
             value = !value;
             if(value) {
-                FastLED.showColor(color);
+                leds.showColor(color);
             }else{
-                FastLED.showColor(CRGB::Black);
+                leds.showColor(Colors::Black);
             }
             
         }
@@ -32,7 +33,7 @@ class FadePattern : public BasePattern {
 
     bool update(JsonObject p) override {
         int rgb = p["color"];
-        color = CRGB(rgb);
+        color = Color(rgb);
         return true;
     }
 

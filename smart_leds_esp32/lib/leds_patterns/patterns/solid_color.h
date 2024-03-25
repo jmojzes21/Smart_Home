@@ -7,25 +7,25 @@ class SolidColorPattern : public BasePattern {
 
     public:
 
-    CRGB color;
+    Color color;
 
-    SolidColorPattern(CRGB* leds, int ledCount) : BasePattern(leds, ledCount) {}
+    SolidColorPattern() {}
 
     void setup() override {
-        color = CRGB::Black;
-        FastLED.showColor(color);
+        color = Colors::Black;
+        leds.show();
     }
 
     void loop() override {
         EVERY_N_MILLIS(200) {
-            FastLED.showColor(color);
+            leds.showColor(color);
         }
     }
 
     bool update(JsonObject p) override {
         int rgb = p["color"];
-        color = CRGB(rgb);
-        FastLED.showColor(color);
+        color = Color(rgb);
+        leds.showColor(color);
         return true;
     }
 
