@@ -1,21 +1,24 @@
 
 #pragma once
 
-#include <FastLED.h>
 #include <ArduinoJson.h>
+
+#include "leds.h"
+
+extern LEDs leds;
 
 class BasePattern {
 
     protected:
 
-    CRGB* leds = nullptr;
+    Color* colors = nullptr;
     int ledCount = 0;
 
     public:
 
-    BasePattern(CRGB* leds, int ledCount) {
-        this->leds = leds;
-        this->ledCount = ledCount;
+    BasePattern() {
+        colors = leds.colors();
+        ledCount = leds.ledCount();
     }
 
     virtual void setup() {}

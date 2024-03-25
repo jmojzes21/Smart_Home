@@ -4,9 +4,9 @@
 #include <AsyncUDP.h>
 
 #include "patterns/base_pattern.h"
+#include "leds.h"
 
-#define LED_COUNT 7
-#define LED_DATA_PIN 26
+extern LEDs leds;
 
 class LedManager {
 
@@ -17,8 +17,6 @@ class LedManager {
     bool _directAccess = false;
     AsyncUDP _udp;
 
-    const int _ledCount = LED_COUNT;
-    CRGB _leds[LED_COUNT];
     BasePattern* _currentPattern = nullptr;
 
     public:

@@ -11,10 +11,7 @@ void LedManager::setup() {
 
     _mutex = xSemaphoreCreateMutex();
 
-    FastLED.addLeds<WS2812B, LED_DATA_PIN, GRB>(_leds, LED_COUNT);
-    FastLED.clear(true);
-    
-    FastLED.setBrightness(80);
+    leds.setup();
 
     _udp.onPacket([&](AsyncUDPPacket packet) {
         _onUdpPacket(packet);
@@ -141,8 +138,8 @@ void LedManager::_onUdpPacket(AsyncUDPPacket& packet) {
         uint8_t cmd = data[0];
         switch (cmd) {
             case 10:
-                if(length >= sizeof(_leds) + 1) {
-                    memcpy(_leds, data + 1, sizeof(_leds));
+                if(length >= 21) {
+                    memcpy(leds.colors(), data + 1, 21);
                     FastLED.show();
                 }
                 break;
@@ -160,9 +157,9 @@ void LedManager::_onUdpPacket(AsyncUDPPacket& packet) {
 BasePattern* LedManager::_createPattern(std::string& name) {
 
     if(name == "solid") {
-        return new SolidColorPattern(_leds, _ledCount);
+        return new SolidColorPattern();
     }else if(name == "fade") {
-        return new FadePattern(_leds, _ledCount);
+        return new FadePattern();
     }
 
     return nullptr;
