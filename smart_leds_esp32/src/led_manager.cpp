@@ -7,6 +7,8 @@
 
 #include "log.h"
 
+#define DLA_PAYLOAD_SIZE (sizeof(Color) * LED_COUNT)
+
 void LedManager::setup() {
 
     _mutex = xSemaphoreCreateMutex();
@@ -61,11 +63,11 @@ void LedManager::setBrightness(uint8_t value) {
 
 }
 
-bool LedManager::enableDirectAccess() {
+bool LedManager::enableDLA() {
 
     xSemaphoreTake(_mutex, portMAX_DELAY);
 
-    bool result = _enableDirectAccess();
+    bool result = _enableDLA();
     
     xSemaphoreGive(_mutex);
     return result;
@@ -106,7 +108,7 @@ bool LedManager::_updatePattern(JsonObject json) {
 
 }
 
-bool LedManager::_enableDirectAccess() {
+bool LedManager::_enableDLA() {
 
     if(_directAccess) return false;
 
@@ -134,13 +136,16 @@ void LedManager::_onUdpPacket(AsyncUDPPacket& packet) {
     if(_directAccess) {
 
         uint8_t cmd = data[0];
+
         switch (cmd) {
+
             case 10:
-                if(length >= 21) {
-                    memcpy(leds.colors(), data + 1, 21);
+                if(length == DLA_PAYLOAD_SIZE + 1) {
+                    memcpy(leds.colors(), data + 1, DLA_PAYLOAD_SIZE);
                     leds.show();
                 }
                 break;
+
             case 20:
                 leds.clear();
                 break;

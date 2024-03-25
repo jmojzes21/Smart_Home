@@ -89,9 +89,9 @@ void DeviceRestApi::setup() {
         req->send(201);
     });
 
-    // POST /enable_direct_access
-    httpServer.on("/enable_direct_access", HTTP_POST, [&](AsyncWebServerRequest* req) {
-        bool result = ledManager.enableDirectAccess();
+    // POST /enable_dla
+    httpServer.on("/enable_dla", HTTP_POST, [&](AsyncWebServerRequest* req) {
+        bool result = ledManager.enableDLA();
         req->send(result ? 201 : 400);
     });
 
