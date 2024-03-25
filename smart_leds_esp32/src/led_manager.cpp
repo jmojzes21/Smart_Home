@@ -58,10 +58,9 @@ void LedManager::setBrightness(uint8_t value) {
 
     xSemaphoreTake(_mutex, portMAX_DELAY);
 
-    if(_directAccess == false) {
-        if(value > 80) value = 80;
-        FastLED.setBrightness(value);
-    }
+    if(value > 80) value = 80;
+    FastLED.setBrightness(value);
+    FastLED.show();
     
     xSemaphoreGive(_mutex);
 
