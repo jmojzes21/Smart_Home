@@ -3,7 +3,7 @@
 
 #include <AsyncUDP.h>
 
-#include "patterns/base_pattern.h"
+#include "patterns/color_pattern.h"
 #include "leds.h"
 
 extern LEDs leds;
@@ -17,7 +17,7 @@ class LedManager {
     bool _directAccess = false;
     AsyncUDP _udp;
 
-    BasePattern* _currentPattern = nullptr;
+    ColorPattern* _currentPattern = nullptr;
 
     public:
 
@@ -37,6 +37,6 @@ class LedManager {
     bool _enableDLA();
     void _onUdpPacket(AsyncUDPPacket& packet);
 
-    BasePattern* _createPattern(std::string& name);
+    ColorPattern* _createPattern(std::string& name);
 
 };

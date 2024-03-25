@@ -1,7 +1,7 @@
 
 #include "led_manager.h"
 
-#include "patterns/base_pattern.h"
+#include "patterns/color_pattern.h"
 #include "patterns/solid_color.h"
 #include "patterns/fade_pattern.h"
 
@@ -78,7 +78,7 @@ bool LedManager::_changePattern(JsonObject json) {
 
     std::string name = json["name"];
 
-    BasePattern* newPattern = _createPattern(name);
+    ColorPattern* newPattern = _createPattern(name);
     if(newPattern == nullptr) return false;
 
     newPattern->setup();
@@ -157,7 +157,7 @@ void LedManager::_onUdpPacket(AsyncUDPPacket& packet) {
 
 }
 
-BasePattern* LedManager::_createPattern(std::string& name) {
+ColorPattern* LedManager::_createPattern(std::string& name) {
 
     if(name == "solid") {
         return new SolidColorPattern();

@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include "base_pattern.h"
+#include "color_pattern.h"
 
-class FadePattern : public BasePattern {
+class FadePattern : public ColorPattern {
 
     public:
 

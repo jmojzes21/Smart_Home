@@ -7,7 +7,7 @@
 
 extern LEDs leds;
 
-class BasePattern {
+class ColorPattern {
 
     protected:
 
@@ -16,7 +16,7 @@ class BasePattern {
 
     public:
 
-    BasePattern() {
+    ColorPattern() {
         colors = leds.colors();
         ledCount = leds.ledCount();
     }
