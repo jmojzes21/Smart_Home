@@ -16,6 +16,16 @@ void LEDs::setup() {
 
 }
 
+void LEDs::clear() {
+    
+    #ifdef ESP32
+
+    FastLED.clear(true);
+
+    #endif
+
+}
+
 void LEDs::show() {
 
     #ifdef ESP32
@@ -32,6 +42,19 @@ void LEDs::showColor(Color color) {
 
     CRGB crgb = CRGB(color.r, color.g, color.b);
     FastLED.showColor(crgb);
+
+    #endif
+
+}
+
+void LEDs::setBrightness(uint8_t value) {
+
+    #ifdef ESP32
+
+    if(value > 80) value = 80;
+
+    FastLED.setBrightness(value);
+    FastLED.show();
 
     #endif
 

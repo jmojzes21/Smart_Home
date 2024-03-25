@@ -55,9 +55,7 @@ void LedManager::setBrightness(uint8_t value) {
 
     xSemaphoreTake(_mutex, portMAX_DELAY);
 
-    if(value > 80) value = 80;
-    FastLED.setBrightness(value);
-    FastLED.show();
+    leds.setBrightness(value);
     
     xSemaphoreGive(_mutex);
 
@@ -118,7 +116,7 @@ bool LedManager::_enableDirectAccess() {
         _currentPattern = nullptr;
     }
 
-    FastLED.clear(true);
+    leds.clear();
 
     _udp.listen(7000);
     _directAccess = true;
@@ -140,11 +138,11 @@ void LedManager::_onUdpPacket(AsyncUDPPacket& packet) {
             case 10:
                 if(length >= 21) {
                     memcpy(leds.colors(), data + 1, 21);
-                    FastLED.show();
+                    leds.show();
                 }
                 break;
             case 20:
-                FastLED.clear(true);
+                leds.clear();
                 break;
         }
 

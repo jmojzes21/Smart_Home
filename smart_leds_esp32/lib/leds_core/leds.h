@@ -24,8 +24,12 @@ class LEDs {
     public:
 
     void setup();
+    
+    void clear();
     void show();
     void showColor(Color color);
+    
+    void setBrightness(uint8_t value);
 
     Color* colors();
     int ledCount();
