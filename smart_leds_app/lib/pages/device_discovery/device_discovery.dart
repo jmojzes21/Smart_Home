@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/logic/device_discovery.dart';
 import 'package:smart_leds_app/models/device.dart';
-import 'package:smart_leds_app/pages/home_page.dart';
+import 'package:smart_leds_app/pages/home/home.dart';
 import 'package:smart_leds_app/widgets/message_dialogs.dart';
 
-import '../logic/device_factory.dart';
-import '../models/discovered_device.dart';
+import '../../logic/device_factory.dart';
+import '../../models/discovered_device.dart';
 
 class DeviceDiscoveryPage extends StatefulWidget {
   const DeviceDiscoveryPage({super.key});
