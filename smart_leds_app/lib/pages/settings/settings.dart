@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/models/device.dart';
 import 'package:smart_leds_app/models/device_info.dart';
+import 'package:smart_leds_app/models/exceptions.dart';
+import 'package:smart_leds_app/widgets/dialogs/change_password.dart';
+import 'package:smart_leds_app/theme.dart';
+import 'package:smart_leds_app/widgets/message_dialogs.dart';
 import 'package:smart_leds_app/widgets/navigation_drawer.dart';
 import 'package:smart_leds_app/widgets/update_dialogs.dart';
 
@@ -26,7 +30,27 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
-  void openPrepareUpdateDialog(BuildContext context) {
+  void restartDevice() async {
+    var result = await showConfirmDialog(context, 'Ponovno pokretanje uređaja',
+        'Jeste li sigurni da želite ponovno pokrenuti uređaj?');
+    if (result == false) return;
+
+    Device.currentDevice.restart();
+  }
+
+  void changePassword() async {
+    var result = await ChangePasswordDialog.show(context);
+    if (result == null) return;
+
+    try {
+      await Device.currentDevice.changePassword(result.$1, result.$2);
+    } on DeviceException catch (e) {
+      if (!mounted) return;
+      showMessageDialog(context, 'Promjena lozinke', e.message);
+    }
+  }
+
+  void openPrepareUpdateDialog() {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -57,16 +81,18 @@ class _SettingsPageState extends State<SettingsPage> {
       );
     }
 
-    var theme = Theme.of(context).textTheme;
-    var titleStyle = theme.titleMedium;
-    var bodyStyle = theme.bodyMedium;
+    var titleStyle = MyTheme.titleMedium;
+    var bodyStyle = MyTheme.bodyMedium;
     const spacing = 10.0;
 
-    return Padding(
-      padding: const EdgeInsets.all(40),
+    var content = SizedBox(
+      width: MediaQuery.of(context).size.width,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Osnovne informacije
+          Text('Osnovne informacije', style: MyTheme.titleLarge),
+          SizedBox(height: spacing),
           Text('Naziv', style: titleStyle),
           Text(deviceInfo!.name, style: bodyStyle),
           SizedBox(height: spacing),
@@ -78,17 +104,43 @@ class _SettingsPageState extends State<SettingsPage> {
           SizedBox(height: spacing),
           Text('IP adresa', style: titleStyle),
           Text(deviceInfo!.ipAddress, style: bodyStyle),
-          SizedBox(height: 20),
+          SizedBox(height: 2 * spacing),
           ElevatedButton(
             onPressed: () => getDeviceInfo(),
             child: Text('Osvježi'),
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 2 * spacing),
+
+          // WiFi mreže
+          Text('WiFi mreže', style: MyTheme.titleLarge),
+          SizedBox(height: spacing),
+          SizedBox(height: 2 * spacing),
+
+          // OTA update, promjena lozinke
+          Text('Ostalo', style: MyTheme.titleLarge),
+          SizedBox(height: 2 * spacing),
           ElevatedButton(
-            onPressed: () => openPrepareUpdateDialog(context),
-            child: Text('Ažuriraj program'),
+            onPressed: () => restartDevice(),
+            child: Text('Ponovno pokreni uređaj'),
+          ),
+          SizedBox(height: 2 * spacing),
+          ElevatedButton(
+            onPressed: () => changePassword(),
+            child: Text('Promijeni lozinku'),
+          ),
+          SizedBox(height: 2 * spacing),
+          ElevatedButton(
+            onPressed: () => openPrepareUpdateDialog(),
+            child: Text('Ažuriraj ugradbeni program'),
           ),
         ],
+      ),
+    );
+
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(40),
+        child: content,
       ),
     );
   }
