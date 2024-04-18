@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/logic/device_discovery.dart';
+import 'package:smart_leds_app/logic/session_service.dart';
 import 'package:smart_leds_app/models/device/device.dart';
+import 'package:smart_leds_app/models/exceptions.dart';
 import 'package:smart_leds_app/widgets/dialogs/login.dart';
 import 'package:smart_leds_app/pages/home/home.dart';
+import 'package:smart_leds_app/widgets/dialogs/simple_dialogs.dart';
 import 'package:smart_leds_app/widgets/message_dialogs.dart';
 
 import '../../logic/device_factory.dart';
@@ -67,16 +70,28 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
     var deviceFactory = DeviceFactory();
     var device = deviceFactory.createDevice(discoveredDevice);
 
-    await showDialog(
-      context: context,
-      builder: (context) => LoginDialog(
-        device: device,
-      ),
-    );
+    var result = await LoginDialog.show(context);
+    if (result == null) return;
 
-    if (device.isLoggedIn == false) return;
+    var passwordHash = device.hashPassword(result.password);
+
+    try {
+      await device.login(passwordHash);
+
+      if (result.stayLoggedIn) {
+        var sessionService = SessionService();
+        var info = await device.getDeviceInfo();
+
+        await sessionService.saveSession(info, passwordHash);
+      }
+    } on DeviceException catch (e) {
+      if (!mounted) return;
+      SimpleDialogs.showMessage(
+          context: context, title: 'Prijava nije uspjela', message: e.message);
+      return;
+    }
+
     if (!mounted) return;
-
     Device.currentDevice = device;
 
     Navigator.of(context).pushReplacement(
