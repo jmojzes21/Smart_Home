@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:crypto/crypto.dart' as crypto;
 import 'package:smart_leds_app/models/device/device_info.dart';
 import 'package:smart_leds_app/models/firmware.dart';
 import 'package:smart_leds_app/models/wifi_network.dart';
@@ -16,7 +18,6 @@ abstract class Device {
 
   Future<DeviceInfo> getDeviceInfo();
 
-  bool get isLoggedIn => false;
   Future<void> login(String password) async {}
 
   Future<List<WifiNetwork>> getWifiNetworks() async => [];
@@ -25,6 +26,13 @@ abstract class Device {
   Future<void> restart() async {}
   Future<void> changePassword(String oldPassword, String newPassword) async {}
   Future<void> updateFirmware(Firmware firmware);
+
+  String hashPassword(String password) {
+    var data = utf8.encode(password);
+    var digest = crypto.sha256.convert(data);
+    var base64 = base64Encode(digest.bytes);
+    return base64;
+  }
 
   static Device? _currentDevice;
 

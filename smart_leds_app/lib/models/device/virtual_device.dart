@@ -8,9 +8,7 @@ import 'package:smart_leds_app/models/wifi_network.dart';
 import 'device.dart';
 
 class VirtualDevice extends Device {
-  bool _isLoggedIn = false;
-
-  var _wifiNetworks = [
+  final _wifiNetworks = [
     WifiNetwork('Prva Wifi mreža', 'lozinka'),
     WifiNetwork('Druga Wifi mreža', 'lozinka'),
     WifiNetwork('Treća Wifi mreža', 'lozinka'),
@@ -25,6 +23,7 @@ class VirtualDevice extends Device {
       () {
         return DeviceInfo(
           name: 'Virtualni uređaj',
+          type: 'Smart LEDs L24',
           firmwareVersion: '1.0.0',
           ipAddress: '127.0.0.1',
           macAddress: 'FF:FF:FF:FF:FF:FF',
@@ -36,15 +35,11 @@ class VirtualDevice extends Device {
   }
 
   @override
-  bool get isLoggedIn => _isLoggedIn;
-
-  @override
   Future<void> login(String password) async {
     return Future.delayed(Duration(milliseconds: 500), () {
-      if (password != 'test') {
+      if (password != hashPassword('test')) {
         throw DeviceException('Pogrešna lozinka!');
       }
-      _isLoggedIn = true;
     });
   }
 

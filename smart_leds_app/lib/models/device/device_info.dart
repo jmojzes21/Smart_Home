@@ -1,5 +1,6 @@
 class DeviceInfo {
   String name;
+  String type;
   String firmwareVersion;
   String ipAddress;
   String macAddress;
@@ -8,6 +9,7 @@ class DeviceInfo {
 
   DeviceInfo({
     required this.name,
+    required this.type,
     required this.firmwareVersion,
     required this.ipAddress,
     required this.macAddress,
@@ -18,6 +20,7 @@ class DeviceInfo {
   factory DeviceInfo.fromJson(Map<String, dynamic> src) {
     return DeviceInfo(
       name: src['name'],
+      type: src['type'],
       firmwareVersion: src['version'],
       ipAddress: src['ip'],
       macAddress: src['mac'],
