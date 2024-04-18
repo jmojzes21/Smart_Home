@@ -7,6 +7,8 @@ import 'package:smart_leds_app/models/firmware.dart';
 import 'device.dart';
 
 class VirtualDevice extends Device {
+  bool _isLoggedIn = false;
+
   VirtualDevice({required super.name, required super.ipAddress});
 
   @override
@@ -24,6 +26,19 @@ class VirtualDevice extends Device {
         );
       },
     );
+  }
+
+  @override
+  bool get isLoggedIn => _isLoggedIn;
+
+  @override
+  Future<void> login(String password) async {
+    return Future.delayed(Duration(milliseconds: 500), () {
+      if (password != 'test') {
+        throw DeviceException('Pogrešna lozinka!');
+      }
+      _isLoggedIn = true;
+    });
   }
 
   @override

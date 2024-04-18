@@ -13,6 +13,10 @@ abstract class Device {
   });
 
   Future<DeviceInfo> getDeviceInfo();
+
+  bool get isLoggedIn => false;
+  Future<void> login(String password) async {}
+
   Future<void> updateFirmware(Firmware firmware);
 
   static Device? _currentDevice;

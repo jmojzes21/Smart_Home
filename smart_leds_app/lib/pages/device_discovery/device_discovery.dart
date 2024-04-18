@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/logic/device_discovery.dart';
 import 'package:smart_leds_app/models/device.dart';
+import 'package:smart_leds_app/pages/device_discovery/login_dialog.dart';
 import 'package:smart_leds_app/pages/home/home.dart';
 import 'package:smart_leds_app/widgets/message_dialogs.dart';
 
@@ -62,9 +63,19 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
     deviceDiscovery.stop();
   }
 
-  void openDevice(DiscoveredDevice discoveredDevice) {
+  void openDevice(DiscoveredDevice discoveredDevice) async {
     var deviceFactory = DeviceFactory();
     var device = deviceFactory.createDevice(discoveredDevice);
+
+    await showDialog(
+      context: context,
+      builder: (context) => LoginDialog(
+        device: device,
+      ),
+    );
+
+    if (device.isLoggedIn == false) return;
+    if (!mounted) return;
 
     Device.currentDevice = device;
 
