@@ -1,9 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:smart_leds_app/models/device.dart';
 import 'package:smart_leds_app/models/device_info.dart';
 import 'package:smart_leds_app/models/exceptions.dart';
+import 'package:smart_leds_app/models/wifi_network.dart';
 import 'package:smart_leds_app/widgets/dialogs/change_password.dart';
 import 'package:smart_leds_app/theme.dart';
+import 'package:smart_leds_app/widgets/dialogs/wifi_network.dart';
 import 'package:smart_leds_app/widgets/message_dialogs.dart';
 import 'package:smart_leds_app/widgets/navigation_drawer.dart';
 import 'package:smart_leds_app/widgets/update_dialogs.dart';
@@ -16,17 +20,26 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   DeviceInfo? deviceInfo;
+  List<WifiNetwork> wifiNetworks = [];
 
   @override
   void initState() {
     super.initState();
     getDeviceInfo();
+    getWifiNetworks();
   }
 
   void getDeviceInfo() async {
     var info = await Device.currentDevice.getDeviceInfo();
     setState(() {
       deviceInfo = info;
+    });
+  }
+
+  void getWifiNetworks() async {
+    var networks = await Device.currentDevice.getWifiNetworks();
+    setState(() {
+      wifiNetworks = networks;
     });
   }
 
@@ -58,6 +71,38 @@ class _SettingsPageState extends State<SettingsPage> {
         return PrepareUpdateWidget();
       },
     );
+  }
+
+  void addWifiNetwork() async {
+    var network = await WifiNetworkInputDialog.showAddNetwork(context);
+    if (network == null) return;
+
+    var networks = [...wifiNetworks];
+    networks.add(network);
+
+    Device.currentDevice.updateWifiNetworks(networks);
+    getWifiNetworks();
+  }
+
+  void openWifiNetwork(WifiNetwork network) async {
+    var edited = await WifiNetworkInputDialog.showEditNetwork(context, network);
+    if (edited == null) return;
+
+    var networks = [...wifiNetworks];
+
+    if (edited.ssid == '') {
+      // obriši mrežu
+
+      networks.removeWhere((e) => e.ssid == network.ssid);
+    } else {
+      // spremi promjene
+
+      var target = networks.firstWhere((e) => e.ssid == edited.ssid);
+      target.password = edited.password;
+    }
+
+    Device.currentDevice.updateWifiNetworks(networks);
+    getWifiNetworks();
   }
 
   @override
@@ -114,6 +159,23 @@ class _SettingsPageState extends State<SettingsPage> {
           // WiFi mreže
           Text('WiFi mreže', style: MyTheme.titleLarge),
           SizedBox(height: spacing),
+          SizedBox(
+            height: 200,
+            child: ListView.builder(
+              itemCount: wifiNetworks.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(wifiNetworks[index].ssid),
+                  onTap: () => openWifiNetwork(wifiNetworks[index]),
+                );
+              },
+            ),
+          ),
+          SizedBox(height: spacing),
+          TextButton(
+            onPressed: () => addWifiNetwork(),
+            child: Text('Dodaj mrežu'),
+          ),
           SizedBox(height: 2 * spacing),
 
           // OTA update, promjena lozinke

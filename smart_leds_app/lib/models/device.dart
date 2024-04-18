@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:smart_leds_app/models/device_info.dart';
 import 'package:smart_leds_app/models/firmware.dart';
+import 'package:smart_leds_app/models/wifi_network.dart';
 
 abstract class Device {
   String name;
@@ -17,6 +18,9 @@ abstract class Device {
 
   bool get isLoggedIn => false;
   Future<void> login(String password) async {}
+
+  Future<List<WifiNetwork>> getWifiNetworks() async => [];
+  Future<void> updateWifiNetworks(List<WifiNetwork> networks) async {}
 
   Future<void> restart() async {}
   Future<void> changePassword(String oldPassword, String newPassword) async {}

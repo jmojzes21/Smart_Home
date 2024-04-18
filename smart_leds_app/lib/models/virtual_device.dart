@@ -3,11 +3,18 @@ import 'dart:math';
 import 'package:smart_leds_app/models/device_info.dart';
 import 'package:smart_leds_app/models/exceptions.dart';
 import 'package:smart_leds_app/models/firmware.dart';
+import 'package:smart_leds_app/models/wifi_network.dart';
 
 import 'device.dart';
 
 class VirtualDevice extends Device {
   bool _isLoggedIn = false;
+
+  var _wifiNetworks = [
+    WifiNetwork('Prva Wifi mreža', 'lozinka'),
+    WifiNetwork('Druga Wifi mreža', 'lozinka'),
+    WifiNetwork('Treća Wifi mreža', 'lozinka'),
+  ];
 
   VirtualDevice({required super.name, required super.ipAddress});
 
@@ -39,6 +46,18 @@ class VirtualDevice extends Device {
       }
       _isLoggedIn = true;
     });
+  }
+
+  @override
+  Future<List<WifiNetwork>> getWifiNetworks() async {
+    await Future.delayed(Duration(milliseconds: 2000));
+    return _wifiNetworks;
+  }
+
+  @override
+  Future<void> updateWifiNetworks(List<WifiNetwork> networks) async {
+    _wifiNetworks.clear();
+    _wifiNetworks.addAll(networks);
   }
 
   @override
