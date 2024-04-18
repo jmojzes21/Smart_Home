@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/logic/device_discovery.dart';
 import 'package:smart_leds_app/models/device.dart';
-import 'package:smart_leds_app/pages/device_discovery/login_dialog.dart';
+import 'package:smart_leds_app/widgets/dialogs/login.dart';
 import 'package:smart_leds_app/pages/home/home.dart';
 import 'package:smart_leds_app/widgets/message_dialogs.dart';
 
