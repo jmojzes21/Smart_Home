@@ -1,32 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds_app/models/device/device.dart';
-import 'package:smart_leds_app/models/exceptions.dart';
-import 'package:smart_leds_app/widgets/message_dialogs.dart';
+import 'package:smart_leds_app/models/misc/login_dialog_result.dart';
+import 'package:smart_leds_app/widgets/checkbox.dart';
+import 'package:smart_leds_app/widgets/dialogs/simple_dialogs.dart';
 
 class LoginDialog extends StatefulWidget {
-  final Device device;
-  const LoginDialog({super.key, required this.device});
+  const LoginDialog({super.key});
 
   @override
   State<LoginDialog> createState() => _LoginDialogState();
+
+  static Future<LoginDialogResult?> show(BuildContext context) async {
+    var result = await showDialog<LoginDialogResult>(
+      context: context,
+      builder: (context) => LoginDialog(),
+    );
+
+    return result;
+  }
 }
 
 class _LoginDialogState extends State<LoginDialog> {
   var tcPassword = TextEditingController();
+  var showPassword = false;
+  var stayLoggedIn = false;
 
-  void login() async {
-    try {
-      var password = tcPassword.text.trim();
-      if (password.isEmpty) return;
-
-      await widget.device.login(password);
-
-      if (!mounted) return;
-      Navigator.of(context).pop();
-    } on DeviceException catch (e) {
-      if (!mounted) return;
-      showMessageDialog(context, 'Prijava', e.message);
+  void login() {
+    var password = tcPassword.text.trim();
+    if (password.isEmpty) {
+      SimpleDialogs.showMessage(
+          context: context,
+          title: 'Prijava',
+          message: 'Potrebno je unijeti lozinku.');
+      return;
     }
+
+    var result = LoginDialogResult(password, stayLoggedIn);
+    Navigator.of(context).pop(result);
   }
 
   @override
@@ -57,14 +66,26 @@ class _LoginDialogState extends State<LoginDialog> {
               const SizedBox(height: 10),
               TextField(
                 controller: tcPassword,
-                obscureText: true,
+                obscureText: showPassword == false,
                 enableSuggestions: false,
                 autocorrect: false,
                 decoration: InputDecoration(
                   isDense: true,
                   border: OutlineInputBorder(),
                 ),
-              )
+              ),
+              const SizedBox(height: 5),
+              CheckboxText(
+                value: showPassword,
+                text: 'Prikaži lozinku',
+                onChanged: (value) => setState(() => showPassword = value),
+              ),
+              const SizedBox(height: 5),
+              CheckboxText(
+                value: stayLoggedIn,
+                text: 'Ostani prijavljen',
+                onChanged: (value) => setState(() => stayLoggedIn = value),
+              ),
             ],
           ),
         ),
