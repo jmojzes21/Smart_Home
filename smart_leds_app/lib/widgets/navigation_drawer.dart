@@ -4,7 +4,7 @@ import 'package:smart_leds_app/pages/device_info/device_info.dart';
 import 'package:smart_leds_app/pages/home/home.dart';
 import 'package:smart_leds_app/pages/settings/settings.dart';
 
-import '../models/device.dart';
+import '../models/device/device.dart';
 
 class AppNavigationDrawer extends StatelessWidget {
   const AppNavigationDrawer({super.key});

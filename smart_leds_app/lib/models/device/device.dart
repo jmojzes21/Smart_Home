@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:smart_leds_app/models/device_info.dart';
+import 'package:smart_leds_app/models/device/device_info.dart';
 import 'package:smart_leds_app/models/firmware.dart';
 import 'package:smart_leds_app/models/wifi_network.dart';
 

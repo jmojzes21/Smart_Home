@@ -1,7 +1,7 @@
-import '../models/device.dart';
-import '../models/discovered_device.dart';
-import '../models/real_device.dart';
-import '../models/virtual_device.dart';
+import '../models/device/device.dart';
+import '../models/device/discovered_device.dart';
+import '../models/device/real_device.dart';
+import '../models/device/virtual_device.dart';
 
 class DeviceFactory {
   Device createDevice(DiscoveredDevice device) {

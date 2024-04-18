@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:smart_leds_app/models/device.dart';
-import 'package:smart_leds_app/models/device_info.dart';
+import 'package:smart_leds_app/models/device/device.dart';
+import 'package:smart_leds_app/models/device/device_info.dart';
 import 'package:smart_leds_app/models/exceptions.dart';
 import 'package:smart_leds_app/models/wifi_network.dart';
 import 'package:smart_leds_app/widgets/dialogs/change_password.dart';

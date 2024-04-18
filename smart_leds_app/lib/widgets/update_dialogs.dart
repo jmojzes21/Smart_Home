@@ -1,7 +1,7 @@
 import 'package:file_selector/file_selector.dart' as fs;
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/helpers/firmware_loader.dart';
-import 'package:smart_leds_app/models/device.dart';
+import 'package:smart_leds_app/models/device/device.dart';
 import 'package:smart_leds_app/models/exceptions.dart';
 import 'package:smart_leds_app/models/firmware.dart';
 import 'package:smart_leds_app/widgets/message_dialogs.dart';
