@@ -28,7 +28,14 @@ class DeviceDiscovery {
     log('Započni pretraživanje uređaja');
 
     _client = MDnsClient(rawDatagramSocketFactory: _rawDatagramSocketFactory);
-    await _client!.start();
+
+    try {
+      await _client!.start();
+    } on Exception catch (_) {
+      _isDiscovering = false;
+      streamController.close();
+      return;
+    }
 
     await for (final PtrResourceRecord ptr in _client!
         .lookup<PtrResourceRecord>(
@@ -81,89 +88,3 @@ class DeviceDiscovery {
         reuseAddress: true, reusePort: false, ttl: ttl!);
   }
 }
-
-
-/*
-
-// Copyright 2013 The Flutter Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
-// Example script to illustrate how to use the mdns package to discover services
-// on the local network.
-
-// ignore_for_file: avoid_print
-
-import 'dart:async';
-import 'dart:io';
-
-import 'package:multicast_dns/multicast_dns.dart';
-
-class DeviceInfo {
-  final String hostname;
-  final InternetAddress internetAddress;
-  final int port;
-
-  DeviceInfo({
-    required this.hostname,
-    required this.internetAddress,
-    required this.port,
-  });
-
-  String get address => '${internetAddress.address}:$port';
-
-  @override
-  String toString() {
-    return '$hostname:$port (${internetAddress.address})';
-  }
-}
-
-Future<DeviceInfo?> scan() async {
-  final completer = Completer<DeviceInfo?>();
-  _scan(completer);
-
-  return completer.future;
-}
-
-void _scan(Completer<DeviceInfo?> completer) async {
-  const String name = '_http._tcp.local';
-  print('Scan started');
-
-  final MDnsClient client = MDnsClient(rawDatagramSocketFactory:
-      (dynamic host, int port,
-          {bool? reuseAddress, bool? reusePort, int? ttl}) {
-    return RawDatagramSocket.bind(host, port,
-        reuseAddress: true, reusePort: false, ttl: ttl!);
-  });
-  await client.start();
-
-  await for (final PtrResourceRecord ptr in client
-      .lookup<PtrResourceRecord>(ResourceRecordQuery.serverPointer(name))) {
-    await for (final SrvResourceRecord srv in client.lookup<SrvResourceRecord>(
-        ResourceRecordQuery.service(ptr.domainName))) {
-      await for (final IPAddressResourceRecord ip
-          in client.lookup<IPAddressResourceRecord>(
-              ResourceRecordQuery.addressIPv4(srv.target))) {
-        var device = DeviceInfo(
-          hostname: srv.target,
-          internetAddress: ip.address,
-          port: srv.port,
-        );
-        print('Found $device');
-        if (completer.isCompleted == false) {
-          completer.complete(device);
-        }
-      }
-    }
-  }
-
-  client.stop();
-  print('Scan finished');
-
-  if (completer.isCompleted == false) {
-    completer.complete(null);
-  }
-}
-
-
-*/

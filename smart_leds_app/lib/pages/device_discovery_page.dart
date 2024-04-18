@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_leds_app/logic/device_discovery.dart';
 import 'package:smart_leds_app/models/device.dart';
 import 'package:smart_leds_app/pages/home_page.dart';
+import 'package:smart_leds_app/widgets/message_dialogs.dart';
 
 import '../logic/device_factory.dart';
 import '../models/discovered_device.dart';
@@ -24,9 +25,23 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
   }
 
   void startScan() async {
+    try {
+      await _startScan();
+    } on Exception catch (_) {
+      if (!mounted) return;
+      showMessageDialog(context, 'Pretraživanje uređaja',
+          'Greška prilikom pretraživanja uređaja!');
+    }
+  }
+
+  Future<void> _startScan() async {
     setState(() {
       isDiscovering = true;
       discoveredDevices.clear();
+
+      if (showVirtualDevice) {
+        discoveredDevices.add(DiscoveredDevice.virtual());
+      }
     });
 
     await deviceDiscovery.start().forEach((device) {
@@ -39,10 +54,6 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
     if (mounted == false) return;
 
     setState(() {
-      if (showVirtualDevice) {
-        discoveredDevices.add(DiscoveredDevice.virtual());
-      }
-
       isDiscovering = false;
     });
   }
