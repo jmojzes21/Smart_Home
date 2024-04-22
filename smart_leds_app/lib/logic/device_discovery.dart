@@ -55,7 +55,6 @@ class DeviceDiscovery {
             streamController.sink.add(DiscoveredDevice(
               name: deviceName,
               ipAddress: ip.address,
-              httpPort: srv.port,
             ));
           }
         }

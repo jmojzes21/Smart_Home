@@ -3,20 +3,20 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart' as crypto;
-import 'package:smart_leds_app/models/device/device_info.dart';
 import 'package:smart_leds_app/models/firmware.dart';
 import 'package:smart_leds_app/models/wifi_network.dart';
 
 abstract class Device {
-  String name;
+  String name = '';
+  String type = '';
+  String firmwareVersion = '';
+
   InternetAddress ipAddress;
+  String macAddress = '';
 
-  Device({
-    required this.name,
-    required this.ipAddress,
-  });
+  Device({required this.ipAddress});
 
-  Future<DeviceInfo> getDeviceInfo();
+  Future<void> getDeviceInfo() async {}
 
   Future<void> login(String password) async {}
 

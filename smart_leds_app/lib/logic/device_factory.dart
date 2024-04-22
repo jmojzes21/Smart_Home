@@ -1,21 +1,14 @@
 import '../models/device/device.dart';
 import '../models/device/discovered_device.dart';
 import '../models/device/real_device.dart';
-import '../models/device/virtual_device.dart';
+import '../models/device/fake_device.dart';
 
 class DeviceFactory {
   Device createDevice(DiscoveredDevice device) {
-    if (device.isVirtual) {
-      return VirtualDevice(
-        name: device.name,
-        ipAddress: device.ipAddress,
-      );
+    if (device.isReal) {
+      return RealDevice(ipAddress: device.ipAddress);
+    } else {
+      return VirtualDevice();
     }
-
-    return RealDevice(
-      name: device.name,
-      ipAddress: device.ipAddress,
-      httpPort: device.httpPort,
-    );
   }
 }

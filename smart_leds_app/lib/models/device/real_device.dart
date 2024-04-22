@@ -5,25 +5,25 @@ import 'package:smart_leds_app/models/exceptions.dart';
 import 'package:smart_leds_app/models/firmware.dart';
 
 import 'device.dart';
-import 'device_info.dart';
 
 class RealDevice extends Device {
-  int httpPort;
-
-  RealDevice({
-    required super.name,
-    required super.ipAddress,
-    required this.httpPort,
-  });
+  RealDevice({required super.ipAddress});
 
   @override
-  Future<DeviceInfo> getDeviceInfo() async {
+  Future<void> getDeviceInfo() async {
     var res = await http.get(Uri.http(ipAddress.address, '/device'));
 
     var json = jsonDecode(res.body);
-    var info = DeviceInfo.fromJson(json);
 
-    return info;
+    String name = json['name'];
+    String type = json['type'];
+    String firmwareVersion = json['version'];
+    String macAddress = json['mac'];
+
+    this.name = name;
+    this.type = type;
+    this.firmwareVersion = firmwareVersion;
+    this.macAddress = macAddress;
   }
 
   @override

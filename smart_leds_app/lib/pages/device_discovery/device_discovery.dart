@@ -3,6 +3,7 @@ import 'package:smart_leds_app/logic/device_discovery.dart';
 import 'package:smart_leds_app/logic/session_service.dart';
 import 'package:smart_leds_app/models/device/device.dart';
 import 'package:smart_leds_app/models/exceptions.dart';
+import 'package:smart_leds_app/models/session.dart';
 import 'package:smart_leds_app/widgets/dialogs/login.dart';
 import 'package:smart_leds_app/pages/home/home.dart';
 import 'package:smart_leds_app/widgets/dialogs/simple_dialogs.dart';
@@ -77,12 +78,11 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
 
     try {
       await device.login(passwordHash);
+      await device.getDeviceInfo();
 
       if (result.stayLoggedIn) {
         var sessionService = SessionService();
-        var info = await device.getDeviceInfo();
-
-        await sessionService.saveSession(info, passwordHash);
+        await sessionService.saveSession(device, passwordHash);
       }
     } on DeviceException catch (e) {
       if (!mounted) return;

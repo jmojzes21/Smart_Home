@@ -3,19 +3,16 @@ import 'dart:io';
 class DiscoveredDevice {
   final String name;
   final InternetAddress ipAddress;
-  final int httpPort;
 
-  final bool isVirtual;
+  final bool isReal;
 
   DiscoveredDevice({
     required this.name,
     required this.ipAddress,
-    required this.httpPort,
-  }) : isVirtual = false;
+  }) : isReal = true;
 
   DiscoveredDevice.virtual()
-      : name = 'Virtualni uređaj',
+      : name = 'Lažni uređaj',
         ipAddress = InternetAddress('0.0.0.0'),
-        httpPort = 80,
-        isVirtual = true;
+        isReal = false;
 }

@@ -1,8 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:smart_leds_app/models/device/device.dart';
-import 'package:smart_leds_app/models/device/device_info.dart';
 import 'package:smart_leds_app/models/exceptions.dart';
 import 'package:smart_leds_app/models/wifi_network.dart';
 import 'package:smart_leds_app/widgets/dialogs/change_password.dart';
@@ -19,21 +16,14 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  DeviceInfo? deviceInfo;
+  late Device device;
   List<WifiNetwork> wifiNetworks = [];
 
   @override
   void initState() {
     super.initState();
-    getDeviceInfo();
+    device = Device.currentDevice;
     getWifiNetworks();
-  }
-
-  void getDeviceInfo() async {
-    var info = await Device.currentDevice.getDeviceInfo();
-    setState(() {
-      deviceInfo = info;
-    });
   }
 
   void getWifiNetworks() async {
@@ -117,15 +107,6 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget buildBody(BuildContext context) {
-    if (deviceInfo == null) {
-      return Center(
-        child: SizedBox.square(
-          dimension: 100,
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-
     var titleStyle = MyTheme.titleMedium;
     var bodyStyle = MyTheme.bodyMedium;
     const spacing = 10.0;
@@ -139,21 +120,13 @@ class _SettingsPageState extends State<SettingsPage> {
           Text('Osnovne informacije', style: MyTheme.titleLarge),
           SizedBox(height: spacing),
           Text('Naziv', style: titleStyle),
-          Text(deviceInfo!.name, style: bodyStyle),
+          Text(device.name, style: bodyStyle),
           SizedBox(height: spacing),
           Text('Verzija', style: titleStyle),
-          Text(deviceInfo!.firmwareVersion, style: bodyStyle),
-          SizedBox(height: spacing),
-          Text('WiFi mreža', style: titleStyle),
-          Text(deviceInfo!.wifiSSID, style: bodyStyle),
+          Text(device.firmwareVersion, style: bodyStyle),
           SizedBox(height: spacing),
           Text('IP adresa', style: titleStyle),
-          Text(deviceInfo!.ipAddress, style: bodyStyle),
-          SizedBox(height: 2 * spacing),
-          ElevatedButton(
-            onPressed: () => getDeviceInfo(),
-            child: Text('Osvježi'),
-          ),
+          Text(device.ipAddress.address, style: bodyStyle),
           SizedBox(height: 2 * spacing),
 
           // WiFi mreže

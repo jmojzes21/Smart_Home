@@ -1,6 +1,6 @@
+import 'dart:io';
 import 'dart:math';
 
-import 'package:smart_leds_app/models/device/device_info.dart';
 import 'package:smart_leds_app/models/exceptions.dart';
 import 'package:smart_leds_app/models/firmware.dart';
 import 'package:smart_leds_app/models/wifi_network.dart';
@@ -14,24 +14,16 @@ class VirtualDevice extends Device {
     WifiNetwork('Treća Wifi mreža', 'lozinka'),
   ];
 
-  VirtualDevice({required super.name, required super.ipAddress});
+  VirtualDevice() : super(ipAddress: InternetAddress('0.0.0.0'));
 
   @override
-  Future<DeviceInfo> getDeviceInfo() {
-    return Future.delayed(
-      Duration(milliseconds: 500),
-      () {
-        return DeviceInfo(
-          name: 'Virtualni uređaj',
-          type: 'Smart LEDs L24',
-          firmwareVersion: '1.0.0',
-          ipAddress: '127.0.0.1',
-          macAddress: 'FF:FF:FF:FF:FF:FF',
-          wifiSSID: 'WiFi Network',
-          wifiRSSI: -20,
-        );
-      },
-    );
+  Future<void> getDeviceInfo() {
+    return Future.delayed(Duration(milliseconds: 500), () {
+      name = 'Lažni uređaj';
+      type = 'Smart LEDS L24';
+      firmwareVersion = 'v1.0.0';
+      macAddress = 'FF:FF:FF:FF:FF:FF';
+    });
   }
 
   @override
