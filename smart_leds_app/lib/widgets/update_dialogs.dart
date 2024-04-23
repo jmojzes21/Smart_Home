@@ -54,6 +54,7 @@ class _PrepareUpdateWidgetState extends State<PrepareUpdateWidget> {
     Navigator.of(context).pop();
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) => FirmwareUpdatingWidget(
         firmware: firmware!,
       ),
