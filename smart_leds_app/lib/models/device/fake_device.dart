@@ -1,18 +1,22 @@
 import 'dart:io';
-import 'dart:math';
+import 'dart:math' as math;
 
 import 'package:smart_leds_app/models/exceptions.dart';
 import 'package:smart_leds_app/models/firmware.dart';
+import 'package:smart_leds_app/models/power_sensor_data.dart';
 import 'package:smart_leds_app/models/wifi_network.dart';
 
 import 'device.dart';
 
 class VirtualDevice extends Device {
-  final _wifiNetworks = [
+  final wifiNetworks = [
     WifiNetwork('Prva Wifi mreža', 'lozinka'),
     WifiNetwork('Druga Wifi mreža', 'lozinka'),
     WifiNetwork('Treća Wifi mreža', 'lozinka'),
   ];
+
+  var isPowerSensorActive = false;
+  var random = math.Random();
 
   VirtualDevice() : super(ipAddress: InternetAddress('0.0.0.0'));
 
@@ -38,22 +42,42 @@ class VirtualDevice extends Device {
   @override
   Future<List<WifiNetwork>> getWifiNetworks() async {
     await Future.delayed(Duration(milliseconds: 2000));
-    return _wifiNetworks;
+    return wifiNetworks;
   }
 
   @override
   Future<void> updateWifiNetworks(List<WifiNetwork> networks) async {
-    _wifiNetworks.clear();
-    _wifiNetworks.addAll(networks);
+    wifiNetworks.clear();
+    wifiNetworks.addAll(networks);
+  }
+
+  @override
+  Future<void> setPowerSensorState(bool active) async {
+    isPowerSensorActive = active;
+  }
+
+  @override
+  Future<PowerSensorData> getPowerSensorData() async {
+    var data = PowerSensorData();
+    if (isPowerSensorActive) {
+      data.isActive = true;
+
+      data.current = random.nextInt(2000).toDouble();
+      data.minCurrent = 20;
+      data.maxCurrent = 2000;
+
+      data.voltage = 4 + random.nextInt(1000).toDouble() / 1000;
+      data.minVoltage = 4;
+      data.maxVoltage = 5;
+    }
+    return data;
   }
 
   @override
   Future<void> updateFirmware(Firmware firmware) async {
     await Future.delayed(Duration(milliseconds: 4000));
-
-    var random = Random();
     if (random.nextDouble() < 0.3) {
-      throw FirmwareUpdateException('Nepoznata greška.');
+      throw FirmwareUpdateException('Nepoznata greška!');
     }
   }
 }

@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:smart_leds_app/models/firmware.dart';
+import 'package:smart_leds_app/models/power_sensor_data.dart';
 import 'package:smart_leds_app/models/wifi_network.dart';
 
 abstract class Device {
@@ -22,6 +23,9 @@ abstract class Device {
 
   Future<List<WifiNetwork>> getWifiNetworks() async => [];
   Future<void> updateWifiNetworks(List<WifiNetwork> networks) async {}
+
+  Future<void> setPowerSensorState(bool active) async {}
+  Future<PowerSensorData> getPowerSensorData() => throw UnimplementedError();
 
   Future<void> restart() async {}
   Future<void> changePassword(String oldPassword, String newPassword) async {}
