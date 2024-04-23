@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_leds_app/logic/device_service.dart';
 import 'package:smart_leds_app/pages/device_discovery/device_discovery.dart';
 import 'package:smart_leds_app/pages/device_info/device_info.dart';
 import 'package:smart_leds_app/pages/home/home.dart';
@@ -49,7 +50,11 @@ class AppNavigationDrawer extends StatelessWidget {
     );
   }
 
-  void closeDevice(BuildContext context) {
+  void closeDevice(BuildContext context) async {
+    var deviceService = DeviceService();
+    await deviceService.deleteSession();
+
+    if (!context.mounted) return;
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) {

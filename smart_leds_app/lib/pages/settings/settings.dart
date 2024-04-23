@@ -132,17 +132,15 @@ class _SettingsPageState extends State<SettingsPage> {
           // WiFi mreže
           Text('WiFi mreže', style: MyTheme.titleLarge),
           SizedBox(height: spacing),
-          SizedBox(
-            height: 200,
-            child: ListView.builder(
-              itemCount: wifiNetworks.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(wifiNetworks[index].ssid),
-                  onTap: () => openWifiNetwork(wifiNetworks[index]),
-                );
-              },
-            ),
+          ListView.builder(
+            itemCount: wifiNetworks.length,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(wifiNetworks[index].ssid),
+                onTap: () => openWifiNetwork(wifiNetworks[index]),
+              );
+            },
           ),
           SizedBox(height: spacing),
           TextButton(

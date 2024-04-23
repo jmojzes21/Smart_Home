@@ -42,4 +42,9 @@ class DeviceService {
       return null;
     }
   }
+
+  Future<void> deleteSession() async {
+    var sessionService = SessionService();
+    await sessionService.deleteSession();
+  }
 }

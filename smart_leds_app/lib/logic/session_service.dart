@@ -12,7 +12,8 @@ class SessionService {
       var docsDir = await pp.getApplicationDocumentsDirectory();
       var sessionFile = File('${docsDir.path}/Smart LEDs/session.txt');
 
-      if (await sessionFile.exists() == false) {
+      var sessionFileExists = await sessionFile.exists();
+      if (sessionFileExists == false) {
         return null;
       }
 
@@ -39,11 +40,24 @@ class SessionService {
     var docsDir = await pp.getApplicationDocumentsDirectory();
     var appDir = Directory('${docsDir.path}/Smart LEDs');
 
-    if (await appDir.exists() == false) {
+    var appDirExists = await appDir.exists();
+    if (appDirExists == false) {
       await appDir.create();
     }
 
     var sessionFile = File('${appDir.path}/session.txt');
     await sessionFile.writeAsString(json);
+  }
+
+  Future<void> deleteSession() async {
+    try {
+      var docsDir = await pp.getApplicationDocumentsDirectory();
+      var sessionFile = File('${docsDir.path}/Smart LEDs/session.txt');
+
+      var sessionFileExists = await sessionFile.exists();
+      if (sessionFileExists) {
+        await sessionFile.delete();
+      }
+    } on Exception catch (_) {}
   }
 }
