@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/models/wifi_network.dart';
 import 'package:smart_leds_app/widgets/dialogs/simple_dialogs.dart';

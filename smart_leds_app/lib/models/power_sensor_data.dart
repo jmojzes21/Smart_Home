@@ -17,5 +17,5 @@ class PowerSensorData {
 
   String get voltageString => '${voltage.toStringAsFixed(2)} V';
   String get minVoltageString => 'Min: ${minVoltage.toStringAsFixed(2)} V';
-  String get maxVoltageString => 'Max: ${minVoltage.toStringAsFixed(2)} V';
+  String get maxVoltageString => 'Max: ${maxVoltage.toStringAsFixed(2)} V';
 }
