@@ -3,6 +3,7 @@ import 'package:smart_leds_app/logic/device_service.dart';
 import 'package:smart_leds_app/pages/device_discovery/device_discovery.dart';
 import 'package:smart_leds_app/pages/device_info/device_info.dart';
 import 'package:smart_leds_app/pages/home/home.dart';
+import 'package:smart_leds_app/pages/power_sensor/power_sensor.dart';
 import 'package:smart_leds_app/pages/settings/settings.dart';
 
 import '../models/device/device.dart';
@@ -20,11 +21,11 @@ class AppNavigationDrawer extends StatelessWidget {
     );
   }
 
-  void openEnergyPage(BuildContext context) {
+  void openPowerSensorPage(BuildContext context) {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) {
-          return HomePage();
+          return PowerSensorPage();
         },
       ),
     );
@@ -82,7 +83,7 @@ class AppNavigationDrawer extends StatelessWidget {
             ListTile(
               title: Text('Potrošnja energije'),
               leading: Icon(Icons.battery_charging_full),
-              onTap: () => openEnergyPage(context),
+              onTap: () => openPowerSensorPage(context),
             ),
             ListTile(
               title: Text('Postavke'),
