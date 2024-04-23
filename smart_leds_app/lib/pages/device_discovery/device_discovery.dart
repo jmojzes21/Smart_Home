@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/logic/device_discovery.dart';
-import 'package:smart_leds_app/logic/session_service.dart';
+import 'package:smart_leds_app/logic/device_service.dart';
 import 'package:smart_leds_app/models/device/device.dart';
 import 'package:smart_leds_app/models/exceptions.dart';
-import 'package:smart_leds_app/models/session.dart';
 import 'package:smart_leds_app/widgets/dialogs/login.dart';
 import 'package:smart_leds_app/pages/home/home.dart';
 import 'package:smart_leds_app/widgets/dialogs/simple_dialogs.dart';
@@ -27,6 +26,7 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
   @override
   void initState() {
     super.initState();
+    loadSession();
   }
 
   void startScan() async {
@@ -67,31 +67,46 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
     deviceDiscovery.stop();
   }
 
-  void openDevice(DiscoveredDevice discoveredDevice) async {
-    var deviceFactory = DeviceFactory();
-    var device = deviceFactory.createDevice(discoveredDevice);
-
+  Future<void> connectDevice(DiscoveredDevice discoveredDevice) async {
     var result = await LoginDialog.show(context);
     if (result == null) return;
 
-    var passwordHash = device.hashPassword(result.password);
+    var deviceFactory = DeviceFactory();
+    var device = deviceFactory.fromDiscovery(discoveredDevice);
+
+    var deviceService = DeviceService();
 
     try {
-      await device.login(passwordHash);
-      await device.getDeviceInfo();
-
-      if (result.stayLoggedIn) {
-        var sessionService = SessionService();
-        await sessionService.saveSession(device, passwordHash);
-      }
+      await deviceService.login(
+        device: device,
+        plainPassword: result.password,
+        stayLoggedIn: result.stayLoggedIn,
+      );
     } on DeviceException catch (e) {
       if (!mounted) return;
       SimpleDialogs.showMessage(
-          context: context, title: 'Prijava nije uspjela', message: e.message);
+        context: context,
+        title: 'Prijava nije uspjela',
+        message: e.message,
+      );
       return;
     }
 
     if (!mounted) return;
+    openHomePage(device);
+  }
+
+  Future<void> loadSession() async {
+    var deviceService = DeviceService();
+    Device? device = await deviceService.restoreSession();
+
+    if (device != null) {
+      if (!mounted) return;
+      openHomePage(device);
+    }
+  }
+
+  void openHomePage(Device device) {
     Device.currentDevice = device;
 
     Navigator.of(context).pushReplacement(
@@ -132,7 +147,7 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
                         title: Text(device.name),
                         subtitle: Text(device.ipAddress.address),
                         leading: const Icon(Icons.devices),
-                        onTap: () => openDevice(device),
+                        onTap: () => connectDevice(device),
                       );
                     },
                   ),
