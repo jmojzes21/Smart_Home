@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:smart_leds_app/models/firmware.dart';
+import 'package:smart_leds_app/models/patterns/color_pattern.dart';
 import 'package:smart_leds_app/models/power_sensor_data.dart';
 import 'package:smart_leds_app/models/wifi_network.dart';
 
@@ -20,6 +21,9 @@ abstract class Device {
   Future<void> getDeviceInfo() async {}
 
   Future<void> login(String password) async {}
+
+  Future<void> showPattern(ColorPattern pattern) async {}
+  Future<void> clearPattern() async {}
 
   Future<List<WifiNetwork>> getWifiNetworks() async => [];
   Future<void> updateWifiNetworks(List<WifiNetwork> networks) async {}

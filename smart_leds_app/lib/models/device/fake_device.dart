@@ -1,8 +1,10 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:smart_leds_app/models/exceptions.dart';
 import 'package:smart_leds_app/models/firmware.dart';
+import 'package:smart_leds_app/models/patterns/color_pattern.dart';
 import 'package:smart_leds_app/models/power_sensor_data.dart';
 import 'package:smart_leds_app/models/wifi_network.dart';
 
@@ -37,6 +39,16 @@ class VirtualDevice extends Device {
         throw DeviceException('Pogrešna lozinka!');
       }
     });
+  }
+
+  @override
+  Future<void> showPattern(ColorPattern pattern) async {
+    log('Prikaži svjetlosni uzorak ${pattern.toJson()}');
+  }
+
+  @override
+  Future<void> clearPattern() async {
+    log('Očisti svjetlosni uzorak');
   }
 
   @override
