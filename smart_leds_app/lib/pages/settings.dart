@@ -126,7 +126,7 @@ class _SettingsPageState extends State<SettingsPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Osnovne informacije
-          Text('Osnovne informacije', style: MyTheme.titleLarge),
+          Text('Osnovne informacije', style: MyTheme.titleLargeBold),
           SizedBox(height: spacing),
           Text('Naziv', style: titleStyle),
           Text(device.name, style: bodyStyle),
@@ -139,7 +139,7 @@ class _SettingsPageState extends State<SettingsPage> {
           SizedBox(height: 2 * spacing),
 
           // WiFi mreže
-          Text('WiFi mreže', style: MyTheme.titleLarge),
+          Text('WiFi mreže', style: MyTheme.titleLargeBold),
           SizedBox(height: spacing),
           ListView.builder(
             itemCount: wifiNetworks.length,
@@ -159,7 +159,7 @@ class _SettingsPageState extends State<SettingsPage> {
           SizedBox(height: 2 * spacing),
 
           // OTA update, promjena lozinke
-          Text('Ostalo', style: MyTheme.titleLarge),
+          Text('Ostalo', style: MyTheme.titleLargeBold),
           SizedBox(height: 2 * spacing),
           ElevatedButton(
             onPressed: () => restartDevice(),

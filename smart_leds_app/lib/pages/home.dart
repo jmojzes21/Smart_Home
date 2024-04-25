@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/logic/providers/pattern_provider.dart';
 import 'package:smart_leds_app/theme.dart';
+import 'package:smart_leds_app/widgets/dialogs/brightness.dart';
 import 'package:smart_leds_app/widgets/navigation_drawer.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,6 +23,11 @@ class _HomePageState extends State<HomePage> {
         title: Text('Početna'),
       ),
       drawer: AppNavigationDrawer(),
+      floatingActionButton: IconButton.filled(
+        padding: EdgeInsets.all(20),
+        onPressed: () => BrightnessDialog.show(context),
+        icon: Icon(Icons.light_mode, size: 26),
+      ),
       body: buildBody(),
     );
   }
