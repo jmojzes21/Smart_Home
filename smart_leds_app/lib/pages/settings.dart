@@ -7,7 +7,7 @@ import 'package:smart_leds_app/theme.dart';
 import 'package:smart_leds_app/widgets/dialogs/wifi_network.dart';
 import 'package:smart_leds_app/widgets/message_dialogs.dart';
 import 'package:smart_leds_app/widgets/navigation_drawer.dart';
-import 'package:smart_leds_app/widgets/update_dialogs.dart';
+import 'package:smart_leds_app/widgets/dialogs/update_dialogs.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
