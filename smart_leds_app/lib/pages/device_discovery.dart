@@ -6,7 +6,6 @@ import 'package:smart_leds_app/models/exceptions.dart';
 import 'package:smart_leds_app/widgets/dialogs/login.dart';
 import 'package:smart_leds_app/pages/home.dart';
 import 'package:smart_leds_app/widgets/dialogs/simple_dialogs.dart';
-import 'package:smart_leds_app/widgets/message_dialogs.dart';
 
 import '../logic/device_factory.dart';
 import '../models/device/discovered_device.dart';
@@ -34,8 +33,12 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
       await _startScan();
     } on Exception catch (_) {
       if (!mounted) return;
-      showMessageDialog(context, 'Pretraživanje uređaja',
-          'Greška prilikom pretraživanja uređaja!');
+
+      SimpleDialogs.showMessage(
+        context: context,
+        title: 'Pretraživanje uređaja',
+        message: 'Greška prilikom pretraživanja uređaja!',
+      );
     }
   }
 

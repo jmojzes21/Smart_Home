@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:smart_leds_app/models/exceptions.dart';
-import 'package:smart_leds_app/widgets/message_dialogs.dart';
-
 class ChangePasswordDialog extends StatefulWidget {
   const ChangePasswordDialog({super.key});
 
@@ -25,24 +22,17 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
   var tcNewPassword = TextEditingController();
   var tcConfirmPassword = TextEditingController();
 
-  void changePassword() async {
-    try {
-      var oldPassword = tcOldPassword.text.trim();
-      var newPassword = tcNewPassword.text.trim();
-      var confirmPassword = tcConfirmPassword.text.trim();
+  void changePassword() {
+    var oldPassword = tcOldPassword.text.trim();
+    var newPassword = tcNewPassword.text.trim();
+    var confirmPassword = tcConfirmPassword.text.trim();
 
-      if (oldPassword.isEmpty ||
-          newPassword.isEmpty ||
-          confirmPassword.isEmpty) {
-        return;
-      }
-      if (newPassword != confirmPassword) return;
-
-      Navigator.of(context).pop((oldPassword, newPassword));
-    } on DeviceException catch (e) {
-      if (!mounted) return;
-      showMessageDialog(context, 'Prijava', e.message);
+    if (oldPassword.isEmpty || newPassword.isEmpty || confirmPassword.isEmpty) {
+      return;
     }
+    if (newPassword != confirmPassword) return;
+
+    Navigator.of(context).pop((oldPassword, newPassword));
   }
 
   @override

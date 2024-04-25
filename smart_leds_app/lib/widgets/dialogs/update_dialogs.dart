@@ -4,7 +4,7 @@ import 'package:smart_leds_app/helpers/firmware_loader.dart';
 import 'package:smart_leds_app/models/device/device.dart';
 import 'package:smart_leds_app/models/exceptions.dart';
 import 'package:smart_leds_app/models/firmware.dart';
-import 'package:smart_leds_app/widgets/message_dialogs.dart';
+import 'package:smart_leds_app/widgets/dialogs/simple_dialogs.dart';
 
 const _dialogSize = Size(600, 200);
 
@@ -46,7 +46,12 @@ class _PrepareUpdateWidgetState extends State<PrepareUpdateWidget> {
         firmwareFile = '';
         firmware = null;
       });
-      showMessageDialog(context, 'Greška', e.message);
+
+      SimpleDialogs.showMessage(
+        context: context,
+        title: 'Greška',
+        message: e.message,
+      );
     }
   }
 
@@ -144,12 +149,20 @@ class _FirmwareUpdatingWidgetState extends State<FirmwareUpdatingWidget> {
 
       if (!mounted) return;
       Navigator.of(context).pop();
-      showMessageDialog(context, 'Ažuriranje programa',
-          'Program na uređaju je uspješno ažuriran.');
+
+      SimpleDialogs.showMessage(
+        context: context,
+        title: 'Ažuriranje programa',
+        message: 'Program na uređaju je uspješno ažuriran.',
+      );
     } on FirmwareUpdateException catch (e) {
       if (!mounted) return;
       Navigator.of(context).pop();
-      showMessageDialog(context, 'Ažuriranje programa nije uspjelo', e.message);
+
+      SimpleDialogs.showMessage(
+          context: context,
+          title: 'Ažuriranje programa nije uspjelo',
+          message: e.message);
     }
   }
 

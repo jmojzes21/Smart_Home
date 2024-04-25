@@ -4,8 +4,8 @@ import 'package:smart_leds_app/models/exceptions.dart';
 import 'package:smart_leds_app/models/wifi_network.dart';
 import 'package:smart_leds_app/widgets/dialogs/change_password.dart';
 import 'package:smart_leds_app/theme.dart';
+import 'package:smart_leds_app/widgets/dialogs/simple_dialogs.dart';
 import 'package:smart_leds_app/widgets/dialogs/wifi_network.dart';
-import 'package:smart_leds_app/widgets/message_dialogs.dart';
 import 'package:smart_leds_app/widgets/navigation_drawer.dart';
 import 'package:smart_leds_app/widgets/dialogs/update_dialogs.dart';
 
@@ -34,8 +34,12 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void restartDevice() async {
-    var result = await showConfirmDialog(context, 'Ponovno pokretanje uređaja',
-        'Jeste li sigurni da želite ponovno pokrenuti uređaj?');
+    var result = await SimpleDialogs.showConfirm(
+      context: context,
+      title: 'Ponovno pokretanje uređaja',
+      message: 'Jeste li sigurni da želite ponovno pokrenuti uređaj?',
+    );
+
     if (result == false) return;
 
     Device.currentDevice.restart();
@@ -49,7 +53,12 @@ class _SettingsPageState extends State<SettingsPage> {
       await Device.currentDevice.changePassword(result.$1, result.$2);
     } on DeviceException catch (e) {
       if (!mounted) return;
-      showMessageDialog(context, 'Promjena lozinke', e.message);
+
+      SimpleDialogs.showMessage(
+        context: context,
+        title: 'Promjena lozinke',
+        message: e.message,
+      );
     }
   }
 
