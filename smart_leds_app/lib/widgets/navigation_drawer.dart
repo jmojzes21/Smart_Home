@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/logic/device_service.dart';
-import 'package:smart_leds_app/pages/device_discovery/device_discovery.dart';
-import 'package:smart_leds_app/pages/device_info/device_info.dart';
-import 'package:smart_leds_app/pages/home/home.dart';
-import 'package:smart_leds_app/pages/power_sensor/power_sensor.dart';
-import 'package:smart_leds_app/pages/settings/settings.dart';
+import 'package:smart_leds_app/pages/device_discovery.dart';
+import 'package:smart_leds_app/pages/device_info.dart';
+import 'package:smart_leds_app/pages/home.dart';
+import 'package:smart_leds_app/pages/power_sensor.dart';
+import 'package:smart_leds_app/pages/settings.dart';
 
 import '../models/device/device.dart';
 

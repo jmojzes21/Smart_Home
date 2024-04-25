@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds_app/pages/device_discovery/device_discovery.dart';
+import 'package:smart_leds_app/pages/device_discovery.dart';
 
 void main() {
   runApp(const MainApp());

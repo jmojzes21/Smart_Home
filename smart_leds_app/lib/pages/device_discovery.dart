@@ -4,12 +4,12 @@ import 'package:smart_leds_app/logic/device_service.dart';
 import 'package:smart_leds_app/models/device/device.dart';
 import 'package:smart_leds_app/models/exceptions.dart';
 import 'package:smart_leds_app/widgets/dialogs/login.dart';
-import 'package:smart_leds_app/pages/home/home.dart';
+import 'package:smart_leds_app/pages/home.dart';
 import 'package:smart_leds_app/widgets/dialogs/simple_dialogs.dart';
 import 'package:smart_leds_app/widgets/message_dialogs.dart';
 
-import '../../logic/device_factory.dart';
-import '../../models/device/discovered_device.dart';
+import '../logic/device_factory.dart';
+import '../models/device/discovered_device.dart';
 
 class DeviceDiscoveryPage extends StatefulWidget {
   const DeviceDiscoveryPage({super.key});
