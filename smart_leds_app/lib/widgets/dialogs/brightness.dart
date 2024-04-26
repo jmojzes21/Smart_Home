@@ -24,7 +24,7 @@ class BrightnessDialog extends StatelessWidget {
 }
 
 class _BrightnessControl extends StatefulWidget {
-  const _BrightnessControl({super.key});
+  const _BrightnessControl();
   @override
   State<_BrightnessControl> createState() => _BrightnessControlState();
 }
@@ -44,13 +44,16 @@ class _BrightnessControlState extends State<_BrightnessControl> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text('Jačina svjetla', style: MyTheme.titleLarge),
-        Text('${brightness.round()} %', style: TextStyle(fontSize: 20)),
         SizedBox(height: 10),
         Slider(
           value: brightness,
           min: 0,
           max: 100,
           onChanged: (value) => setState(() => brightness = value),
+        ),
+        Center(
+          child:
+              Text('${brightness.round()} %', style: TextStyle(fontSize: 20)),
         ),
       ],
     );

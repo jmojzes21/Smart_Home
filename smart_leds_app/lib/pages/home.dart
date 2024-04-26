@@ -98,7 +98,6 @@ class _PatternCard extends StatelessWidget {
   final void Function() onSecondaryTap;
 
   const _PatternCard({
-    super.key,
     required this.name,
     required this.icon,
     required this.onPrimaryTap,
