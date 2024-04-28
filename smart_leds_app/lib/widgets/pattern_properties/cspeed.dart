@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/theme.dart';
 
-class RainbowCSpeedProperty extends StatelessWidget {
+class CSpeedPropertyWidget extends StatelessWidget {
   final int cspeed;
   final void Function(int value) onChange;
 
-  const RainbowCSpeedProperty({
+  const CSpeedPropertyWidget({
     super.key,
     required this.cspeed,
     required this.onChange,

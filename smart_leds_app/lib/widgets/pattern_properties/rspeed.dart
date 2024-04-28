@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/theme.dart';
 
-class WaveDirProperty extends StatelessWidget {
-  final int dir;
+class RSpeedPropertyWidget extends StatelessWidget {
+  final int rspeed;
   final void Function(int value) onChange;
 
-  const WaveDirProperty({
+  const RSpeedPropertyWidget({
     super.key,
-    required this.dir,
+    required this.rspeed,
     required this.onChange,
   });
 
@@ -17,20 +17,24 @@ class WaveDirProperty extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Smjer', style: MyTheme.patternPropertyTitle),
+        Text('Brzina okretanja', style: MyTheme.patternPropertyTitle),
         const SizedBox(height: 10),
         SegmentedButton<int>(
           segments: [
             ButtonSegment(
-              value: -1,
-              label: Text('Lijevo'),
+              value: 30,
+              label: Text('Sporo'),
             ),
             ButtonSegment(
-              value: 1,
-              label: Text('Desno'),
+              value: 20,
+              label: Text('Umjereno'),
+            ),
+            ButtonSegment(
+              value: 10,
+              label: Text('Brzo'),
             ),
           ],
-          selected: {dir},
+          selected: {rspeed},
           onSelectionChanged: (e) => onChange(e.first),
         ),
       ],

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/theme.dart';
 
-class WaveSizeProperty extends StatelessWidget {
+class SizePropertyWidget extends StatelessWidget {
   final int size;
   final void Function(int value) onChange;
 
-  const WaveSizeProperty({
+  const SizePropertyWidget({
     super.key,
     required this.size,
     required this.onChange,

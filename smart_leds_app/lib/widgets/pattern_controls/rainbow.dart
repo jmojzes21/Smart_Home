@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/logic/providers/pattern_provider.dart';
-import 'package:smart_leds_app/models/patterns/rainbow.dart';
-import 'package:smart_leds_app/widgets/pattern_properties/wave_dir.dart';
-import 'package:smart_leds_app/widgets/pattern_properties/wave_rspeed.dart';
+import 'package:smart_leds_app/widgets/pattern_properties/dir.dart';
+import 'package:smart_leds_app/widgets/pattern_properties/rspeed.dart';
 
 class RainbowPatternControl extends StatefulWidget {
   const RainbowPatternControl({super.key});
@@ -11,48 +10,35 @@ class RainbowPatternControl extends StatefulWidget {
 }
 
 class _RainbowPatternControlState extends State<RainbowPatternControl> {
-  late RainbowPattern pattern;
-
-  @override
-  void initState() {
-    super.initState();
-    var patternProvider = PatternProvider.of(context);
-    pattern = patternProvider.rainbowPattern;
-  }
-
   @override
   Widget build(BuildContext context) {
     var patternProvider = PatternProvider.of(context);
+    var properties = patternProvider.properties;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        WaveDirProperty(
-          dir: pattern.dir,
+        DirPropertyWidget(
+          dir: properties.dir,
           onChange: (value) {
             setState(() {
-              pattern.dir = value;
-              patternProvider.showPattern(pattern);
+              properties.dir = value;
+              patternProvider.updatePattern();
             });
           },
         ),
         const SizedBox(height: 20),
-        WaveRSpeedProperty(
-          rspeed: pattern.rspeed,
+        RSpeedPropertyWidget(
+          rspeed: properties.rSpeed,
           onChange: (value) {
             setState(() {
-              pattern.rspeed = value;
-              patternProvider.showPattern(pattern);
+              properties.rSpeed = value;
+              patternProvider.updatePattern();
             });
           },
         ),
       ],
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }

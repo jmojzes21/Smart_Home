@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/logic/providers/pattern_provider.dart';
-import 'package:smart_leds_app/models/patterns/wave.dart';
 import 'package:smart_leds_app/widgets/pattern_properties/color.dart';
-import 'package:smart_leds_app/widgets/pattern_properties/wave_dir.dart';
-import 'package:smart_leds_app/widgets/pattern_properties/wave_rspeed.dart';
-import 'package:smart_leds_app/widgets/pattern_properties/wave_size.dart';
+import 'package:smart_leds_app/widgets/pattern_properties/dir.dart';
+import 'package:smart_leds_app/widgets/pattern_properties/rspeed.dart';
+import 'package:smart_leds_app/widgets/pattern_properties/size.dart';
 
 class WavePatternControl extends StatefulWidget {
   const WavePatternControl({super.key});
@@ -13,65 +12,52 @@ class WavePatternControl extends StatefulWidget {
 }
 
 class _WavePatternControlState extends State<WavePatternControl> {
-  late WavePattern pattern;
-
-  @override
-  void initState() {
-    super.initState();
-    var patternProvider = PatternProvider.of(context);
-    pattern = patternProvider.wavePattern;
-  }
-
   @override
   Widget build(BuildContext context) {
     var patternProvider = PatternProvider.of(context);
+    var properties = patternProvider.properties;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        PatternColorProperty(
+        ColorPropertyWidget(
           onColor: (color) {
-            pattern.color = color;
-            patternProvider.showPattern(pattern);
+            properties.color = color;
+            patternProvider.updatePattern();
           },
         ),
         const SizedBox(height: 20),
-        WaveDirProperty(
-          dir: pattern.dir,
+        DirPropertyWidget(
+          dir: properties.dir,
           onChange: (value) {
             setState(() {
-              pattern.dir = value;
-              patternProvider.showPattern(pattern);
+              properties.dir = value;
+              patternProvider.updatePattern();
             });
           },
         ),
         const SizedBox(height: 20),
-        WaveRSpeedProperty(
-          rspeed: pattern.rspeed,
+        RSpeedPropertyWidget(
+          rspeed: properties.rSpeed,
           onChange: (value) {
             setState(() {
-              pattern.rspeed = value;
-              patternProvider.showPattern(pattern);
+              properties.rSpeed = value;
+              patternProvider.updatePattern();
             });
           },
         ),
         const SizedBox(height: 20),
-        WaveSizeProperty(
-          size: pattern.size,
+        SizePropertyWidget(
+          size: properties.size,
           onChange: (value) {
             setState(() {
-              pattern.size = value;
-              patternProvider.showPattern(pattern);
+              properties.size = value;
+              patternProvider.updatePattern();
             });
           },
         ),
       ],
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }

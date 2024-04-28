@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/theme.dart';
 
-class PatternColorProperty extends StatelessWidget {
+class ColorPropertyWidget extends StatelessWidget {
   final List<Color> colors = Colors.primaries;
-
   final void Function(Color color) onColor;
 
-  const PatternColorProperty({super.key, required this.onColor});
+  const ColorPropertyWidget({super.key, required this.onColor});
 
   @override
   Widget build(BuildContext context) {
