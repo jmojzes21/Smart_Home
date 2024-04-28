@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds_app/models/misc/login_dialog_result.dart';
-import 'package:smart_leds_app/widgets/checkbox.dart';
+import 'package:smart_leds_app/widgets/misc/checkbox.dart';
 import 'package:smart_leds_app/widgets/dialogs/simple_dialogs.dart';
+
+class LoginDialogResult {
+  String password = '';
+  bool stayLoggedIn = false;
+
+  LoginDialogResult(this.password, this.stayLoggedIn);
+}
 
 class LoginDialog extends StatefulWidget {
   const LoginDialog({super.key});

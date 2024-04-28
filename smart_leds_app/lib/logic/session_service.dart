@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:smart_leds_app/models/device/device.dart';
-import 'package:smart_leds_app/models/session.dart';
+import 'package:smart_leds_app/models/misc/session.dart';
 
 import 'package:path_provider/path_provider.dart' as pp;
 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_leds_app/helpers/firmware_loader.dart';
 import 'package:smart_leds_app/models/device/device.dart';
 import 'package:smart_leds_app/models/exceptions.dart';
-import 'package:smart_leds_app/models/firmware.dart';
+import 'package:smart_leds_app/models/misc/firmware.dart';
 import 'package:smart_leds_app/widgets/dialogs/simple_dialogs.dart';
 
 const _dialogSize = Size(600, 200);

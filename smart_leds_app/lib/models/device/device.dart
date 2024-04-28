@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart' as crypto;
-import 'package:smart_leds_app/models/firmware.dart';
+import 'package:smart_leds_app/models/misc/firmware.dart';
 import 'package:smart_leds_app/models/patterns/color_pattern.dart';
-import 'package:smart_leds_app/models/power_sensor_data.dart';
-import 'package:smart_leds_app/models/wifi_network.dart';
+import 'package:smart_leds_app/models/misc/power_sensor_data.dart';
+import 'package:smart_leds_app/models/misc/wifi_network.dart';
 
 abstract class Device {
   String name = '';

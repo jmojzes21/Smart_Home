@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/models/device/device.dart';
 import 'package:smart_leds_app/models/exceptions.dart';
-import 'package:smart_leds_app/models/wifi_network.dart';
+import 'package:smart_leds_app/models/misc/wifi_network.dart';
 import 'package:smart_leds_app/widgets/dialogs/change_password.dart';
 import 'package:smart_leds_app/theme.dart';
 import 'package:smart_leds_app/widgets/dialogs/simple_dialogs.dart';
 import 'package:smart_leds_app/widgets/dialogs/wifi_network.dart';
-import 'package:smart_leds_app/widgets/navigation_drawer.dart';
+import 'package:smart_leds_app/widgets/misc/navigation_drawer.dart';
 import 'package:smart_leds_app/widgets/dialogs/update_dialogs.dart';
 
 class SettingsPage extends StatefulWidget {

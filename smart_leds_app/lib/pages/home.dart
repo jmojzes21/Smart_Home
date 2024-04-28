@@ -3,7 +3,7 @@ import 'package:smart_leds_app/logic/providers/pattern_provider.dart';
 import 'package:smart_leds_app/theme.dart';
 import 'package:smart_leds_app/widgets/dialogs/brightness.dart';
 import 'package:smart_leds_app/widgets/dialogs/pattern_control.dart';
-import 'package:smart_leds_app/widgets/navigation_drawer.dart';
+import 'package:smart_leds_app/widgets/misc/navigation_drawer.dart';
 import 'package:smart_leds_app/widgets/pattern_controls/rainbow.dart';
 import 'package:smart_leds_app/widgets/pattern_controls/rainbow_single.dart';
 import 'package:smart_leds_app/widgets/pattern_controls/rainbow_wave.dart';
@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
 }
 
 class _Patterns extends StatefulWidget {
-  const _Patterns({super.key});
+  const _Patterns();
   @override
   State<_Patterns> createState() => __PatternsState();
 }

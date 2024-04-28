@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/models/device/device.dart';
-import 'package:smart_leds_app/models/power_sensor_data.dart';
+import 'package:smart_leds_app/models/misc/power_sensor_data.dart';
 import 'package:smart_leds_app/theme.dart';
-import 'package:smart_leds_app/widgets/navigation_drawer.dart';
+import 'package:smart_leds_app/widgets/misc/navigation_drawer.dart';
 
 class PowerSensorPage extends StatefulWidget {
   const PowerSensorPage({super.key});

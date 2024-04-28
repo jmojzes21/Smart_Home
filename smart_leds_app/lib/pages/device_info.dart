@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/models/device/device.dart';
-import 'package:smart_leds_app/widgets/navigation_drawer.dart';
+import 'package:smart_leds_app/widgets/misc/navigation_drawer.dart';
 
 class DeviceInfoPage extends StatefulWidget {
   const DeviceInfoPage({super.key});

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:smart_leds_app/models/exceptions.dart';
-import 'package:smart_leds_app/models/firmware.dart';
+import 'package:smart_leds_app/models/misc/firmware.dart';
 
 class FirmwareLoader {
   Future<Firmware> loadFirmware(String path) async {

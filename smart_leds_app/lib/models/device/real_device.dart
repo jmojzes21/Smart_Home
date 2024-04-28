@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:smart_leds_app/models/exceptions.dart';
-import 'package:smart_leds_app/models/firmware.dart';
+import 'package:smart_leds_app/models/misc/firmware.dart';
 
 import 'device.dart';
 
