@@ -1,21 +1,15 @@
-import 'package:flutter/material.dart';
-
 import 'color_pattern.dart';
+import 'pattern_property.dart';
 
 class WavePattern extends ColorPattern {
-  Color color = Colors.purple;
-  int dir = 1;
-  int rspeed = 10;
-  int size = 1;
-
   @override
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson(PatternProperties properties) {
     return {
       'name': 'wave',
-      'color': color.rgb,
-      'dir': dir,
-      'rspeed': rspeed,
-      'size': size,
+      'color': properties.color.rgb,
+      'dir': properties.dir,
+      'rspeed': properties.rSpeed,
+      'size': properties.size,
     };
   }
 }

@@ -1,7 +1,9 @@
 import 'dart:ui';
 
+import 'pattern_property.dart';
+
 abstract class ColorPattern {
-  Map<String, dynamic> toJson();
+  Map<String, dynamic> toJson(PatternProperties properties);
 }
 
 extension ColorExtension on Color {

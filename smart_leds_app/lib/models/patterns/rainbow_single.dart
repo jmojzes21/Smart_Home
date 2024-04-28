@@ -1,13 +1,12 @@
 import 'color_pattern.dart';
+import 'pattern_property.dart';
 
 class RainbowSinglePattern extends ColorPattern {
-  int cspeed = 10;
-
   @override
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson(PatternProperties properties) {
     return {
       'name': 'rainbow_single',
-      'cspeed': cspeed,
+      'cspeed': properties.cSpeed,
     };
   }
 }

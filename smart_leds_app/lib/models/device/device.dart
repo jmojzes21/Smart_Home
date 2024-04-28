@@ -7,6 +7,7 @@ import 'package:smart_leds_app/models/misc/firmware.dart';
 import 'package:smart_leds_app/models/patterns/color_pattern.dart';
 import 'package:smart_leds_app/models/misc/power_sensor_data.dart';
 import 'package:smart_leds_app/models/misc/wifi_network.dart';
+import 'package:smart_leds_app/models/patterns/pattern_property.dart';
 
 abstract class Device {
   String name = '';
@@ -22,7 +23,8 @@ abstract class Device {
 
   Future<void> login(String password) async {}
 
-  Future<void> showPattern(ColorPattern pattern) async {}
+  Future<void> showPattern(
+      ColorPattern pattern, PatternProperties properties) async {}
   Future<void> clearPattern() async {}
 
   Future<List<WifiNetwork>> getWifiNetworks() async => [];

@@ -1,15 +1,13 @@
 import 'color_pattern.dart';
+import 'pattern_property.dart';
 
 class RainbowPattern extends ColorPattern {
-  int dir = 1;
-  int rspeed = 10;
-
   @override
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson(PatternProperties properties) {
     return {
       'name': 'rainbow',
-      'dir': dir,
-      'rspeed': rspeed,
+      'dir': properties.dir,
+      'rspeed': properties.rSpeed,
     };
   }
 }

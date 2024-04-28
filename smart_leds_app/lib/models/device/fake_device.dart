@@ -7,6 +7,7 @@ import 'package:smart_leds_app/models/misc/firmware.dart';
 import 'package:smart_leds_app/models/patterns/color_pattern.dart';
 import 'package:smart_leds_app/models/misc/power_sensor_data.dart';
 import 'package:smart_leds_app/models/misc/wifi_network.dart';
+import 'package:smart_leds_app/models/patterns/pattern_property.dart';
 
 import 'device.dart';
 
@@ -42,8 +43,11 @@ class VirtualDevice extends Device {
   }
 
   @override
-  Future<void> showPattern(ColorPattern pattern) async {
-    log('Prikaži svjetlosni uzorak ${pattern.toJson()}');
+  Future<void> showPattern(
+    ColorPattern pattern,
+    PatternProperties properties,
+  ) async {
+    log('Prikaži svjetlosni uzorak ${pattern.toJson(properties)}');
   }
 
   @override
