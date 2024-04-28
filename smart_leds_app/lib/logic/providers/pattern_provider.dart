@@ -8,7 +8,7 @@ import 'package:smart_leds_app/models/patterns/rainbow_wave.dart';
 import 'package:smart_leds_app/models/patterns/single_color.dart';
 import 'package:smart_leds_app/models/patterns/wave.dart';
 
-class PatternProvider extends ChangeNotifier {
+class PatternProvider {
   final singleColorPattern = SingleColorPattern();
   final wavePattern = WavePattern();
   final rainbowPattern = RainbowPattern();
@@ -20,13 +20,11 @@ class PatternProvider extends ChangeNotifier {
   void showPattern(ColorPattern pattern) {
     _currentPattern = pattern;
     Device.currentDevice.showPattern(pattern);
-    notifyListeners();
   }
 
   void clearPattern() {
     _currentPattern = null;
     Device.currentDevice.clearPattern();
-    notifyListeners();
   }
 
   ColorPattern? get currentPattern => _currentPattern;

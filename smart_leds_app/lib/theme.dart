@@ -19,5 +19,10 @@ class MyTheme {
   static const TextStyle bodyMedium = TextStyle(
     fontSize: 16,
   );
+  static const TextStyle bodyLarge = TextStyle(
+    fontSize: 20,
+  );
+
+  static const TextStyle patternPropertyTitle = bodyLarge;
   //
 }
