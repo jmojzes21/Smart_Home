@@ -2,6 +2,7 @@
 #include <AsyncJson.h>
 
 #include "rest_api.h"
+#include "settings.h"
 #include "log.h"
 
 extern AsyncWebServer httpServer;
@@ -92,6 +93,7 @@ void DeviceRestApi::_initDeviceApi() {
         device.restart(2000);
         respondCode(request, 201);
     });
+
 }
 
 void DeviceRestApi::_initWifiApi() {
@@ -109,6 +111,18 @@ void DeviceRestApi::_initMiscApi() {
         bool result = ledManager.enableDLA();
         respondCode(request, result ? 201 : 400);
     });
+
+    // POST /factory_reset
+
+    httpServer.on("/factory_reset", HTTP_POST, [&](AsyncWebServerRequest* request) {
+
+        Settings settings;
+        settings.load();
+
+        device.restart(2000);
+        respondCode(request, 201);
+    });
+
 
     // GET /logs
 

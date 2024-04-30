@@ -7,7 +7,6 @@ void Settings::load() {
 
     if(LittleFS.exists(_settingsPath) == false) {
         _loadInitial();
-        _isLoaded = true;
         save();
         return;
     }
@@ -72,7 +71,14 @@ void Settings::save() {
 
 }
 
+void Settings::reset() {
+    _loadInitial();
+    save();
+}
+
 void Settings::_loadInitial() {
+
+    _isLoaded = true;
 
     deviceName = "Pametne LEDice";
 

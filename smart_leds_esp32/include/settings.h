@@ -23,6 +23,7 @@ class Settings {
 
     void load();
     void save();
+    void reset();
 
     private:
 
