@@ -10,8 +10,8 @@
 #define OTA_UPDATE_STATE_ERROR 20
 
 extern AsyncWebServer httpServer;
+extern DeviceRestApi restApi;
 extern Device device;
-extern VoidCallback onDeviceRestart;
 
 OtaUpdate::OtaUpdate() {
     _otaState = OTA_UPDATE_STATE_READY;
@@ -180,22 +180,22 @@ void OtaUpdate::_handleUpdateRequest(AsyncWebServerRequest* request) {
     switch (_otaState) {
 
         case OTA_UPDATE_STATE_DONE:
-            respondMessage(request, 201, "Done");
+            restApi.respondMessage(request, 201, "Done");
             _restart();
             return;
 
         case OTA_UPDATE_STATE_ERROR:
             if(_errorMessage.length() == 0) _errorMessage = "Unknown error";
-            respondMessage(request, 400, _errorMessage.c_str());
+            restApi.respondMessage(request, 400, _errorMessage.c_str());
             _restart();
             return;
         
         case OTA_UPDATE_STATE_READY:
-            respondMessage(request, 400, "No body");
+            restApi.respondMessage(request, 400, "No body");
             return;
 
         case OTA_UPDATE_STATE_UPLOAD_FIRMWARE:
-            respondMessage(request, 400, "OTA did not finish");
+            restApi.respondMessage(request, 400, "OTA did not finish");
             _restart();
             return;
     }
@@ -233,5 +233,5 @@ std::string OtaUpdate::_finishHmac() {
 }
 
 void OtaUpdate::_restart() {
-    onDeviceRestart();
+    device.restart(2000);
 }

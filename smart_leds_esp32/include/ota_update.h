@@ -7,7 +7,6 @@
 #include <mbedtls/md.h>
 #include <mbedtls/base64.h>
 
-#include "types.h"
 #include "device.h"
 
 class OtaUpdate {
