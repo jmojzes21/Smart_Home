@@ -4,12 +4,8 @@
 #include <ArduinoJson.h>
 #include <ESPAsyncWebServer.h>
 
-#include "types.h"
 #include "device.h"
 #include "led_manager.h"
-
-void respondJson(AsyncWebServerRequest* request, int code, JsonDocument& doc);
-void respondMessage(AsyncWebServerRequest* request, int code, const char* message);
 
 class DeviceRestApi {
 
@@ -17,4 +13,15 @@ class DeviceRestApi {
 
     void setup();
     
+    void respondJson(AsyncWebServerRequest* request, int code, JsonDocument& doc);
+    void respondMessage(AsyncWebServerRequest* request, int code, const char* message);
+    void respondCode(AsyncWebServerRequest* request, int code);
+
+    private:
+
+    void _initLedApi();
+    void _initDeviceApi();
+    void _initWifiApi();
+    void _initMiscApi();
+
 };

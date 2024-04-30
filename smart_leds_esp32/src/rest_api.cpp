@@ -7,31 +7,58 @@
 extern AsyncWebServer httpServer;
 extern Device device;
 extern LedManager ledManager;
-extern VoidCallback onDeviceRestart;
-
-void respondJson(AsyncWebServerRequest* request, int code, JsonDocument& doc) {
-    AsyncResponseStream* response = request->beginResponseStream("application/json");
-    response->setCode(code);
-
-    serializeJson(doc, *response);
-    request->send(response);
-}
-
-void respondMessage(AsyncWebServerRequest* request, int code, const char* message) {
-    JsonDocument doc;
-    doc["msg"] = message;
-
-    respondJson(request, code, doc);
-}
 
 void DeviceRestApi::setup() {
-    
+    _initLedApi();
+    _initDeviceApi();
+    _initWifiApi();
+    _initMiscApi();
+}
+
+void DeviceRestApi::_initLedApi() {
+
+    // POST /pattern
+
+    auto postPattern = new AsyncCallbackJsonWebHandler("/pattern", nullptr);
+    postPattern->setMethod(HTTP_POST);
+    postPattern->onRequest([&](AsyncWebServerRequest* request, JsonVariant& jsonv) {
+        
+        JsonObject json = jsonv.as<JsonObject>();
+        
+        bool result = ledManager.updatePattern(json);
+        respondCode(request, result ? 201 : 400);
+
+    });
+    httpServer.addHandler(postPattern);
+
+    // POST /brightness
+
+    auto postBrightness = new AsyncCallbackJsonWebHandler("/brightness", nullptr);
+    postBrightness->setMethod(HTTP_POST);
+    postBrightness->onRequest([&](AsyncWebServerRequest* request, JsonVariant& jsonv) {
+        
+        JsonObject json = jsonv.as<JsonObject>();    
+        int value = json["value"];
+
+        if(value < 0 || value > 255) {
+            respondCode(request, 400);
+            return;
+        }
+
+        ledManager.setBrightness(value);
+        respondCode(request, 201);
+
+    });
+    httpServer.addHandler(postBrightness);
+
+}
+
+void DeviceRestApi::_initDeviceApi() {
+
     // GET /device
 
-    httpServer.on("/device", HTTP_GET, [&](AsyncWebServerRequest* req) {
+    httpServer.on("/device", HTTP_GET, [&](AsyncWebServerRequest* request) {
 
-        AsyncResponseStream* res = req->beginResponseStream("application/json");
-        
         JsonDocument doc;
         doc["name"] = device.name;
         doc["version"] = device.version;
@@ -41,65 +68,73 @@ void DeviceRestApi::setup() {
         doc["mac"] = WiFi.macAddress();
         doc["ssid"] = WiFi.SSID();
 
-        serializeJson(doc, *res);
-        req->send(res);
+        respondJson(request, 200, doc);
+
     });
 
-    // POST /pattern
+    // POST /login
 
-    auto patternHandler = new AsyncCallbackJsonWebHandler("/pattern", nullptr);
-    patternHandler->setMethod(HTTP_POST);
-    patternHandler->onRequest([&](AsyncWebServerRequest* request, JsonVariant& json) {
-        JsonObject p = json.as<JsonObject>();
-        bool result = ledManager.updatePattern(p);
-        request->send(result ? 201 : 400);
-    });
-    httpServer.addHandler(patternHandler);
-
-    // POST /brightness
-
-    auto brightnessHandler = new AsyncCallbackJsonWebHandler("/brightness", nullptr);
-    brightnessHandler->setMethod(HTTP_POST);
-    brightnessHandler->onRequest([&](AsyncWebServerRequest* request, JsonVariant& json) {
-
-        JsonObject object = json.as<JsonObject>();
-        int value = object["value"];
-
-        if(value < 0 || value > 255) {
-            request->send(400);
-            return;
-        }
-
-        ledManager.setBrightness(value);
-        request->send(201);
-    });
-    httpServer.addHandler(brightnessHandler);
-
-    // GET /logs
-
-    httpServer.on("/logs", HTTP_GET, [&](AsyncWebServerRequest* req) {
-        std::string logs = qlog_get_logs();
-        req->send(200, "text/plain", logs.c_str());
-    });
-
-    // DELETE /logs
-
-    httpServer.on("/logs", HTTP_DELETE, [&](AsyncWebServerRequest* req) {
-        qlog_clear();
-        req->send(201);
-    });
-
-    // POST /enable_dla
-    httpServer.on("/enable_dla", HTTP_POST, [&](AsyncWebServerRequest* req) {
-        bool result = ledManager.enableDLA();
-        req->send(result ? 201 : 400);
+    httpServer.on("/login", HTTP_POST, [&](AsyncWebServerRequest* request) {
+        auto r = request->authenticate("");
     });
 
     // POST /restart
 
-    httpServer.on("/restart", HTTP_POST, [&](AsyncWebServerRequest* req) {
-        respondMessage(req, 201, "Ok");
-        onDeviceRestart();
+    httpServer.on("/restart", HTTP_POST, [&](AsyncWebServerRequest* request) {
+        device.restart(2000);
+        respondCode(request, 201);
+    });
+}
+
+void DeviceRestApi::_initWifiApi() {
+
+    // GET /wifi_networks
+    // POST /wifi_networks
+
+}
+
+void DeviceRestApi::_initMiscApi() {
+
+    // POST /dla
+
+    httpServer.on("/dla", HTTP_POST, [&](AsyncWebServerRequest* request) {
+        bool result = ledManager.enableDLA();
+        respondCode(request, result ? 201 : 400);
     });
 
+    // GET /logs
+
+    httpServer.on("/logs", HTTP_GET, [&](AsyncWebServerRequest* request) {
+        std::string logs = qlog_get_logs();
+        request->send(200, "text/plain", logs.c_str());
+    });
+
+    // DELETE /logs
+
+    httpServer.on("/logs", HTTP_DELETE, [&](AsyncWebServerRequest* request) {
+        qlog_clear();
+        request->send(201);
+    });
+
+}
+
+void DeviceRestApi::respondJson(AsyncWebServerRequest* request, int code, JsonDocument& doc) {
+    
+    AsyncResponseStream* response = request->beginResponseStream("application/json");
+    response->setCode(code);
+
+    serializeJson(doc, *response);
+    request->send(response);
+}
+
+void DeviceRestApi::respondMessage(AsyncWebServerRequest* request, int code, const char* message) {
+    
+    JsonDocument doc;
+    doc["msg"] = message;
+
+    respondJson(request, code, doc);
+}
+
+void DeviceRestApi::respondCode(AsyncWebServerRequest* request, int code) {
+    request->send(code);
 }
