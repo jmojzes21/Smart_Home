@@ -13,6 +13,9 @@ class DeviceRestApi {
 
     void setup();
     
+    bool checkAuthentication(AsyncWebServerRequest* request);
+    bool authenticate(AsyncWebServerRequest* request);
+
     void respondJson(AsyncWebServerRequest* request, int code, JsonDocument& doc);
     void respondMessage(AsyncWebServerRequest* request, int code, const char* message);
     void respondCode(AsyncWebServerRequest* request, int code);

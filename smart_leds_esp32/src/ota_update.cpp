@@ -45,6 +45,12 @@ void OtaUpdate::_prepareUpdate(AsyncWebServerRequest* request) {
         return;
     }
 
+    if(restApi.checkAuthentication(request) == false) {
+        _otaState = OTA_UPDATE_STATE_ERROR;
+        _errorMessage = "Authentication failed";
+        return;
+    }
+
     auto deviceTypeHeader = request->getHeader("Device-Type");
     auto sizeHeader = request->getHeader("Firmware-Size");
     auto hmacHeader = request->getHeader("Firmware-HMAC");

@@ -16,6 +16,23 @@ void DeviceRestApi::setup() {
     _initMiscApi();
 }
 
+bool DeviceRestApi::checkAuthentication(AsyncWebServerRequest* request) {
+    std::string auth = request->header("Authorization").c_str();
+    return auth == device.password;
+}
+
+bool DeviceRestApi::authenticate(AsyncWebServerRequest* request) {
+    
+    bool result = checkAuthentication(request);
+    
+    if(result == false) {
+        respondCode(request, 401);
+        return false;
+    }
+
+    return true;
+}
+
 void DeviceRestApi::_initLedApi() {
 
     // POST /pattern
@@ -24,6 +41,8 @@ void DeviceRestApi::_initLedApi() {
     postPattern->setMethod(HTTP_POST);
     postPattern->onRequest([&](AsyncWebServerRequest* request, JsonVariant& jsonv) {
         
+        if(!authenticate(request)) return;
+
         JsonObject json = jsonv.as<JsonObject>();
         
         bool result = ledManager.updatePattern(json);
@@ -38,6 +57,8 @@ void DeviceRestApi::_initLedApi() {
     postBrightness->setMethod(HTTP_POST);
     postBrightness->onRequest([&](AsyncWebServerRequest* request, JsonVariant& jsonv) {
         
+        if(!authenticate(request)) return;
+
         JsonObject json = jsonv.as<JsonObject>();    
         int value = json["value"];
 
@@ -76,20 +97,16 @@ void DeviceRestApi::_initDeviceApi() {
     // POST /login
 
     httpServer.on("/login", HTTP_POST, [&](AsyncWebServerRequest* request) {
-
-        std::string auth = request->header("Authorization").c_str();
-
-        if(auth == device.password) {
-            respondCode(request, 201);
-        }else{
-            respondCode(request, 401);
-        }
-
+        bool result = checkAuthentication(request);
+        respondCode(request, result ? 201 : 400);
     });
 
     // POST /restart
 
     httpServer.on("/restart", HTTP_POST, [&](AsyncWebServerRequest* request) {
+
+        if(!authenticate(request)) return;
+
         device.restart(2000);
         respondCode(request, 201);
     });
@@ -108,6 +125,9 @@ void DeviceRestApi::_initMiscApi() {
     // POST /dla
 
     httpServer.on("/dla", HTTP_POST, [&](AsyncWebServerRequest* request) {
+
+        if(!authenticate(request)) return;
+
         bool result = ledManager.enableDLA();
         respondCode(request, result ? 201 : 400);
     });
@@ -117,7 +137,7 @@ void DeviceRestApi::_initMiscApi() {
     httpServer.on("/factory_reset", HTTP_POST, [&](AsyncWebServerRequest* request) {
 
         Settings settings;
-        settings.load();
+        settings.reset();
 
         device.restart(2000);
         respondCode(request, 201);
