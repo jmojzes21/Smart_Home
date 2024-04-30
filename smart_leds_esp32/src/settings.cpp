@@ -73,8 +73,11 @@ void Settings::save() {
 }
 
 void Settings::_loadInitial() {
-    deviceName = "Smart LEDs";
-    devicePassword = "admin";
+
+    deviceName = "Pametne LEDice";
+
+    // lozinka: "pass"
+    devicePassword = "10/w7o2juYBrGMh32/KbveULW9jk2tejpyUAD+uC6PE=";
     
     preferredWifiNetwork = -1;
     wifiNetworks.clear();

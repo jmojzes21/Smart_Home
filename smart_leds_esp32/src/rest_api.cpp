@@ -75,7 +75,15 @@ void DeviceRestApi::_initDeviceApi() {
     // POST /login
 
     httpServer.on("/login", HTTP_POST, [&](AsyncWebServerRequest* request) {
-        auto r = request->authenticate("");
+
+        std::string auth = request->header("Authorization").c_str();
+
+        if(auth == device.password) {
+            respondCode(request, 201);
+        }else{
+            respondCode(request, 401);
+        }
+
     });
 
     // POST /restart
