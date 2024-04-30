@@ -32,10 +32,6 @@ AsyncWebServer httpServer(httpPort);
 DeviceRestApi restApi;
 OtaUpdate otaUpdate;
 Adafruit_INA219 powerSensor;
-VoidCallback onDeviceRestart;
-
-Ticker restartTicker;
-void requestRestart();
 
 Ticker powerSensorTicker;
 
@@ -90,7 +86,6 @@ void setup() {
     // pokreni http server
     httpServer.begin();
 
-    onDeviceRestart = requestRestart;
     // temp
     powerSensorTicker.attach_ms(4000, []() {
         float current_mA = powerSensor.getCurrent_mA();
@@ -101,10 +96,4 @@ void setup() {
 
 void loop() {
     ledManager.loop();
-}
-
-void requestRestart() {
-    restartTicker.once_ms(2000, []() {
-        ESP.restart();
-    });
 }
