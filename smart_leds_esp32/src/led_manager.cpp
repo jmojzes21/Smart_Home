@@ -40,10 +40,11 @@ bool LedManager::updatePattern(JsonObject json) {
     bool result = false;
     if(_directAccess == false) {
 
-        if(json.containsKey("name")) {
-            result = _changePattern(json);
-        }else{
+        std::string name = json["name"];
+        if(name == _currentPatternName) {
             result = _updatePattern(json);
+        }else{
+            result = _changePattern(name, json);
         }
 
     }
@@ -74,9 +75,7 @@ bool LedManager::enableDLA() {
 
 }
 
-bool LedManager::_changePattern(JsonObject json) {
-
-    std::string name = json["name"];
+bool LedManager::_changePattern(std::string& name, JsonObject json) {
 
     ColorPattern* newPattern = _createPattern(name);
     if(newPattern == nullptr) return false;

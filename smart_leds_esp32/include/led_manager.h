@@ -18,6 +18,7 @@ class LedManager {
     AsyncUDP _udp;
 
     ColorPattern* _currentPattern = nullptr;
+    std::string _currentPatternName = "";
 
     public:
 
@@ -31,7 +32,7 @@ class LedManager {
 
     private:
 
-    bool _changePattern(JsonObject json);
+    bool _changePattern(std::string& name, JsonObject json);
     bool _updatePattern(JsonObject json);
 
     bool _enableDLA();
