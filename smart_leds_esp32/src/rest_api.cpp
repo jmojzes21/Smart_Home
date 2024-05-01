@@ -2,17 +2,20 @@
 #include <AsyncJson.h>
 
 #include "rest_api.h"
+#include "power_sensor.h"
 #include "settings.h"
 #include "log.h"
 
 extern AsyncWebServer httpServer;
 extern Device device;
 extern LedManager ledManager;
+extern PowerSensor powerSensor;
 
 void DeviceRestApi::setup() {
     _initLedApi();
     _initDeviceApi();
     _initWifiApi();
+    _initPowerSensorApi();
     _initMiscApi();
 }
 
@@ -117,6 +120,50 @@ void DeviceRestApi::_initWifiApi() {
 
     // GET /wifi_networks
     // POST /wifi_networks
+
+}
+
+void DeviceRestApi::_initPowerSensorApi() {
+
+    // GET /power_sensor
+
+    httpServer.on("/power_sensor", HTTP_GET, [&](AsyncWebServerRequest* request) {
+
+        if(!authenticate(request)) return;
+
+        PowerSensorData data;
+        powerSensor.getData(&data);
+
+        JsonDocument doc;
+
+        doc["current"] = data.current;
+        doc["minCurrent"] = data.minCurrent;
+        doc["maxCurrent"] = data.maxCurrent;
+
+        doc["voltage"] = data.voltage;
+        doc["minVoltage"] = data.minVoltage;
+        doc["maxVoltage"] = data.maxVoltage;
+
+        respondJson(request, 200, doc);
+
+    });
+
+    // POST /power_sensor
+
+    auto postPowerSensor = new AsyncCallbackJsonWebHandler("/power_sensor", nullptr);
+    postPowerSensor->setMethod(HTTP_POST);
+    postPowerSensor->onRequest([&](AsyncWebServerRequest* request, JsonVariant& jsonv) {
+        
+        if(!authenticate(request)) return;
+
+        JsonObject json = jsonv.as<JsonObject>();    
+        bool active = json["active"];
+
+        powerSensor.setActive(active);
+        respondCode(request, 201);
+
+    });
+    httpServer.addHandler(postPowerSensor);
 
 }
 

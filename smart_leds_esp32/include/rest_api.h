@@ -25,6 +25,7 @@ class DeviceRestApi {
     void _initLedApi();
     void _initDeviceApi();
     void _initWifiApi();
+    void _initPowerSensorApi();
     void _initMiscApi();
 
 };
