@@ -4,7 +4,6 @@
 #include <ESPAsyncWebServer.h>
 #include <ESPmDNS.h>
 #include <FastLED.h>
-#include <Adafruit_INA219.h>
 #include <LittleFS.h>
 #include <Ticker.h>
 
@@ -14,6 +13,7 @@
 #include "wifi_manager.h"
 #include "rest_api.h"
 #include "ota_update.h"
+#include "power_sensor.h"
 
 #include "settings.h"
 #include "log.h"
@@ -31,9 +31,7 @@ WifiManager wifiManager;
 AsyncWebServer httpServer(httpPort);
 DeviceRestApi restApi;
 OtaUpdate otaUpdate;
-Adafruit_INA219 powerSensor;
-
-Ticker powerSensorTicker;
+PowerSensor powerSensor;
 
 void setup() {
 
@@ -64,7 +62,7 @@ void setup() {
     ledManager.setup();
 
     // postavi senzor struje
-    powerSensor.begin();
+    powerSensor.setup();
 
     // postavi wifi manager
     wifiManager.setup();
@@ -85,12 +83,6 @@ void setup() {
 
     // pokreni http server
     httpServer.begin();
-
-    // temp
-    powerSensorTicker.attach_ms(4000, []() {
-        float current_mA = powerSensor.getCurrent_mA();
-        Serial.printf("I: %.1f mA\n", current_mA);
-    });
 
 }
 
