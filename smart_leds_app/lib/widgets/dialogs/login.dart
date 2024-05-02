@@ -50,12 +50,10 @@ class _LoginDialogState extends State<LoginDialog> {
       title: Text('Prijava'),
       actions: [
         TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: () => Navigator.of(context).pop(),
           child: Text('Odustani'),
         ),
-        TextButton(
+        FilledButton(
           onPressed: () => login(),
           child: Text('Prijavi se'),
         ),
@@ -80,7 +78,7 @@ class _LoginDialogState extends State<LoginDialog> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 10),
               CheckboxText(
                 value: showPassword,
                 text: 'Prikaži lozinku',

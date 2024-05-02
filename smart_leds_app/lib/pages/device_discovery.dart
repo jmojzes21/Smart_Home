@@ -125,48 +125,51 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: SizedBox(
-          width: 400,
-          height: 400,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                ListTile(
-                  title: Text(
-                    'Pretraživanje uređaja',
-                    style: Theme.of(context).textTheme.titleLarge,
+        child: Card(
+          child: SizedBox(
+            width: 500,
+            height: 400,
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  ListTile(
+                    title: Text(
+                      'Pretraživanje uređaja',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    trailing: isDiscovering
+                        ? const CircularProgressIndicator()
+                        : null,
                   ),
-                  trailing:
-                      isDiscovering ? const CircularProgressIndicator() : null,
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: discoveredDevices.length,
-                    itemBuilder: (context, index) {
-                      var device = discoveredDevices[index];
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: discoveredDevices.length,
+                      itemBuilder: (context, index) {
+                        var device = discoveredDevices[index];
 
-                      return ListTile(
-                        title: Text(device.name),
-                        subtitle: Text(device.ipAddress.address),
-                        leading: const Icon(Icons.devices),
-                        onTap: () => connectDevice(device),
-                      );
-                    },
+                        return ListTile(
+                          title: Text(device.name),
+                          subtitle: Text(device.ipAddress.address),
+                          leading: const Icon(Icons.devices),
+                          onTap: () => connectDevice(device),
+                        );
+                      },
+                    ),
                   ),
-                ),
-                SizedBox(height: 20),
-                if (isDiscovering == false)
-                  ElevatedButton(
-                    onPressed: () => startScan(),
-                    child: Text('Pretraži uređaje'),
-                  ),
-                if (isDiscovering)
-                  ElevatedButton(
-                    onPressed: () => stopScan(),
-                    child: Text('Zaustavi pretraživanje'),
-                  ),
-              ],
+                  SizedBox(height: 20),
+                  if (isDiscovering == false)
+                    FilledButton(
+                      onPressed: () => startScan(),
+                      child: Text('Pretraži uređaje'),
+                    ),
+                  if (isDiscovering)
+                    FilledButton(
+                      onPressed: () => stopScan(),
+                      child: Text('Zaustavi pretraživanje'),
+                    ),
+                ],
+              ),
             ),
           ),
         ),

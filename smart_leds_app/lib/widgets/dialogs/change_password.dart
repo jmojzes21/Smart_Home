@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_leds_app/widgets/misc/checkbox.dart';
 
 class ChangePasswordDialog extends StatefulWidget {
   const ChangePasswordDialog({super.key});
@@ -21,6 +22,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
   var tcOldPassword = TextEditingController();
   var tcNewPassword = TextEditingController();
   var tcConfirmPassword = TextEditingController();
+  var showPassword = false;
 
   void changePassword() {
     var oldPassword = tcOldPassword.text.trim();
@@ -46,7 +48,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
           },
           child: Text('Odustani'),
         ),
-        TextButton(
+        FilledButton(
           onPressed: () => changePassword(),
           child: Text('Promijeni lozinku'),
         ),
@@ -63,7 +65,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
               const SizedBox(height: 10),
               TextField(
                 controller: tcOldPassword,
-                obscureText: true,
+                obscureText: showPassword == false,
                 enableSuggestions: false,
                 autocorrect: false,
                 decoration: InputDecoration(
@@ -76,7 +78,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
               const SizedBox(height: 10),
               TextField(
                 controller: tcNewPassword,
-                obscureText: true,
+                obscureText: showPassword == false,
                 enableSuggestions: false,
                 autocorrect: false,
                 decoration: InputDecoration(
@@ -89,13 +91,19 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
               const SizedBox(height: 10),
               TextField(
                 controller: tcConfirmPassword,
-                obscureText: true,
+                obscureText: showPassword == false,
                 enableSuggestions: false,
                 autocorrect: false,
                 decoration: InputDecoration(
                   isDense: true,
                   border: OutlineInputBorder(),
                 ),
+              ),
+              const SizedBox(height: 20),
+              CheckboxText(
+                value: showPassword,
+                text: 'Prikaži lozinke',
+                onChanged: (value) => setState(() => showPassword = value),
               ),
             ],
           ),

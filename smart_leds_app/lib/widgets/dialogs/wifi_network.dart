@@ -82,18 +82,18 @@ class _WifiNetworkInputDialogState extends State<WifiNetworkInputDialog> {
     return AlertDialog(
       title: Text(editMode ? 'Uredi WiFi mrežu' : 'Dodaj WiFi mrežu'),
       actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: Text('Odustani'),
-        ),
         if (editMode)
           TextButton(
             onPressed: () => delete(),
             child: Text('Obriši'),
           ),
         TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('Odustani'),
+        ),
+        FilledButton(
           onPressed: () => addOrSave(),
           child: Text(editMode ? 'Spremi' : 'Dodaj'),
         ),

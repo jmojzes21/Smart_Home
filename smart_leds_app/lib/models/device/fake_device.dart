@@ -13,9 +13,9 @@ import 'device.dart';
 
 class VirtualDevice extends Device {
   final wifiNetworks = [
-    WifiNetwork('Prva Wifi mreža', 'lozinka'),
-    WifiNetwork('Druga Wifi mreža', 'lozinka'),
-    WifiNetwork('Treća Wifi mreža', 'lozinka'),
+    WifiNetwork('Water', 'water'),
+    WifiNetwork('Clound', 'cloud'),
+    WifiNetwork('Forest', 'forest'),
   ];
 
   var isPowerSensorActive = false;
