@@ -16,6 +16,7 @@ dependencies:
   path_provider: ^2.1.2
   multicast_dns: ^0.3.2+6
   file_selector: ^1.0.3
+  async: ^2.11.0
 
 dev_dependencies:
   flutter_test:
