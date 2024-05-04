@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import '../models/device/device.dart';
-import '../models/device/discovered_device.dart';
-import '../models/device/real_device.dart';
-import '../models/device/fake_device.dart';
+import 'device/device.dart';
+import '../models/misc/discovered_device.dart';
+import 'device/real_device.dart';
+import 'device/fake_device.dart';
 import '../models/misc/session.dart';
 
 class DeviceFactory {

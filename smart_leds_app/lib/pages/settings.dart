@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds_app/models/device/device.dart';
+import 'package:smart_leds_app/logic/device/device.dart';
 import 'package:smart_leds_app/models/exceptions.dart';
 import 'package:smart_leds_app/models/misc/wifi_network.dart';
 import 'package:smart_leds_app/widgets/dialogs/change_password.dart';

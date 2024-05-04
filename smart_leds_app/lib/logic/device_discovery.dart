@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:multicast_dns/multicast_dns.dart';
-import 'package:smart_leds_app/models/device/discovered_device.dart';
+import 'package:smart_leds_app/models/misc/discovered_device.dart';
 
 class DeviceDiscovery {
   bool _isDiscovering = false;

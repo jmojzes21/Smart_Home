@@ -6,7 +6,7 @@ import 'package:smart_leds_app/pages/home.dart';
 import 'package:smart_leds_app/pages/power_sensor.dart';
 import 'package:smart_leds_app/pages/settings.dart';
 
-import '../../models/device/device.dart';
+import '../../logic/device/device.dart';
 
 class AppNavigationDrawer extends StatelessWidget {
   const AppNavigationDrawer({super.key});

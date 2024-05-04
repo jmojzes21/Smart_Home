@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_leds_app/models/device/device.dart';
+import 'package:smart_leds_app/logic/device/device.dart';
 import 'package:smart_leds_app/models/patterns/color_pattern.dart';
 import 'package:smart_leds_app/models/patterns/pattern_property.dart';
 import 'package:smart_leds_app/models/patterns/rainbow.dart';

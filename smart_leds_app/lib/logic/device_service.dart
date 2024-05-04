@@ -1,6 +1,6 @@
 import 'package:smart_leds_app/logic/device_factory.dart';
 import 'package:smart_leds_app/logic/session_service.dart';
-import 'package:smart_leds_app/models/device/device.dart';
+import 'package:smart_leds_app/logic/device/device.dart';
 import 'package:smart_leds_app/models/exceptions.dart';
 import 'package:smart_leds_app/models/misc/session.dart';
 
