@@ -101,7 +101,12 @@ void DeviceRestApi::_initDeviceApi() {
 
     httpServer.on("/login", HTTP_POST, [&](AsyncWebServerRequest* request) {
         bool result = checkAuthentication(request);
-        respondCode(request, result ? 201 : 400);
+
+        if(result) {
+            respondCode(request, 201);
+        }else{
+            respondMessage(request, 400, "Netočna lozinka.");
+        }
     });
 
     // POST /restart
