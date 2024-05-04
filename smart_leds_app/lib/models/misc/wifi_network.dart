@@ -4,6 +4,8 @@ class WifiNetwork {
 
   WifiNetwork(this.ssid, this.password);
 
+  WifiNetwork copy() => WifiNetwork(ssid, password);
+
   factory WifiNetwork.fromJson(Map<String, dynamic> src) {
     return WifiNetwork(src['ssid'], src['pass']);
   }

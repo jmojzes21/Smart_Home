@@ -22,12 +22,18 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
+
     device = Device.currentDevice;
-    getWifiNetworks();
+    refresh();
   }
 
-  void getWifiNetworks() async {
-    var networks = await Device.currentDevice.wifi.getNetworks();
+  void refresh() async {
+    var infoFuture = device.getDeviceInfo();
+    var networksFuture = device.wifi.getNetworks();
+
+    await infoFuture;
+    var networks = await networksFuture;
+
     setState(() {
       wifiNetworks = networks;
     });
@@ -40,13 +46,13 @@ class _SettingsPageState extends State<SettingsPage> {
       message: 'Jeste li sigurni da želite ponovno pokrenuti uređaj?',
     );
 
-    if (result == false) return;
-
-    Device.currentDevice.restart();
+    if (result) {
+      device.restart();
+    }
   }
 
   void changePassword() async {
-    var result = await ChangePasswordDialog.show(context);
+    /*  var result = await ChangePasswordDialog.show(context);
     if (result == null) return;
 
     try {
@@ -59,49 +65,35 @@ class _SettingsPageState extends State<SettingsPage> {
         title: 'Promjena lozinke',
         message: e.message,
       );
-    }
+    }*/
   }
 
   void openPrepareUpdateDialog() {
-    showDialog(
+    /* showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) {
         return PrepareUpdateWidget();
       },
-    );
+    );*/
   }
 
   void addWifiNetwork() async {
-    var network = await WifiNetworkInputDialog.showAddNetwork(context);
-    if (network == null) return;
+    var result =
+        await WifiNetworkInputDialog.showAddNetwork(context, wifiNetworks);
 
-    var networks = [...wifiNetworks];
-    networks.add(network);
-
-    Device.currentDevice.wifi.updateNetworks(networks);
-    getWifiNetworks();
+    if (result) {
+      refresh();
+    }
   }
 
-  void openWifiNetwork(WifiNetwork network) async {
-    var edited = await WifiNetworkInputDialog.showEditNetwork(context, network);
-    if (edited == null) return;
+  void editWifiNetwork(WifiNetwork network) async {
+    var result = await WifiNetworkInputDialog.showEditNetwork(
+        context, wifiNetworks, network);
 
-    var networks = [...wifiNetworks];
-
-    if (edited.ssid == '') {
-      // obriši mrežu
-
-      networks.removeWhere((e) => e.ssid == network.ssid);
-    } else {
-      // spremi promjene
-
-      var target = networks.firstWhere((e) => e.ssid == edited.ssid);
-      target.password = edited.password;
+    if (result) {
+      refresh();
     }
-
-    Device.currentDevice.wifi.updateNetworks(networks);
-    getWifiNetworks();
   }
 
   @override
@@ -181,7 +173,7 @@ class _SettingsPageState extends State<SettingsPage> {
           return ListTile(
             title: Text(wifiNetworks[index].ssid),
             leading: Icon(Icons.wifi),
-            onTap: () => openWifiNetwork(wifiNetworks[index]),
+            onTap: () => editWifiNetwork(wifiNetworks[index]),
           );
         },
       ),

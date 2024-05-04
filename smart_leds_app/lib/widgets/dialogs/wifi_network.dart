@@ -1,37 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:smart_leds_app/logic/device/device.dart';
+import 'package:smart_leds_app/models/exceptions.dart';
 import 'package:smart_leds_app/models/misc/wifi_network.dart';
 import 'package:smart_leds_app/widgets/dialogs/simple_dialogs.dart';
+import 'package:smart_leds_app/widgets/misc/checkbox.dart';
+import 'package:smart_leds_app/widgets/misc/error_text.dart';
 
 class WifiNetworkInputDialog extends StatefulWidget {
-  final WifiNetwork? wifiNetwork;
-  const WifiNetworkInputDialog(this.wifiNetwork, {super.key});
+  final List<WifiNetwork> networks;
+  final WifiNetwork? network;
+  const WifiNetworkInputDialog(this.networks, this.network, {super.key});
 
   @override
   State<WifiNetworkInputDialog> createState() => _WifiNetworkInputDialogState();
 
-  static Future<WifiNetwork?> showAddNetwork(BuildContext context) async {
-    return _show(context, null);
+  static Future<bool> showAddNetwork(
+      BuildContext context, List<WifiNetwork> networks) async {
+    return _show(context, networks, null);
   }
 
-  static Future<WifiNetwork?> showEditNetwork(
-      BuildContext context, WifiNetwork network) async {
-    return _show(context, network);
+  static Future<bool> showEditNetwork(BuildContext context,
+      List<WifiNetwork> networks, WifiNetwork network) async {
+    return _show(context, networks, network);
   }
 
-  static Future<WifiNetwork?> _show(
-      BuildContext context, WifiNetwork? network) async {
-    var result = await showDialog<WifiNetwork>(
+  static Future<bool> _show(BuildContext context, List<WifiNetwork> networks,
+      WifiNetwork? network) async {
+    var result = await showDialog<bool>(
       context: context,
-      builder: (context) => WifiNetworkInputDialog(network),
+      builder: (context) => WifiNetworkInputDialog(networks, network),
     );
 
-    return result;
+    return result ?? false;
   }
 }
 
 class _WifiNetworkInputDialogState extends State<WifiNetworkInputDialog> {
+  late Device device;
+  late List<WifiNetwork> networks;
+  String ssid = '';
+
   var tcName = TextEditingController();
   var tcPassword = TextEditingController();
+
+  String errorMessage = '';
   bool editMode = false;
   bool showPassword = false;
 
@@ -39,28 +51,67 @@ class _WifiNetworkInputDialogState extends State<WifiNetworkInputDialog> {
   void initState() {
     super.initState();
 
-    editMode = widget.wifiNetwork != null;
-    if (editMode) {
-      tcName.text = widget.wifiNetwork!.ssid;
-      tcPassword.text = widget.wifiNetwork!.password;
+    device = Device.currentDevice;
+    networks = widget.networks.map((e) => e.copy()).toList();
+
+    if (widget.network != null) {
+      ssid = widget.network!.ssid;
+      tcName.text = widget.network!.ssid;
+      tcPassword.text = widget.network!.password;
+      editMode = true;
     }
   }
 
-  void addOrSave() {
+  void add() async {
     String name = tcName.text.trim();
     String pass = tcPassword.text.trim();
 
     if (name.isEmpty) {
-      SimpleDialogs.showMessage(
-        context: context,
-        title: 'Dodavanje WiFi mreže',
-        message: 'Potrebno je unijeti naziv WiFi mreže.',
-      );
+      setState(() => errorMessage = 'Postavite naziv WiFi mreže.');
       return;
     }
 
     var network = WifiNetwork(name, pass);
-    Navigator.of(context).pop(network);
+    networks.add(network);
+
+    try {
+      await device.wifi.updateNetworks(networks);
+    } on DeviceException catch (e) {
+      if (!mounted) return;
+      setState(() => errorMessage = e.message);
+      return;
+    }
+
+    if (!mounted) return;
+    Navigator.of(context).pop(true);
+  }
+
+  void save() async {
+    String pass = tcPassword.text.trim();
+
+    var network = networks.firstWhere((e) => e.ssid == ssid);
+    network.password = pass;
+
+    try {
+      await device.wifi.updateNetworks(networks);
+    } on DeviceException catch (e) {
+      if (!mounted) return;
+      setState(() => errorMessage = e.message);
+      return;
+    }
+
+    if (!mounted) return;
+    Navigator.of(context).pop(true);
+  }
+
+  void addOrSave() {
+    setState(() => errorMessage = '');
+
+    if (editMode) {
+      save();
+    } else {
+      add();
+    }
   }
 
   void delete() async {
@@ -73,8 +124,18 @@ class _WifiNetworkInputDialogState extends State<WifiNetworkInputDialog> {
     if (result == false) return;
     if (!mounted) return;
 
-    var network = WifiNetwork('', '');
-    Navigator.of(context).pop(network);
+    networks.removeWhere((e) => e.ssid == ssid);
+
+    try {
+      await device.wifi.updateNetworks(networks);
+    } on DeviceException catch (e) {
+      if (!mounted) return;
+      setState(() => errorMessage = e.message);
+      return;
+    }
+
+    if (!mounted) return;
+    Navigator.of(context).pop(true);
   }
 
   @override
@@ -132,19 +193,12 @@ class _WifiNetworkInputDialogState extends State<WifiNetworkInputDialog> {
                 ),
               ),
               SizedBox(height: 5),
-              Row(
-                children: [
-                  Checkbox(
-                    value: showPassword,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        showPassword = value ?? false;
-                      });
-                    },
-                  ),
-                  Text('Prikaži lozinku'),
-                ],
+              CheckboxText(
+                value: showPassword,
+                text: 'Prikaži lozinku',
+                onChanged: (value) => setState(() => showPassword = value),
               ),
+              if (errorMessage.isNotEmpty) ErrorText(errorMessage),
             ],
           ),
         ),
