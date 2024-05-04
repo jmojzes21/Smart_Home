@@ -109,16 +109,6 @@ void DeviceRestApi::_initDeviceApi() {
         }
     });
 
-    // POST /restart
-
-    httpServer.on("/restart", HTTP_POST, [&](AsyncWebServerRequest* request) {
-
-        if(!authenticate(request)) return;
-
-        device.restart(2000);
-        respondCode(request, 201);
-    });
-
 }
 
 void DeviceRestApi::_initWifiApi() {
@@ -234,6 +224,39 @@ void DeviceRestApi::_initPowerSensorApi() {
 
 void DeviceRestApi::_initMiscApi() {
 
+    // POST /restart
+
+    httpServer.on("/restart", HTTP_POST, [&](AsyncWebServerRequest* request) {
+
+        if(!authenticate(request)) return;
+
+        device.restart(2000);
+        respondCode(request, 201);
+    });
+
+    // POST /auth
+
+    auto postAuth = new AsyncCallbackJsonWebHandler("/auth", nullptr);
+    postAuth->setMethod(HTTP_POST);
+    postAuth->onRequest([&](AsyncWebServerRequest* request, JsonVariant& jsonv) {
+        
+        if(!authenticate(request)) return;
+
+        JsonObject json = jsonv.as<JsonObject>();    
+        std::string newPassword = json["pass"];
+
+        device.password = newPassword;
+
+        Settings settings;
+        settings.load();
+        settings.devicePassword = newPassword;
+        settings.save();
+
+        respondCode(request, 201);
+
+    });
+    httpServer.addHandler(postAuth);
+
     // POST /dla
 
     httpServer.on("/dla", HTTP_POST, [&](AsyncWebServerRequest* request) {
@@ -244,9 +267,9 @@ void DeviceRestApi::_initMiscApi() {
         respondCode(request, result ? 201 : 400);
     });
 
-    // POST /factory_reset
+    // POST /wipe_data
 
-    httpServer.on("/factory_reset", HTTP_POST, [&](AsyncWebServerRequest* request) {
+    httpServer.on("/wipe_data", HTTP_POST, [&](AsyncWebServerRequest* request) {
 
         Settings settings;
         settings.reset();
