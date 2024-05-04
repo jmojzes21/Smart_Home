@@ -124,7 +124,61 @@ void DeviceRestApi::_initDeviceApi() {
 void DeviceRestApi::_initWifiApi() {
 
     // GET /wifi_networks
+
+    httpServer.on("/wifi_networks", HTTP_GET, [&](AsyncWebServerRequest* request) {
+
+        if(!authenticate(request)) return;
+
+        JsonDocument doc;
+
+        Settings settings;
+        settings.load();
+
+        JsonArray networks = doc["networks"].to<JsonArray>();
+        for(int i = 0; i < settings.wifiNetworks.size(); i++) {
+
+            WifiNetwork& net = settings.wifiNetworks[i];
+            JsonObject network = networks[i].to<JsonObject>();
+
+            network["ssid"] = net.ssid;
+            network["pass"] = net.password;
+        }
+
+        respondJson(request, 200, doc);
+
+    });
+
     // POST /wifi_networks
+
+    auto postWifiNetworks = new AsyncCallbackJsonWebHandler("/wifi_networks", nullptr);
+    postWifiNetworks->setMethod(HTTP_POST);
+    postWifiNetworks->onRequest([&](AsyncWebServerRequest* request, JsonVariant& jsonv) {
+        
+        if(!authenticate(request)) return;
+
+        JsonObject json = jsonv.as<JsonObject>();    
+        
+        Settings settings;
+        settings.load();
+
+        settings.wifiNetworks.clear();
+
+        JsonArray networks = json["networks"];
+        for(int i = 0; i < networks.size(); i++) {
+            JsonObject net = networks[i];
+
+            std::string ssid = net["ssid"];
+            std::string pass = net["pass"];
+
+            settings.wifiNetworks.emplace_back(ssid, pass);
+        }
+
+        settings.save();
+
+        respondCode(request, 201);
+
+    });
+    httpServer.addHandler(postWifiNetworks);
 
 }
 
@@ -136,18 +190,24 @@ void DeviceRestApi::_initPowerSensorApi() {
 
         if(!authenticate(request)) return;
 
-        PowerSensorData data;
-        powerSensor.getData(&data);
-
         JsonDocument doc;
 
-        doc["current"] = data.current;
-        doc["minCurrent"] = data.minCurrent;
-        doc["maxCurrent"] = data.maxCurrent;
+        bool active = powerSensor.isActive();
+        doc["active"] = active;
 
-        doc["voltage"] = data.voltage;
-        doc["minVoltage"] = data.minVoltage;
-        doc["maxVoltage"] = data.maxVoltage;
+        if(active) {
+
+            PowerSensorData data;
+            powerSensor.getData(&data);
+
+            doc["current"] = data.current;
+            doc["minCurrent"] = data.minCurrent;
+            doc["maxCurrent"] = data.maxCurrent;
+
+            doc["voltage"] = data.voltage;
+            doc["minVoltage"] = data.minVoltage;
+            doc["maxVoltage"] = data.maxVoltage;
+        }
 
         respondJson(request, 200, doc);
 
