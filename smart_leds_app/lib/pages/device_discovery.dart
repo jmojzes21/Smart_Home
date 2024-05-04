@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_leds_app/logic/device/device.dart';
 import 'package:smart_leds_app/logic/device_discovery.dart';
 import 'package:smart_leds_app/logic/device_service.dart';
+import 'package:smart_leds_app/widgets/dialogs/direct_connection.dart';
 import 'package:smart_leds_app/widgets/dialogs/login.dart';
 import 'package:smart_leds_app/pages/home.dart';
 import 'package:smart_leds_app/widgets/dialogs/simple_dialogs.dart';
@@ -78,6 +79,13 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
     }
   }
 
+  Future<void> connectDirectly() async {
+    Device? device = await DirectConnectionDialog.show(context);
+    if (device != null) {
+      await connectDevice(device);
+    }
+  }
+
   Future<void> loadSession() async {
     var deviceService = DeviceService();
     Device? device = await deviceService.restoreSession();
@@ -133,16 +141,26 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  if (isDiscovering == false)
-                    FilledButton(
-                      onPressed: () => startScan(),
-                      child: Text('Pretraži uređaje'),
-                    ),
-                  if (isDiscovering)
-                    FilledButton(
-                      onPressed: () => stopScan(),
-                      child: Text('Zaustavi pretraživanje'),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () => connectDirectly(),
+                        child: Text('Izravno povezivanje'),
+                      ),
+                      SizedBox(width: 20),
+                      if (isDiscovering == false)
+                        FilledButton(
+                          onPressed: () => startScan(),
+                          child: Text('Pretraži uređaje'),
+                        ),
+                      if (isDiscovering)
+                        FilledButton(
+                          onPressed: () => stopScan(),
+                          child: Text('Zaustavi pretraživanje'),
+                        ),
+                    ],
+                  ),
                 ],
               ),
             ),
