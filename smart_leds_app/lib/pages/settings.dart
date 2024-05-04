@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/logic/device/device.dart';
-import 'package:smart_leds_app/models/exceptions.dart';
+import 'package:smart_leds_app/logic/device_service.dart';
 import 'package:smart_leds_app/models/misc/wifi_network.dart';
+import 'package:smart_leds_app/pages/device_discovery.dart';
 import 'package:smart_leds_app/widgets/dialogs/change_password.dart';
 import 'package:smart_leds_app/theme.dart';
 import 'package:smart_leds_app/widgets/dialogs/simple_dialogs.dart';
 import 'package:smart_leds_app/widgets/dialogs/wifi_network.dart';
 import 'package:smart_leds_app/widgets/misc/navigation_drawer.dart';
-import 'package:smart_leds_app/widgets/dialogs/update_dialogs.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -52,20 +52,45 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void changePassword() async {
-    /*  var result = await ChangePasswordDialog.show(context);
-    if (result == null) return;
-
-    try {
-      await Device.currentDevice.changePassword(result.$1, result.$2);
-    } on DeviceException catch (e) {
+    var result = await ChangePasswordDialog.show(context);
+    if (result) {
       if (!mounted) return;
-
       SimpleDialogs.showMessage(
         context: context,
         title: 'Promjena lozinke',
-        message: e.message,
+        message: 'Uspješno ste promijenili lozinku.',
       );
-    }*/
+    }
+  }
+
+  void wipeData() async {
+    var result = await SimpleDialogs.showExtraConfirm(
+      context: context,
+      title: 'Brisanje podataka',
+      message: 'Jeste li sigurni da želite obrisati sve podatke s uređaja?',
+      checkboxText: 'Potvrda brisanja',
+    );
+
+    if (result) {
+      await device.wipeData();
+
+      if (!mounted) return;
+      await SimpleDialogs.showMessage(
+        context: context,
+        title: 'Brisanje podataka',
+        message: 'Svi podaci su obrisani. Uređaj će se ponovno pokrenuti.',
+      );
+
+      var deviceService = DeviceService();
+      await deviceService.deleteSession();
+
+      if (!mounted) return;
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => DeviceDiscoveryPage(),
+        ),
+      );
+    }
   }
 
   void openPrepareUpdateDialog() {
@@ -197,7 +222,7 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       SizedBox(height: 20),
       OutlinedButton.icon(
-        onPressed: () {},
+        onPressed: () => wipeData(),
         icon: Icon(Icons.delete_outline),
         label: Text('Obriši sve podatke'),
       ),

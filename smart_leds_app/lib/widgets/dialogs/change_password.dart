@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:smart_leds_app/logic/device/device.dart';
+import 'package:smart_leds_app/logic/device_service.dart';
+import 'package:smart_leds_app/models/exceptions.dart';
 import 'package:smart_leds_app/widgets/misc/checkbox.dart';
+import 'package:smart_leds_app/widgets/misc/error_text.dart';
 
 class ChangePasswordDialog extends StatefulWidget {
   const ChangePasswordDialog({super.key});
@@ -7,14 +11,12 @@ class ChangePasswordDialog extends StatefulWidget {
   @override
   State<ChangePasswordDialog> createState() => _ChangePasswordDialogState();
 
-  static Future<(String oldPass, String newPass)?> show(
-      BuildContext context) async {
-    var result = await showDialog<(String, String)>(
+  static Future<bool> show(BuildContext context) async {
+    var result = await showDialog<bool>(
       context: context,
       builder: (context) => ChangePasswordDialog(),
     );
-
-    return result;
+    return result ?? false;
   }
 }
 
@@ -22,19 +24,50 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
   var tcOldPassword = TextEditingController();
   var tcNewPassword = TextEditingController();
   var tcConfirmPassword = TextEditingController();
-  var showPassword = false;
 
-  void changePassword() {
+  var showPassword = false;
+  var errorMessage = '';
+
+  void changePassword() async {
+    setState(() => errorMessage = '');
+
     var oldPassword = tcOldPassword.text.trim();
     var newPassword = tcNewPassword.text.trim();
     var confirmPassword = tcConfirmPassword.text.trim();
 
-    if (oldPassword.isEmpty || newPassword.isEmpty || confirmPassword.isEmpty) {
+    if (oldPassword.isEmpty) {
+      setState(() => errorMessage = 'Unesite trenutnu lozinku.');
       return;
     }
-    if (newPassword != confirmPassword) return;
 
-    Navigator.of(context).pop((oldPassword, newPassword));
+    if (newPassword.isEmpty) {
+      setState(() => errorMessage = 'Unesite novu lozinku.');
+      return;
+    }
+
+    if (confirmPassword != newPassword) {
+      setState(() =>
+          errorMessage = 'Potvrda lozinke mora odgovarati novoj lozinki.');
+      return;
+    }
+
+    var deviceService = DeviceService();
+    var device = Device.currentDevice;
+
+    try {
+      await deviceService.changePassword(
+        device: device,
+        plainOldPassword: oldPassword,
+        plainNewPassword: newPassword,
+      );
+    } on DeviceException catch (e) {
+      if (!mounted) return;
+      setState(() => errorMessage = e.message);
+      return;
+    }
+
+    if (!mounted) return;
+    Navigator.of(context).pop(true);
   }
 
   @override
@@ -50,7 +83,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
         ),
         FilledButton(
           onPressed: () => changePassword(),
-          child: Text('Promijeni lozinku'),
+          child: Text('Promijeni'),
         ),
       ],
       content: Padding(
@@ -105,6 +138,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                 text: 'Prikaži lozinke',
                 onChanged: (value) => setState(() => showPassword = value),
               ),
+              if (errorMessage.isNotEmpty) ErrorText(errorMessage),
             ],
           ),
         ),

@@ -50,15 +50,27 @@ class Device {
   }
 
   Future<void> login(String password) async {
+    await postHttp(path: '/login', body: {}, auth: password);
     _authentication = password;
-    await postHttp(path: '/login', body: {});
   }
 
   Future<void> restart() async {
     await postHttp(path: '/restart', body: {});
   }
 
-  Future<void> changePassword(String oldPassword, String newPassword) async {}
+  Future<void> changePassword(String oldPassword, String newPassword) async {
+    await postHttp(
+      path: '/auth',
+      body: {'pass': newPassword},
+      auth: oldPassword,
+    );
+    _authentication = newPassword;
+  }
+
+  Future<void> wipeData() async {
+    await postHttp(path: '/wipe_data', body: {});
+  }
+
   Future<void> updateFirmware(Firmware firmware) async {
     Uri uri = Uri.http(ipAddress.address, 'firmware_update');
     http.Response response;
@@ -93,11 +105,11 @@ class Device {
     return base64;
   }
 
-  Future<JsonObject> getHttp({required String path}) async {
+  Future<JsonObject> getHttp({required String path, String? auth}) async {
     Uri uri = Uri.http(ipAddress.address, path);
     log('GET $path');
 
-    var headers = {'Authorization': _authentication};
+    var headers = {'Authorization': auth ?? _authentication};
 
     http.Response res;
     var st = Stopwatch()..start();
@@ -128,6 +140,7 @@ class Device {
   Future<JsonObject> postHttp({
     required String path,
     required JsonObject body,
+    String? auth,
   }) async {
     Uri uri = Uri.http(ipAddress.address, path);
     log('POST $path');
@@ -135,7 +148,7 @@ class Device {
     String json = jsonEncode(body);
     var headers = {
       'Content-Type': 'application/json',
-      'Authorization': _authentication,
+      'Authorization': auth ?? _authentication,
     };
 
     http.Response res;

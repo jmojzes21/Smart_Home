@@ -45,4 +45,15 @@ class DeviceService {
     var sessionService = SessionService();
     await sessionService.deleteSession();
   }
+
+  Future<void> changePassword({
+    required Device device,
+    required String plainOldPassword,
+    required String plainNewPassword,
+  }) async {
+    String oldPassword = device.hashPassword(plainOldPassword);
+    String newPassword = device.hashPassword(plainNewPassword);
+
+    await device.changePassword(oldPassword, newPassword);
+  }
 }
