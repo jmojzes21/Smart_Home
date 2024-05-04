@@ -19,6 +19,10 @@ class MyTheme {
   static const TextStyle bodyMedium = TextStyle(
     fontSize: 16,
   );
+  static const TextStyle bodyMediumBold = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+  );
   static const TextStyle bodyLarge = TextStyle(
     fontSize: 20,
   );

@@ -116,64 +116,31 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget buildBody(BuildContext context) {
-    var titleStyle = MyTheme.titleMedium;
-    var bodyStyle = MyTheme.bodyMedium;
-    const spacing = 10.0;
-
     var content = SizedBox(
       width: MediaQuery.of(context).size.width,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Osnovne informacije
-          Text('Osnovne informacije', style: MyTheme.titleLargeBold),
-          SizedBox(height: spacing),
-          Text('Naziv', style: titleStyle),
-          Text(device.name, style: bodyStyle),
-          SizedBox(height: spacing),
-          Text('Verzija', style: titleStyle),
-          Text(device.firmwareVersion, style: bodyStyle),
-          SizedBox(height: spacing),
-          Text('IP adresa', style: titleStyle),
-          Text(device.ipAddress.address, style: bodyStyle),
-          SizedBox(height: 2 * spacing),
-
-          // WiFi mreže
-          Text('WiFi mreže', style: MyTheme.titleLargeBold),
-          SizedBox(height: spacing),
-          ListView.builder(
-            itemCount: wifiNetworks.length,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(wifiNetworks[index].ssid),
-                onTap: () => openWifiNetwork(wifiNetworks[index]),
-              );
-            },
+          ExpansionTile(
+            title: Text('Osnovne informacije', style: MyTheme.titleLarge),
+            expandedCrossAxisAlignment: CrossAxisAlignment.start,
+            expandedAlignment: Alignment.topLeft,
+            childrenPadding: EdgeInsets.all(20),
+            children: buildDeviceInfoSection(context),
           ),
-          SizedBox(height: spacing),
-          TextButton(
-            onPressed: () => addWifiNetwork(),
-            child: Text('Dodaj mrežu'),
+          ExpansionTile(
+            title: Text('Povezivanje', style: MyTheme.titleLarge),
+            expandedCrossAxisAlignment: CrossAxisAlignment.start,
+            expandedAlignment: Alignment.topLeft,
+            childrenPadding: EdgeInsets.all(20),
+            children: buildConnectivitySection(context),
           ),
-          SizedBox(height: 2 * spacing),
-
-          // OTA update, promjena lozinke
-          Text('Ostalo', style: MyTheme.titleLargeBold),
-          SizedBox(height: 2 * spacing),
-          ElevatedButton(
-            onPressed: () => restartDevice(),
-            child: Text('Ponovno pokreni uređaj'),
-          ),
-          SizedBox(height: 2 * spacing),
-          ElevatedButton(
-            onPressed: () => changePassword(),
-            child: Text('Promijeni lozinku'),
-          ),
-          SizedBox(height: 2 * spacing),
-          ElevatedButton(
-            onPressed: () => openPrepareUpdateDialog(),
-            child: Text('Ažuriraj ugradbeni program'),
+          ExpansionTile(
+            title: Text('Sustav', style: MyTheme.titleLarge),
+            expandedCrossAxisAlignment: CrossAxisAlignment.start,
+            expandedAlignment: Alignment.topLeft,
+            childrenPadding: EdgeInsets.all(20),
+            children: buildSystemSection(context),
           ),
         ],
       ),
@@ -185,6 +152,75 @@ class _SettingsPageState extends State<SettingsPage> {
         child: content,
       ),
     );
+  }
+
+  List<Widget> buildDeviceInfoSection(BuildContext context) {
+    return [
+      Text('Naziv', style: MyTheme.bodyMediumBold),
+      Text(device.name, style: MyTheme.bodyMedium),
+      SizedBox(height: 10),
+      Text('Verzija', style: MyTheme.bodyMediumBold),
+      Text(device.firmwareVersion, style: MyTheme.bodyMedium),
+      SizedBox(height: 10),
+      Text('IP adresa', style: MyTheme.bodyMediumBold),
+      Text(device.ipAddress.address, style: MyTheme.bodyMedium),
+    ];
+  }
+
+  List<Widget> buildConnectivitySection(BuildContext context) {
+    return [
+      Text('WiFi mreže', style: MyTheme.bodyMediumBold),
+      SizedBox(height: 10),
+      ListView.builder(
+        itemCount: wifiNetworks.length,
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(wifiNetworks[index].ssid),
+            leading: Icon(Icons.wifi),
+            onTap: () => openWifiNetwork(wifiNetworks[index]),
+          );
+        },
+      ),
+      SizedBox(height: 10),
+      OutlinedButton.icon(
+        onPressed: () => addWifiNetwork(),
+        icon: Icon(Icons.add),
+        label: Text('Dodaj mrežu'),
+      ),
+    ];
+  }
+
+  List<Widget> buildSystemSection(BuildContext context) {
+    return [
+      Text('Sigurnost', style: MyTheme.bodyMediumBold),
+      SizedBox(height: 20),
+      OutlinedButton.icon(
+        onPressed: () => changePassword(),
+        icon: Icon(Icons.lock_outline),
+        label: Text('Promijeni lozinku'),
+      ),
+      SizedBox(height: 20),
+      OutlinedButton.icon(
+        onPressed: () {},
+        icon: Icon(Icons.delete_outline),
+        label: Text('Obriši sve podatke'),
+      ),
+      SizedBox(height: 40),
+      Text('Uređaj', style: MyTheme.bodyMediumBold),
+      SizedBox(height: 20),
+      OutlinedButton.icon(
+        onPressed: () => restartDevice(),
+        icon: Icon(Icons.restart_alt),
+        label: Text('Ponovno pokreni uređaj'),
+      ),
+      SizedBox(height: 20),
+      OutlinedButton.icon(
+        onPressed: () => openPrepareUpdateDialog(),
+        icon: Icon(Icons.upgrade),
+        label: Text('Ažuriraj ugradbeni program'),
+      ),
+    ];
   }
 
   @override
