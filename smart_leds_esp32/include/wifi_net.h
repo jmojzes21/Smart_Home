@@ -10,7 +10,7 @@ class WifiNetwork {
     std::string ssid;
     std::string password;
 
-    WifiNetwork(std::string& ssid, std::string& password) {
+    WifiNetwork(std::string ssid, std::string password) {
         this->ssid = ssid;
         this->password = password;
     }

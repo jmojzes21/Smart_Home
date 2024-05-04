@@ -41,6 +41,12 @@ void setup() {
 
     qlog_setup(2048);
 
+    if(useRealHardware) {
+        qlog("Koristi stvarni hardver");
+    }else{
+        qlog("Koristi virtualni hardver");
+    }
+
     // učitaj postavke
     qlog("Učitaj postavke");
 

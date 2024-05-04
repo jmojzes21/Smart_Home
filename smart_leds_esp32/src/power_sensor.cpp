@@ -1,9 +1,12 @@
 
 #include "power_sensor.h"
+#include "device.h"
 
 void PowerSensor::setup() {
     _mutex = xSemaphoreCreateMutex();
-    _ina219.begin();
+    if(useRealHardware) {
+        _ina219.begin();
+    }
 }
 
 void _powerSensorTask(void* p) {
@@ -18,8 +21,16 @@ void _powerSensorTask(void* p) {
         
         if(active) {
 
-            float current = powerSensor->_ina219.getCurrent_mA();
-            float voltage = powerSensor->_ina219.getBusVoltage_V();
+            float current;
+            float voltage;
+
+            if(useRealHardware) {
+                current = powerSensor->_ina219.getCurrent_mA();
+                voltage = powerSensor->_ina219.getBusVoltage_V();
+            }else{
+                current = 500;
+                voltage = 4.8;
+            }
 
             PowerSensorData& data = powerSensor->_data;
             
