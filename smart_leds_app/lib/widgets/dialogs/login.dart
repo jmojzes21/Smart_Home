@@ -1,27 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:smart_leds_app/logic/device/device.dart';
+import 'package:smart_leds_app/logic/device_service.dart';
+import 'package:smart_leds_app/models/exceptions.dart';
 import 'package:smart_leds_app/widgets/misc/checkbox.dart';
-import 'package:smart_leds_app/widgets/dialogs/simple_dialogs.dart';
-
-class LoginDialogResult {
-  String password = '';
-  bool stayLoggedIn = false;
-
-  LoginDialogResult(this.password, this.stayLoggedIn);
-}
+import 'package:smart_leds_app/widgets/misc/error_text.dart';
 
 class LoginDialog extends StatefulWidget {
-  const LoginDialog({super.key});
+  final Device device;
+  const LoginDialog(this.device, {super.key});
 
   @override
   State<LoginDialog> createState() => _LoginDialogState();
 
-  static Future<LoginDialogResult?> show(BuildContext context) async {
-    var result = await showDialog<LoginDialogResult>(
+  static Future<bool> show(BuildContext context, Device device) async {
+    var result = await showDialog<bool>(
       context: context,
-      builder: (context) => LoginDialog(),
+      builder: (context) => LoginDialog(device),
     );
 
-    return result;
+    return result ?? false;
   }
 }
 
@@ -29,19 +26,37 @@ class _LoginDialogState extends State<LoginDialog> {
   var tcPassword = TextEditingController();
   var showPassword = false;
   var stayLoggedIn = false;
+  var errorMessage = '';
 
-  void login() {
+  void login() async {
     var password = tcPassword.text.trim();
+
     if (password.isEmpty) {
-      SimpleDialogs.showMessage(
-          context: context,
-          title: 'Prijava',
-          message: 'Potrebno je unijeti lozinku.');
+      setError('Unesite lozinku.');
       return;
     }
 
-    var result = LoginDialogResult(password, stayLoggedIn);
-    Navigator.of(context).pop(result);
+    var device = widget.device;
+    var deviceService = DeviceService();
+
+    try {
+      await deviceService.login(
+        device: device,
+        plainPassword: password,
+        stayLoggedIn: stayLoggedIn,
+      );
+    } on DeviceException catch (e) {
+      setError(e.message);
+      return;
+    }
+
+    if (!mounted) return;
+    Navigator.of(context).pop(true);
+  }
+
+  void setError(String message) {
+    if (!mounted) return;
+    setState(() => errorMessage = message);
   }
 
   @override
@@ -90,6 +105,7 @@ class _LoginDialogState extends State<LoginDialog> {
                 text: 'Ostani prijavljen',
                 onChanged: (value) => setState(() => stayLoggedIn = value),
               ),
+              if (errorMessage.isNotEmpty) ErrorText(errorMessage),
             ],
           ),
         ),

@@ -27,7 +27,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void getWifiNetworks() async {
-    var networks = await Device.currentDevice.getWifiNetworks();
+    var networks = await Device.currentDevice.wifi.getNetworks();
     setState(() {
       wifiNetworks = networks;
     });
@@ -79,7 +79,7 @@ class _SettingsPageState extends State<SettingsPage> {
     var networks = [...wifiNetworks];
     networks.add(network);
 
-    Device.currentDevice.updateWifiNetworks(networks);
+    Device.currentDevice.wifi.updateNetworks(networks);
     getWifiNetworks();
   }
 
@@ -100,7 +100,7 @@ class _SettingsPageState extends State<SettingsPage> {
       target.password = edited.password;
     }
 
-    Device.currentDevice.updateWifiNetworks(networks);
+    Device.currentDevice.wifi.updateNetworks(networks);
     getWifiNetworks();
   }
 

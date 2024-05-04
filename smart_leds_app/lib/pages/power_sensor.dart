@@ -24,7 +24,7 @@ class _PowerSensorPageState extends State<PowerSensorPage> {
 
   void refresh() async {
     var device = Device.currentDevice;
-    var data = await device.getPowerSensorData();
+    var data = await device.powerSensor.getData();
 
     if (data.isActive) {
       refreshTimer ??=
@@ -41,7 +41,7 @@ class _PowerSensorPageState extends State<PowerSensorPage> {
 
   void changePowerSensorState(bool active) async {
     var device = Device.currentDevice;
-    await device.setPowerSensorState(active);
+    await device.powerSensor.setState(active);
     refresh();
   }
 

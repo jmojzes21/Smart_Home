@@ -1,14 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:smart_leds_app/logic/device/device.dart';
 import 'package:smart_leds_app/logic/device_discovery.dart';
 import 'package:smart_leds_app/logic/device_service.dart';
-import 'package:smart_leds_app/logic/device/device.dart';
-import 'package:smart_leds_app/models/exceptions.dart';
 import 'package:smart_leds_app/widgets/dialogs/login.dart';
 import 'package:smart_leds_app/pages/home.dart';
 import 'package:smart_leds_app/widgets/dialogs/simple_dialogs.dart';
-
-import '../logic/device_factory.dart';
-import '../models/misc/discovered_device.dart';
 
 class DeviceDiscoveryPage extends StatefulWidget {
   const DeviceDiscoveryPage({super.key});
@@ -18,9 +16,9 @@ class DeviceDiscoveryPage extends StatefulWidget {
 
 class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
   var deviceDiscovery = DeviceDiscovery();
-  var discoveredDevices = <DiscoveredDevice>[];
+  var discoveredDevices = <Device>[];
   var isDiscovering = false;
-  var showVirtualDevice = true;
+  var showTestDevice = true;
 
   @override
   void initState() {
@@ -47,8 +45,11 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
       isDiscovering = true;
       discoveredDevices.clear();
 
-      if (showVirtualDevice) {
-        discoveredDevices.add(DiscoveredDevice.virtual());
+      if (showTestDevice) {
+        discoveredDevices.add(Device(
+          name: 'Testni uređaj',
+          ipAddress: InternetAddress('127.0.0.1'),
+        ));
       }
     });
 
@@ -70,33 +71,11 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
     deviceDiscovery.stop();
   }
 
-  Future<void> connectDevice(DiscoveredDevice discoveredDevice) async {
-    var result = await LoginDialog.show(context);
-    if (result == null) return;
-
-    var deviceFactory = DeviceFactory();
-    var device = deviceFactory.fromDiscovery(discoveredDevice);
-
-    var deviceService = DeviceService();
-
-    try {
-      await deviceService.login(
-        device: device,
-        plainPassword: result.password,
-        stayLoggedIn: result.stayLoggedIn,
-      );
-    } on DeviceException catch (e) {
-      if (!mounted) return;
-      SimpleDialogs.showMessage(
-        context: context,
-        title: 'Prijava nije uspjela',
-        message: e.message,
-      );
-      return;
+  Future<void> connectDevice(Device device) async {
+    bool ok = await LoginDialog.show(context, device);
+    if (ok) {
+      openHomePage(device);
     }
-
-    if (!mounted) return;
-    openHomePage(device);
   }
 
   Future<void> loadSession() async {
@@ -113,11 +92,7 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
     Device.currentDevice = device;
 
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) {
-          return HomePage();
-        },
-      ),
+      MaterialPageRoute(builder: (context) => HomePage()),
     );
   }
 
