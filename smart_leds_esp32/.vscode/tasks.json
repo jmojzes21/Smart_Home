@@ -6,7 +6,7 @@
       "type": "shell",
       "command": "dart",
       "args": ["run", "bin/pack_firmware.dart"],
-      "options": { "cwd": "${workspaceFolder}/../smart_leds_tools/" },
+      "options": { "cwd": "${workspaceFolder}/../tools/scripts/" },
       "group": "build",
       "presentation": { "echo": true, "reveal": "always", "focus": false, "panel": "dedicated", "showReuseMessage": false, "clear": false }
     },
@@ -15,7 +15,7 @@
       "type": "shell",
       "command": "dart",
       "args": ["run", "bin/upload_firmware.dart", "${input:device_ip}"],
-      "options": { "cwd": "${workspaceFolder}/../smart_leds_tools/" },
+      "options": { "cwd": "${workspaceFolder}/../tools/scripts/" },
       "group": "build",
       "presentation": { "echo": true, "reveal": "always", "focus": false, "panel": "dedicated", "showReuseMessage": false, "clear": false }
     }

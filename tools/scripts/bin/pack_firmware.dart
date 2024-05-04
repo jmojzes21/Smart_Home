@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:path/path.dart' as p;
-import 'package:smart_leds_tools/firmware.dart';
+import 'package:scripts/firmware.dart';
 
 void main() {
   String outputPath = p.join(p.current, 'out', 'firmware.bin');

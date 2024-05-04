@@ -1,5 +1,5 @@
-name: smart_leds_tools
-description: A sample command-line application.
+name: scripts
+description: 
 version: 1.0.0
 
 environment:

@@ -28,11 +28,11 @@ Firmware loadFirmware() {
     56, 46, 220, 149, 246, 4, 222, 9, 218, 211, 62, 152, 170, 22, 141 //
   ];
 
-  String firmwarePath = p.join(p.current, '..', 'smart_leds_esp32', '.pio',
-      'build', 'esp32dev', 'firmware.bin');
+  String firmwarePath = p.join(p.current, '..', '..', 'smart_leds_esp32',
+      '.pio', 'build', 'esp32dev', 'firmware.bin');
 
   String mainCppPath =
-      p.join(p.current, '..', 'smart_leds_esp32', 'src', 'main.cpp');
+      p.join(p.current, '..', '..', 'smart_leds_esp32', 'src', 'main.cpp');
 
   String version = _getFirmwareVersion(mainCppPath);
   Uint8List firmwareBytes = _getFirmware(firmwarePath);

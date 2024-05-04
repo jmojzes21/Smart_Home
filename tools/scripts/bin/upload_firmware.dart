@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
-import 'package:smart_leds_tools/firmware.dart';
+import 'package:scripts/firmware.dart';
 
 Future<void> main(List<String> args) async {
   var ipAddress = readIpAddress(args);
