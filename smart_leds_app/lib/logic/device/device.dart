@@ -52,7 +52,10 @@ class Device {
     await postHttp(path: '/login', body: {});
   }
 
-  Future<void> restart() async {}
+  Future<void> restart() async {
+    await postHttp(path: '/restart', body: {});
+  }
+
   Future<void> changePassword(String oldPassword, String newPassword) async {}
   Future<void> updateFirmware(Firmware firmware) async {
     Uri uri = Uri.http(ipAddress.address, 'firmware_update');
