@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/logic/device_service.dart';
 import 'package:smart_leds_app/pages/device_discovery.dart';
-import 'package:smart_leds_app/pages/device_info.dart';
 import 'package:smart_leds_app/pages/home.dart';
 import 'package:smart_leds_app/pages/power_sensor.dart';
 import 'package:smart_leds_app/pages/settings.dart';
-
-import '../../logic/device/device.dart';
 
 class AppNavigationDrawer extends StatelessWidget {
   const AppNavigationDrawer({super.key});
@@ -26,16 +23,6 @@ class AppNavigationDrawer extends StatelessWidget {
       MaterialPageRoute(
         builder: (context) {
           return PowerSensorPage();
-        },
-      ),
-    );
-  }
-
-  void openDeviceInfo(BuildContext context) {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) {
-          return DeviceInfoPage();
         },
       ),
     );
@@ -67,8 +54,6 @@ class AppNavigationDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var device = Device.currentDevice;
-
     return Drawer(
       width: 300,
       child: Padding(
@@ -91,12 +76,6 @@ class AppNavigationDrawer extends StatelessWidget {
               onTap: () => openSettings(context),
             ),
             Spacer(),
-            ListTile(
-              title: Text('Uređaj'),
-              subtitle: Text(device.ipAddress.address),
-              leading: Icon(Icons.devices),
-              onTap: () => openDeviceInfo(context),
-            ),
             ListTile(
               title: Text('Zatvori uređaj'),
               leading: Icon(Icons.logout),
