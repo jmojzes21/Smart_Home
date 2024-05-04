@@ -2,12 +2,19 @@ import 'package:smart_leds_app/logic/device/device.dart';
 import 'package:smart_leds_app/models/misc/power_sensor_data.dart';
 
 class PowerSensor {
-  // ignore: unused_field
   final Device _device;
 
   PowerSensor(this._device);
 
-  Future<void> setState(bool active) async {}
+  Future<void> setState(bool active) async {
+    await _device.postHttp(
+      path: '/power_sensor',
+      body: {'active': active},
+    );
+  }
 
-  Future<PowerSensorData> getData() => throw UnimplementedError();
+  Future<PowerSensorData> getData() async {
+    var json = await _device.getHttp(path: '/power_sensor');
+    return PowerSensorData.fromJson(json);
+  }
 }

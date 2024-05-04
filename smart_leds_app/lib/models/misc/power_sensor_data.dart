@@ -11,6 +11,23 @@ class PowerSensorData {
 
   PowerSensorData();
 
+  factory PowerSensorData.fromJson(Map<String, dynamic> src) {
+    var data = PowerSensorData();
+    data.isActive = src['active'];
+
+    if (data.isActive) {
+      data.isActive = src['active'];
+      data.current = src['current'].toDouble();
+      data.minCurrent = src['minCurrent'].toDouble();
+      data.maxCurrent = src['maxCurrent'].toDouble();
+      data.voltage = src['voltage'].toDouble();
+      data.minVoltage = src['minVoltage'].toDouble();
+      data.maxVoltage = src['maxVoltage'].toDouble();
+    }
+
+    return data;
+  }
+
   String get currentString => '${current.round()} mA';
   String get minCurrentString => 'Min: ${minCurrent.round()} mA';
   String get maxCurrentString => 'Max: ${maxCurrent.round()} mA';

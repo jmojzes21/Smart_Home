@@ -57,55 +57,72 @@ class _PowerSensorPageState extends State<PowerSensorPage> {
   }
 
   Widget buildBody(BuildContext context) {
-    var content = <Widget>[];
+    List<Widget> content;
 
     if (powerSensorData.isActive) {
-      content.addAll([
-        buildDataTile(
-          icon: Icons.power_outlined,
-          title: 'Jačina strije',
-          value: powerSensorData.currentString,
-          minValue: powerSensorData.minCurrentString,
-          maxValue: powerSensorData.maxCurrentString,
-          progressValue: powerSensorData.current,
-          progressMaxValue: 3000,
-        ),
-        buildDataTile(
-          icon: Icons.battery_0_bar_outlined,
-          title: 'Napon',
-          value: powerSensorData.voltageString,
-          minValue: powerSensorData.minVoltageString,
-          maxValue: powerSensorData.maxVoltageString,
-          progressValue: powerSensorData.voltage,
-          progressMaxValue: 5,
+      content = [
+        ListView(
+          shrinkWrap: true,
+          children: [
+            buildDataTile(
+              icon: Icons.power_outlined,
+              title: 'Jačina strije',
+              value: powerSensorData.currentString,
+              minValue: powerSensorData.minCurrentString,
+              maxValue: powerSensorData.maxCurrentString,
+              progressValue: powerSensorData.current,
+              progressMaxValue: 3000,
+            ),
+            buildDataTile(
+              icon: Icons.battery_0_bar_outlined,
+              title: 'Napon',
+              value: powerSensorData.voltageString,
+              minValue: powerSensorData.minVoltageString,
+              maxValue: powerSensorData.maxVoltageString,
+              progressValue: powerSensorData.voltage,
+              progressMaxValue: 5,
+            ),
+          ],
         ),
         SizedBox(height: 20),
-      ]);
+        FilledButton(
+          onPressed: () => changePowerSensorState(false),
+          child: Text('Isključi senzor'),
+        ),
+      ];
+    } else {
+      content = [
+        SizedBox(
+          width: 300,
+          height: 200,
+          child: Center(
+            child: Text(
+              'Senzor potrošnje energije je isključen.',
+              textAlign: TextAlign.center,
+              style: MyTheme.titleLarge,
+            ),
+          ),
+        ),
+        SizedBox(height: 40),
+        FilledButton(
+          onPressed: () => changePowerSensorState(true),
+          child: Text('Uključi senzor'),
+        ),
+      ];
     }
 
-    content.add(
-      SwitchListTile(
-        value: powerSensorData.isActive,
-        controlAffinity: ListTileControlAffinity.leading,
-        title: Text(powerSensorData.isActive
-            ? 'Senzor potrošnje energije je aktivan'
-            : 'Senzor potrošnje energije nije aktivan'),
-        onChanged: (value) => changePowerSensorState(value),
-      ),
-    );
-
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            width: 400,
-            child: ListView(
-              shrinkWrap: true,
+      child: Card(
+        child: SizedBox(
+          width: 400,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: content,
             ),
           ),
-        ],
+        ),
       ),
     );
   }
