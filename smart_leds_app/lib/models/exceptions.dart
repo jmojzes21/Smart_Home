@@ -7,7 +7,15 @@ class AppException implements Exception {
 }
 
 class DeviceException extends AppException {
-  DeviceException(super.message);
+  DeviceException(String? message) : super(message ?? 'Nepoznata greška.');
+}
+
+class DeviceNotConnectedException extends DeviceException {
+  DeviceNotConnectedException() : super('Uređaj nije povezan.');
+}
+
+class DeviceAuthenticationException extends DeviceException {
+  DeviceAuthenticationException() : super('Autentifikacija nije uspjela.');
 }
 
 class FirmwareException extends AppException {

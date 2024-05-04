@@ -22,18 +22,18 @@ class PatternProvider {
 
   void showPattern(ColorPattern pattern) {
     _currentPattern = pattern;
-    Device.currentDevice.showPattern(pattern, properties);
+    Device.currentDevice.leds.showPattern(pattern, properties);
   }
 
   void updatePattern() {
     if (_currentPattern != null) {
-      Device.currentDevice.showPattern(_currentPattern!, properties);
+      Device.currentDevice.leds.showPattern(_currentPattern!, properties);
     }
   }
 
   void clearPattern() {
     _currentPattern = null;
-    Device.currentDevice.clearPattern();
+    Device.currentDevice.leds.clearPattern();
   }
 
   static PatternProvider of(BuildContext context) {

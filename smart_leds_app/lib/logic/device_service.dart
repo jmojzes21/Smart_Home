@@ -1,4 +1,3 @@
-import 'package:smart_leds_app/logic/device_factory.dart';
 import 'package:smart_leds_app/logic/session_service.dart';
 import 'package:smart_leds_app/logic/device/device.dart';
 import 'package:smart_leds_app/models/exceptions.dart';
@@ -27,8 +26,7 @@ class DeviceService {
     Session? session = await sessionService.loadSession();
     if (session == null) return null;
 
-    var deviceFactory = DeviceFactory();
-    var device = deviceFactory.fromSession(session);
+    var device = session.getDevice();
 
     try {
       await device.getDeviceInfo();

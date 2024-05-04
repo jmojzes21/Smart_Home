@@ -3,24 +3,24 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:multicast_dns/multicast_dns.dart';
-import 'package:smart_leds_app/models/misc/discovered_device.dart';
+import 'package:smart_leds_app/logic/device/device.dart';
 
 class DeviceDiscovery {
   bool _isDiscovering = false;
   MDnsClient? _client;
 
-  Stream<DiscoveredDevice> start() {
+  Stream<Device> start() {
     if (_isDiscovering) throw Exception('Otkrivanje uređaja u tijeku!');
 
     _isDiscovering = true;
 
-    var streamController = StreamController<DiscoveredDevice>();
+    var streamController = StreamController<Device>();
     _start(streamController);
 
     return streamController.stream;
   }
 
-  void _start(StreamController<DiscoveredDevice> streamController) async {
+  void _start(StreamController<Device> streamController) async {
     const String serviceName = '_http._tcp.local';
     const String targetName = 'smart_leds.local';
 
@@ -52,7 +52,7 @@ class DeviceDiscovery {
 
             log('Pronađen uređaj $deviceName, IP: ${ip.address.address}');
 
-            streamController.sink.add(DiscoveredDevice(
+            streamController.sink.add(Device(
               name: deviceName,
               ipAddress: ip.address,
             ));

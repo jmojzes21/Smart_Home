@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:smart_leds_app/logic/device/device.dart';
+
 class Session {
   String deviceType = '';
   String ipAddress = '';
@@ -10,6 +14,8 @@ class Session {
     required this.macAddress,
     required this.password,
   });
+
+  Device getDevice() => Device(ipAddress: InternetAddress(ipAddress));
 
   factory Session.fromJson(Map<String, dynamic> src) {
     return Session(
