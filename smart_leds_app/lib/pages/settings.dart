@@ -162,6 +162,9 @@ class _SettingsPageState extends State<SettingsPage> {
       Text('Verzija', style: MyTheme.bodyMediumBold),
       Text(device.firmwareVersion, style: MyTheme.bodyMedium),
       SizedBox(height: 10),
+      Text('WiFi mreža', style: MyTheme.bodyMediumBold),
+      Text(device.wifi.wifiSsid, style: MyTheme.bodyMedium),
+      SizedBox(height: 10),
       Text('IP adresa', style: MyTheme.bodyMediumBold),
       Text(device.ipAddress.address, style: MyTheme.bodyMedium),
     ];

@@ -4,6 +4,8 @@ import 'package:smart_leds_app/models/misc/wifi_network.dart';
 class WifiController {
   final Device _device;
 
+  String wifiSsid = '';
+
   WifiController(this._device);
 
   Future<List<WifiNetwork>> getNetworks() async {
