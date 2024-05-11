@@ -5,9 +5,11 @@ class SimpleDialogs {
   static Future<void> showMessage(
       {required BuildContext context,
       required String title,
-      required String message}) {
+      required String message,
+      bool barrierDismissible = true}) {
     return showDialog(
       context: context,
+      barrierDismissible: barrierDismissible,
       builder: (context) => AlertDialog(
         title: Text(title),
         content: Text(message),

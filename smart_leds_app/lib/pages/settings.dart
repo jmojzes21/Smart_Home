@@ -6,6 +6,7 @@ import 'package:smart_leds_app/pages/device_discovery.dart';
 import 'package:smart_leds_app/widgets/dialogs/change_password.dart';
 import 'package:smart_leds_app/theme.dart';
 import 'package:smart_leds_app/widgets/dialogs/simple_dialogs.dart';
+import 'package:smart_leds_app/widgets/dialogs/firmware_update.dart';
 import 'package:smart_leds_app/widgets/dialogs/wifi_network.dart';
 import 'package:smart_leds_app/widgets/misc/navigation_drawer.dart';
 
@@ -93,14 +94,8 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
-  void openPrepareUpdateDialog() {
-    /* showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return PrepareUpdateWidget();
-      },
-    );*/
+  void updateFirmware() async {
+    await FirmwareUpdateDialog.show(context);
   }
 
   void addWifiNetwork() async {
@@ -236,7 +231,7 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       SizedBox(height: 20),
       OutlinedButton.icon(
-        onPressed: () => openPrepareUpdateDialog(),
+        onPressed: () => updateFirmware(),
         icon: Icon(Icons.upgrade),
         label: Text('Ažuriraj ugradbeni program'),
       ),
