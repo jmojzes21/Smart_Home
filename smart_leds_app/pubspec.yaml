@@ -14,9 +14,12 @@ dependencies:
   http: ^1.2.0
   crypto: ^3.0.3
   path_provider: ^2.1.2
-  multicast_dns: ^0.3.2+6
   file_selector: ^1.0.3
   async: ^2.11.0
+
+  multicast_dns:
+    git:
+      url: https://github.com/jmojzes21/multicast_dns.git
 
 dev_dependencies:
   flutter_test:

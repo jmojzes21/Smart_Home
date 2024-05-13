@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:multicast_dns/multicast_dns.dart';
 import 'package:smart_leds_app/logic/device/device.dart';
@@ -27,7 +26,7 @@ class DeviceDiscovery {
     // izvor: https://github.com/flutter/packages/blob/main/packages/multicast_dns/example/mdns_sd.dart
     log('Započni pretraživanje uređaja');
 
-    _client = MDnsClient(rawDatagramSocketFactory: _rawDatagramSocketFactory);
+    _client = MDnsClient();
 
     try {
       await _client!.start();
@@ -74,16 +73,5 @@ class DeviceDiscovery {
     if (_isDiscovering) {
       _client?.stop();
     }
-  }
-
-  Future<RawDatagramSocket> _rawDatagramSocketFactory(
-    dynamic host,
-    int port, {
-    bool? reuseAddress,
-    bool? reusePort,
-    int? ttl,
-  }) {
-    return RawDatagramSocket.bind(host, port,
-        reuseAddress: true, reusePort: false, ttl: ttl!);
   }
 }

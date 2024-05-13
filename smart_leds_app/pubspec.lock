@@ -235,11 +235,12 @@ packages:
   multicast_dns:
     dependency: "direct main"
     description:
-      name: multicast_dns
-      sha256: "316cc47a958d4bd3c67bd238fe8b44fdfb6133bad89cb191c0c3bd3edb14e296"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.2+6"
+      path: "."
+      ref: HEAD
+      resolved-ref: "19f70faaaedf1a6f0ca10988b0e1661f5f120912"
+      url: "https://github.com/jmojzes21/multicast_dns.git"
+    source: git
+    version: "0.3.2+7"
   nested:
     dependency: transitive
     description:
