@@ -18,5 +18,28 @@
     <ClCompile Include="Windows DLA.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="leds\core\leds.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="leds\core\color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="leds\core\colors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="leds\core\leds.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="leds\patterns\color_pattern.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="leds\patterns\fade_pattern.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="leds\patterns\solid_color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
