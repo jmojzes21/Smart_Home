@@ -3,7 +3,7 @@
 
 #include <ArduinoJson.h>
 
-#include "leds.h"
+#include "core/leds.h"
 
 extern LEDs leds;
 

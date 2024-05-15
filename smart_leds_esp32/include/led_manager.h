@@ -4,7 +4,7 @@
 #include <AsyncUDP.h>
 
 #include "patterns/color_pattern.h"
-#include "leds.h"
+#include "core/leds.h"
 
 extern LEDs leds;
 
