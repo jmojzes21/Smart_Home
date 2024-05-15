@@ -156,7 +156,7 @@
     <ClCompile Include="leds\core\led_driver.cpp" />
     <ClCompile Include="leds\core\platforms\esp_driver.cpp" />
     <ClCompile Include="leds\core\platforms\win_dla_driver.cpp" />
-    <ClCompile Include="Windows DLA.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="leds\core\color.h" />

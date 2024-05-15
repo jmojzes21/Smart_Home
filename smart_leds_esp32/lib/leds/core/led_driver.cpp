@@ -11,8 +11,8 @@ void LedDriver::init() {
 
 #elif _WIN32
 
-void LedDriver::init() {
-    platform_led_driver::init();
+void LedDriver::init(const char* ipAddress, int port) {
+    platform_led_driver::init(_colors, _ledCount, ipAddress, port);
 }
 
 #else
@@ -48,3 +48,11 @@ Color* LedDriver::colors() {
 int LedDriver::ledCount() {
     return _ledCount;
 }
+
+#ifdef _WIN32
+
+LedDriver::~LedDriver() {
+    platform_led_driver::dispose();
+}
+
+#endif

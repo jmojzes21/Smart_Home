@@ -9,7 +9,7 @@ namespace platform_led_driver {
 #ifdef ESP32
     void init(Color* colors, int ledCount);
 #elif _WIN32
-    void init();
+    void init(Color* colors, int ledCount, const char* ipAddress, int port);
 #else
 #error Unsupported platform
 #endif
@@ -18,5 +18,9 @@ namespace platform_led_driver {
 
     void setBrightness(uint8_t value);
     void clear();
+
+#ifdef _WIN32
+    void dispose();
+#endif
 
 }

@@ -17,7 +17,7 @@ public:
 #ifdef ESP32
     void init();
 #elif _WIN32
-    void init();
+    void init(const char* ipAddress, int port);
 #else
 #error Unsupported platform
 #endif
@@ -30,5 +30,9 @@ public:
 
     Color* colors();
     int ledCount();
+
+#ifdef _WIN32
+    ~LedDriver();
+#endif
 
 };
