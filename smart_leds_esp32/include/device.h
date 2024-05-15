@@ -5,8 +5,6 @@
 #include <string>
 #include <Ticker.h>
 
-const bool useRealHardware = false;
-
 class Device {
 
     public:

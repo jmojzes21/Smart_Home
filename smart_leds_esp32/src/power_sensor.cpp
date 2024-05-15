@@ -1,12 +1,17 @@
 
 #include "power_sensor.h"
-#include "device.h"
+#include "log.h"
 
 void PowerSensor::setup() {
+
     _mutex = xSemaphoreCreateMutex();
-    if(useRealHardware) {
-        _ina219.begin();
+    _useRealSensor = _ina219.begin();
+
+    if(_useRealSensor == false) {
+        qlog("Senzor potrošnje energije nije povezan");
+        qlog("Koristi lažni senzor potrošnje energije");
     }
+
 }
 
 void _powerSensorTask(void* p) {
@@ -24,7 +29,7 @@ void _powerSensorTask(void* p) {
             float current;
             float voltage;
 
-            if(useRealHardware) {
+            if(powerSensor->_useRealSensor) {
                 current = powerSensor->_ina219.getCurrent_mA();
                 voltage = powerSensor->_ina219.getBusVoltage_V();
             }else{
