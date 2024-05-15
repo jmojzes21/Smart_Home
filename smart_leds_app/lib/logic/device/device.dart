@@ -84,6 +84,7 @@ class Device {
           'Device-Type': firmware.deviceType,
           'Firmware-Size': firmware.bytes.length.toString(),
           'Firmware-HMAC': firmware.hmac,
+          'Authorization': _authentication,
         },
         body: firmware.bytes,
       );
