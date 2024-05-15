@@ -123,7 +123,7 @@ class Device {
       throw DeviceNotConnectedException();
     }
 
-    log('${res.statusCode}, ${st.elapsedMilliseconds} ms');
+    log('GET $path ${res.statusCode}, ${st.elapsedMilliseconds} ms');
 
     if (res.statusCode == 401) {
       throw DeviceAuthenticationException();
@@ -163,7 +163,7 @@ class Device {
       throw DeviceNotConnectedException();
     }
 
-    log('${res.statusCode}, ${st.elapsedMilliseconds} ms');
+    log('POST $path ${res.statusCode}, ${st.elapsedMilliseconds} ms');
 
     if (res.statusCode == 401) {
       throw DeviceAuthenticationException();

@@ -94,6 +94,10 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
+  void startDla() async {
+    await device.leds.startDla();
+  }
+
   void updateFirmware() async {
     await FirmwareUpdateDialog.show(context);
   }
@@ -228,6 +232,12 @@ class _SettingsPageState extends State<SettingsPage> {
         onPressed: () => restartDevice(),
         icon: Icon(Icons.restart_alt),
         label: Text('Ponovno pokreni uređaj'),
+      ),
+      SizedBox(height: 20),
+      OutlinedButton.icon(
+        onPressed: () => startDla(),
+        icon: Icon(Icons.lightbulb_outline),
+        label: Text('Pokreni DLA'),
       ),
       SizedBox(height: 20),
       OutlinedButton.icon(

@@ -14,4 +14,8 @@ class LedController {
   ) async {}
 
   Future<void> clearPattern() async {}
+
+  Future<void> startDla() async {
+    await _device.postHttp(path: '/dla_start', body: {});
+  }
 }
