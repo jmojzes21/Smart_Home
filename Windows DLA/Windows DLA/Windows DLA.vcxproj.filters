@@ -18,6 +18,20 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <Filter Include="Main">
+      <UniqueIdentifier>{dd49d412-2ed5-48c1-bf4c-b6a8439e24f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LED Core">
+      <UniqueIdentifier>{c97a99f5-67be-4511-8f36-499436c6992b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LED Patterns">
+      <UniqueIdentifier>{2ef49a75-096e-45e4-a627-d47317eaa4a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LED Core\Platforms">
+      <UniqueIdentifier>{85f2a3ae-e615-44a1-a849-3393e47a196a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="leds\core\color.h">
       <Filter>LED Core</Filter>
     </ClInclude>
@@ -39,19 +53,5 @@
     <ClInclude Include="leds\core\platforms\platform_driver.h">
       <Filter>LED Core\Platforms</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="Main">
-      <UniqueIdentifier>{dd49d412-2ed5-48c1-bf4c-b6a8439e24f6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LED Core">
-      <UniqueIdentifier>{a0a047bf-d32f-406b-913c-14f72226b38c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LED Patterns">
-      <UniqueIdentifier>{ad55dd52-5fb8-4860-a7d3-e3e731ce71c6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="LED Core\Platforms">
-      <UniqueIdentifier>{dc46fd24-e24d-40b0-95c5-57230dc63116}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
 </Project>
