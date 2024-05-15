@@ -24,7 +24,7 @@ const char* deviceType = "Smart LEDs L24";
 const int httpPort = 80;
 
 Device device;
-LEDs leds;
+LedDriver ledDriver;
 LedManager ledManager;
 
 WifiManager wifiManager;

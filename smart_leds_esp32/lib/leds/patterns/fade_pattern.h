@@ -14,20 +14,10 @@ class FadePattern : public ColorPattern {
 
     void setup() override {
         color = Colors::Black;
-        leds.show();
+        ledDriver.show();
     }
 
     void loop() override {
-
-        EVERY_N_MILLIS(500) {
-            value = !value;
-            if(value) {
-                leds.showColor(color);
-            }else{
-                leds.showColor(Colors::Black);
-            }
-            
-        }
         
     }
 

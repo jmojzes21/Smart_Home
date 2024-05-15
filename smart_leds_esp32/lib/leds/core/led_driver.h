@@ -15,7 +15,7 @@ private:
 public:
 
 #ifdef ESP32
-    void init(int dataPin);
+    void init();
 #elif _WIN32
     void init();
 #else

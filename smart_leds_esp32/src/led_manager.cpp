@@ -13,7 +13,7 @@ void LedManager::setup() {
 
     _mutex = xSemaphoreCreateMutex();
 
-    leds.setup();
+    ledDriver.init();
 
     _udp.onPacket([&](AsyncUDPPacket packet) {
         _onUdpPacket(packet);
@@ -58,7 +58,7 @@ void LedManager::setBrightness(uint8_t value) {
 
     xSemaphoreTake(_mutex, portMAX_DELAY);
 
-    leds.setBrightness(value);
+    ledDriver.setBrightness(value);
     
     xSemaphoreGive(_mutex);
 
@@ -117,7 +117,7 @@ bool LedManager::_enableDLA() {
         _currentPattern = nullptr;
     }
 
-    leds.clear();
+    ledDriver.clear();
 
     _udp.listen(7000);
     _directAccess = true;
@@ -140,13 +140,19 @@ void LedManager::_onUdpPacket(AsyncUDPPacket& packet) {
 
             case 10:
                 if(length == DLA_PAYLOAD_SIZE + 1) {
-                    memcpy(leds.colors(), data + 1, DLA_PAYLOAD_SIZE);
-                    leds.show();
+                    memcpy(ledDriver.colors(), data + 1, DLA_PAYLOAD_SIZE);
+                    ledDriver.show();
                 }
                 break;
 
             case 20:
-                leds.clear();
+                ledDriver.clear();
+                break;
+            case 21:
+                if(length == 2) {
+                    uint8_t brightness = data[1];
+                    ledDriver.setBrightness(brightness);
+                }
                 break;
         }
 

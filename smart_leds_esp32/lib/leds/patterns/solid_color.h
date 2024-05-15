@@ -13,19 +13,17 @@ class SolidColorPattern : public ColorPattern {
 
     void setup() override {
         color = Colors::Black;
-        leds.show();
+        ledDriver.show();
     }
 
     void loop() override {
-        EVERY_N_MILLIS(200) {
-            leds.showColor(color);
-        }
+        
     }
 
     bool update(JsonObject p) override {
         int rgb = p["color"];
         color = Color(rgb);
-        leds.showColor(color);
+        ledDriver.showColor(color);
         return true;
     }
 

@@ -5,8 +5,8 @@
 
 #ifdef ESP32
 
-void LedDriver::init(int dataPin) {
-    platform_led_driver::init(_colors, dataPin);
+void LedDriver::init() {
+    platform_led_driver::init(_colors, _ledCount);
 }
 
 #elif _WIN32

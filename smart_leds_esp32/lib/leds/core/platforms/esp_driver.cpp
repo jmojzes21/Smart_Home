@@ -5,13 +5,15 @@
 
 #include <FastLED.h>
 
+#define LED_DATA_PIN 26
+
 namespace platform_led_driver {
 
-    void init(Color* colors, int dataPin) {
+    void init(Color* colors, int ledCount) {
 
-        CRGB* data = (CRGB*)_colors;
+        CRGB* data = (CRGB*)colors;
 
-        FastLED.addLeds<WS2812B, dataPin, GRB>(data, LED_COUNT);
+        FastLED.addLeds<WS2812B, LED_DATA_PIN, GRB>(data, ledCount);
         FastLED.clear(true);
 
         FastLED.setBrightness(80);

@@ -4,9 +4,9 @@
 #include <AsyncUDP.h>
 
 #include "patterns/color_pattern.h"
-#include "core/leds.h"
+#include "core/led_driver.h"
 
-extern LEDs leds;
+extern LedDriver ledDriver;
 
 class LedManager {
 

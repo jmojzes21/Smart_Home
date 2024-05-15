@@ -3,9 +3,10 @@
 
 #include <ArduinoJson.h>
 
-#include "core/leds.h"
+#include "core/led_driver.h"
+#include "core/colors.h"
 
-extern LEDs leds;
+extern LedDriver ledDriver;
 
 class ColorPattern {
 
@@ -17,8 +18,8 @@ class ColorPattern {
     public:
 
     ColorPattern() {
-        colors = leds.colors();
-        ledCount = leds.ledCount();
+        colors = ledDriver.colors();
+        ledCount = ledDriver.ledCount();
     }
 
     virtual void setup() {}
