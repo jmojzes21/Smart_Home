@@ -257,9 +257,9 @@ void DeviceRestApi::_initMiscApi() {
     });
     httpServer.addHandler(postAuth);
 
-    // POST /dla
+    // POST /dla_start
 
-    httpServer.on("/dla", HTTP_POST, [&](AsyncWebServerRequest* request) {
+    httpServer.on("/dla_start", HTTP_POST, [&](AsyncWebServerRequest* request) {
 
         if(!authenticate(request)) return;
 
