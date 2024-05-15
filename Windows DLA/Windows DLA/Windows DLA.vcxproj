@@ -147,21 +147,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="leds\core\leds.cpp" />
+    <ProjectReference Include="..\ArduinoJson\ArduinoJson.vcxproj">
+      <Project>{3b7b0d90-996b-4952-ad84-e079ea7017bf}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="leds\core\color.cpp" />
+    <ClCompile Include="leds\core\led_driver.cpp">
+      <FileType>CppCode</FileType>
+    </ClCompile>
+    <ClCompile Include="leds\core\platforms\esp_driver.cpp" />
+    <ClCompile Include="leds\core\platforms\win_dla_driver.cpp" />
     <ClCompile Include="Windows DLA.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="leds\core\color.h" />
     <ClInclude Include="leds\core\colors.h" />
-    <ClInclude Include="leds\core\leds.h" />
+    <ClInclude Include="leds\core\led_driver.h" />
+    <ClInclude Include="leds\core\platforms\platform_driver.h" />
     <ClInclude Include="leds\patterns\color_pattern.h" />
     <ClInclude Include="leds\patterns\fade_pattern.h" />
     <ClInclude Include="leds\patterns\solid_color.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ArduinoJson\ArduinoJson.vcxproj">
-      <Project>{3b7b0d90-996b-4952-ad84-e079ea7017bf}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

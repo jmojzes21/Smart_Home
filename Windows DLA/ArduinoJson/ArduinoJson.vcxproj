@@ -146,6 +146,9 @@
     <ClInclude Include="ArduinoJson-v7.0.4.h" />
     <ClInclude Include="ArduinoJson.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ArduinoJson.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

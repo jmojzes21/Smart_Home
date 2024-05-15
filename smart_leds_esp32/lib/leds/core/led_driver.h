@@ -1,35 +1,32 @@
 
 #pragma once
 
-#ifdef ESP32
-
-#include <FastLED.h>
-
-#define LED_DATA_PIN 26
-
-#endif
-
 #include "color.h"
-#include "colors.h"
 
 #define LED_COUNT 7
 
-class LEDs {
+class LedDriver {
 
-    private:
+private:
 
     Color _colors[LED_COUNT];
     int _ledCount = LED_COUNT;
 
-    public:
+public:
 
-    void setup();
-    
-    void clear();
+#ifdef ESP32
+    void init(int dataPin);
+#elif _WIN32
+    void init();
+#else
+#error Unsupported platform
+#endif
+
     void show();
     void showColor(Color color);
-    
+
     void setBrightness(uint8_t value);
+    void clear();
 
     Color* colors();
     int ledCount();

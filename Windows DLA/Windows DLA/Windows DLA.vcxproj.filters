@@ -1,45 +1,57 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="Windows DLA.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Main</Filter>
     </ClCompile>
-    <ClCompile Include="leds\core\leds.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="leds\core\color.cpp">
+      <Filter>LED Core</Filter>
+    </ClCompile>
+    <ClCompile Include="leds\core\led_driver.cpp">
+      <Filter>LED Core</Filter>
+    </ClCompile>
+    <ClCompile Include="leds\core\platforms\esp_driver.cpp">
+      <Filter>LED Core\Platforms</Filter>
+    </ClCompile>
+    <ClCompile Include="leds\core\platforms\win_dla_driver.cpp">
+      <Filter>LED Core\Platforms</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="leds\core\color.h">
-      <Filter>Header Files</Filter>
+      <Filter>LED Core</Filter>
     </ClInclude>
     <ClInclude Include="leds\core\colors.h">
-      <Filter>Header Files</Filter>
+      <Filter>LED Core</Filter>
     </ClInclude>
-    <ClInclude Include="leds\core\leds.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="leds\core\led_driver.h">
+      <Filter>LED Core</Filter>
     </ClInclude>
     <ClInclude Include="leds\patterns\color_pattern.h">
-      <Filter>Header Files</Filter>
+      <Filter>LED Patterns</Filter>
     </ClInclude>
     <ClInclude Include="leds\patterns\fade_pattern.h">
-      <Filter>Header Files</Filter>
+      <Filter>LED Patterns</Filter>
     </ClInclude>
     <ClInclude Include="leds\patterns\solid_color.h">
-      <Filter>Header Files</Filter>
+      <Filter>LED Patterns</Filter>
     </ClInclude>
+    <ClInclude Include="leds\core\platforms\platform_driver.h">
+      <Filter>LED Core\Platforms</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Main">
+      <UniqueIdentifier>{dd49d412-2ed5-48c1-bf4c-b6a8439e24f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LED Core">
+      <UniqueIdentifier>{a0a047bf-d32f-406b-913c-14f72226b38c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LED Patterns">
+      <UniqueIdentifier>{ad55dd52-5fb8-4860-a7d3-e3e731ce71c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LED Core\Platforms">
+      <UniqueIdentifier>{dc46fd24-e24d-40b0-95c5-57230dc63116}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
