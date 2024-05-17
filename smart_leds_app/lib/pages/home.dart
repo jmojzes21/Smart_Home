@@ -77,6 +77,50 @@ class __PatternsState extends State<_Patterns> {
       runSpacing: 20,
       children: [
         _PatternCard(
+          name: 'Jedna boja',
+          icon: 'single.png',
+          onPrimaryTap: () {},
+          onSecondaryTap: () {},
+        ),
+        _PatternCard(
+          name: 'Valovi',
+          icon: 'waves.png',
+          onPrimaryTap: () {},
+          onSecondaryTap: () {},
+        ),
+        _PatternCard(
+          name: 'Dugine boje',
+          icon: 'rainbow.png',
+          onPrimaryTap: () {},
+          onSecondaryTap: () {},
+        ),
+        _PatternCard(
+          name: 'Pojedina dugina boja',
+          icon: 'rainbow_single.png',
+          onPrimaryTap: () {},
+          onSecondaryTap: () {},
+        ),
+        _PatternCard(
+          name: 'Šarena kiša',
+          icon: 'rain.png',
+          onPrimaryTap: () {},
+          onSecondaryTap: () {},
+        ),
+        _PatternCard(
+          name: 'Kiša',
+          icon: 'rain_single.png',
+          onPrimaryTap: () {},
+          onSecondaryTap: () {},
+        ),
+        _PatternCard(
+          name: 'Ugasi lampice',
+          icon: 'clear.png',
+          onPrimaryTap: () {},
+          onSecondaryTap: () {},
+        ),
+
+        /*
+        _PatternCard(
           name: 'Jednobojno',
           icon: 'pattern_single.png',
           onPrimaryTap: () => patterns.showPattern(patterns.singleColorPattern),
@@ -121,6 +165,7 @@ class __PatternsState extends State<_Patterns> {
           },
           onSecondaryTap: () {},
         ),
+        */
       ],
     );
   }
@@ -156,12 +201,11 @@ class _PatternCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Image.asset(
-              'assets/icons/$icon',
+              'assets/patterns/$icon',
               width: 100,
               height: 100,
               filterQuality: FilterQuality.medium,
             ),
-            SizedBox(height: 10),
             Text(name, style: MyTheme.bodyMedium),
           ],
         ),
