@@ -96,6 +96,13 @@ class _SettingsPageState extends State<SettingsPage> {
 
   void startDla() async {
     await device.leds.startDla();
+
+    if (!mounted) return;
+    SimpleDialogs.showMessage(
+      context: context,
+      title: 'DLA',
+      message: 'DLA je pokrenut.',
+    );
   }
 
   void updateFirmware() async {

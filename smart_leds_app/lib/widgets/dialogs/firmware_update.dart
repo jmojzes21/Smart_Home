@@ -159,11 +159,20 @@ class _FirmwareUpdateDialogState extends State<FirmwareUpdateDialog> {
       content = SizedBox(
         width: 400,
         height: 400,
-        child: Center(
-          child: SizedBox.square(
-            dimension: 80,
-            child: CircularProgressIndicator(),
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox.square(
+              dimension: 80,
+              child: CircularProgressIndicator(),
+            ),
+            SizedBox(height: 40),
+            Text(
+              'Ažuriranje ugradbenog programa je u tijeku',
+              style: MyTheme.bodyLarge,
+            ),
+          ],
         ),
       );
     }
