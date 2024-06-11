@@ -24,7 +24,6 @@ class ColorPattern {
         ledCount = ledDriver.ledCount();
     }
 
-    virtual void preview() {}
     virtual void loop() {}
     virtual bool update(JsonObject p) { return true; }
     virtual void dispose() {}

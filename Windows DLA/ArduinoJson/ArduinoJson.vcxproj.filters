@@ -18,13 +18,5 @@
     <ClInclude Include="ArduinoJson.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ArduinoJson-v7.0.4.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="ArduinoJson.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

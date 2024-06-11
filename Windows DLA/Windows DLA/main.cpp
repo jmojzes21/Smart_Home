@@ -27,7 +27,6 @@ static void start() {
     ledDriver.init(ipAddress, port);
 
     ColorPattern* pattern = new SingleColorPattern();
-    pattern->preview();
 
     while (true) {
 
