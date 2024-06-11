@@ -7,17 +7,8 @@ import 'package:smart_leds_app/widgets/dialogs/pattern_control.dart';
 import 'package:smart_leds_app/widgets/misc/navigation_drawer.dart';
 import 'package:smart_leds_app/widgets/pattern_controls/single_color.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,44 +28,9 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 }
 
-class _Patterns extends StatefulWidget {
-  const _Patterns();
-  @override
-  State<_Patterns> createState() => __PatternsState();
-}
-
-class __PatternsState extends State<_Patterns> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  void showPattern(ColorPattern pattern) {
-    var patterns = PatternProvider.of(context);
-    patterns.showPattern(pattern);
-  }
-
-  void clearPattern() {
-    var patterns = PatternProvider.of(context);
-    patterns.clearPattern();
-  }
-
-  void showControlDialog({required String title, required Widget child}) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return PatternControlDialog(title: title, child: child);
-      },
-    );
-  }
-
+class _Patterns extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Wrap(
@@ -84,12 +40,10 @@ class __PatternsState extends State<_Patterns> {
         _PatternCard(
           name: 'Jedna boja',
           icon: 'single.png',
-          onPrimaryTap: () => showPattern(SingleColorPattern()),
-          onSecondaryTap: () => showControlDialog(
-            title: 'Jedna boja',
-            child: SingleColorPatternControl(),
-          ),
+          pattern: SingleColorPattern(),
+          controlDialog: (p) => SingleColorPatternControl(p),
         ),
+        /*
         _PatternCard(
           name: 'Valovi',
           icon: 'waves.png',
@@ -125,24 +79,74 @@ class __PatternsState extends State<_Patterns> {
           icon: 'clear.png',
           onPrimaryTap: () => clearPattern(),
           onSecondaryTap: () {},
+        ),*/
+        _RawPatternCard(
+          name: 'Ugasi lampice',
+          icon: 'clear.png',
+          onPrimaryTap: () {
+            var patterns = PatternProvider.of(context);
+            patterns.clearPattern();
+          },
+          onSecondaryTap: () {},
         ),
       ],
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }
 
 class _PatternCard extends StatelessWidget {
   final String name;
   final String icon;
+  final ColorPattern pattern;
+  final Widget Function(ColorPattern p) controlDialog;
+
+  const _PatternCard({
+    required this.name,
+    required this.icon,
+    required this.pattern,
+    required this.controlDialog,
+  });
+
+  void showPattern(BuildContext context) {
+    var patterns = PatternProvider.of(context);
+    patterns.showPattern(pattern);
+  }
+
+  void showControlDialog({
+    required BuildContext context,
+    required String title,
+    required Widget child,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return PatternControlDialog(title: title, child: child);
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _RawPatternCard(
+      name: name,
+      icon: icon,
+      onPrimaryTap: () => showPattern(context),
+      onSecondaryTap: () => showControlDialog(
+        context: context,
+        title: name,
+        child: controlDialog(pattern),
+      ),
+    );
+  }
+}
+
+class _RawPatternCard extends StatelessWidget {
+  final String name;
+  final String icon;
   final void Function() onPrimaryTap;
   final void Function() onSecondaryTap;
 
-  const _PatternCard({
+  const _RawPatternCard({
     required this.name,
     required this.icon,
     required this.onPrimaryTap,

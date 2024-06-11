@@ -6,21 +6,11 @@ import 'package:smart_leds_app/models/patterns/color_patterns.dart';
 class PatternProvider {
   var properties = PatternProperties();
 
-  ColorPattern? _currentPattern;
-
   void showPattern(ColorPattern pattern) {
-    _currentPattern = pattern;
-    Device.currentDevice.leds.showPattern(pattern, properties);
-  }
-
-  void updatePattern() {
-    if (_currentPattern != null) {
-      Device.currentDevice.leds.showPattern(_currentPattern!, properties);
-    }
+    Device.currentDevice.leds.showPattern(pattern!, properties);
   }
 
   void clearPattern() {
-    _currentPattern = null;
     Device.currentDevice.leds.clearPattern();
   }
 
