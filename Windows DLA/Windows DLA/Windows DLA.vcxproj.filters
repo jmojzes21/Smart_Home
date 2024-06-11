@@ -16,6 +16,12 @@
     <ClCompile Include="leds\core\platforms\win_dla_driver.cpp">
       <Filter>LED Core\Platforms</Filter>
     </ClCompile>
+    <ClCompile Include="leds\core\color_utils.cpp">
+      <Filter>LED Core</Filter>
+    </ClCompile>
+    <ClCompile Include="leds\core\timer.cpp">
+      <Filter>LED Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Main">
@@ -44,14 +50,32 @@
     <ClInclude Include="leds\patterns\color_pattern.h">
       <Filter>LED Patterns</Filter>
     </ClInclude>
-    <ClInclude Include="leds\patterns\fade_pattern.h">
-      <Filter>LED Patterns</Filter>
-    </ClInclude>
-    <ClInclude Include="leds\patterns\solid_color.h">
-      <Filter>LED Patterns</Filter>
-    </ClInclude>
     <ClInclude Include="leds\core\platforms\platform_driver.h">
       <Filter>LED Core\Platforms</Filter>
+    </ClInclude>
+    <ClInclude Include="leds\core\color_utils.h">
+      <Filter>LED Core</Filter>
+    </ClInclude>
+    <ClInclude Include="leds\patterns\rain.h">
+      <Filter>LED Patterns</Filter>
+    </ClInclude>
+    <ClInclude Include="leds\patterns\rain_single.h">
+      <Filter>LED Patterns</Filter>
+    </ClInclude>
+    <ClInclude Include="leds\patterns\rainbow.h">
+      <Filter>LED Patterns</Filter>
+    </ClInclude>
+    <ClInclude Include="leds\patterns\rainbow_single.h">
+      <Filter>LED Patterns</Filter>
+    </ClInclude>
+    <ClInclude Include="leds\patterns\single_color.h">
+      <Filter>LED Patterns</Filter>
+    </ClInclude>
+    <ClInclude Include="leds\patterns\wave.h">
+      <Filter>LED Patterns</Filter>
+    </ClInclude>
+    <ClInclude Include="leds\core\timer.h">
+      <Filter>LED Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

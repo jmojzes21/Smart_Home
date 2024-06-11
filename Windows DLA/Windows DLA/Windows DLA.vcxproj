@@ -95,7 +95,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)ArduinoJson\;$(ProjectDir)leds\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -110,7 +110,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)ArduinoJson\;$(ProjectDir)leds\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -125,7 +125,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)ArduinoJson\;$(ProjectDir)leds\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -140,7 +140,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)ArduinoJson\;$(ProjectDir)leds\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -153,19 +153,27 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="leds\core\color.cpp" />
+    <ClCompile Include="leds\core\color_utils.cpp" />
     <ClCompile Include="leds\core\led_driver.cpp" />
     <ClCompile Include="leds\core\platforms\esp_driver.cpp" />
     <ClCompile Include="leds\core\platforms\win_dla_driver.cpp" />
+    <ClCompile Include="leds\core\timer.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="leds\core\color.h" />
     <ClInclude Include="leds\core\colors.h" />
+    <ClInclude Include="leds\core\color_utils.h" />
     <ClInclude Include="leds\core\led_driver.h" />
     <ClInclude Include="leds\core\platforms\platform_driver.h" />
+    <ClInclude Include="leds\core\timer.h" />
     <ClInclude Include="leds\patterns\color_pattern.h" />
-    <ClInclude Include="leds\patterns\fade_pattern.h" />
-    <ClInclude Include="leds\patterns\solid_color.h" />
+    <ClInclude Include="leds\patterns\rain.h" />
+    <ClInclude Include="leds\patterns\rainbow.h" />
+    <ClInclude Include="leds\patterns\rainbow_single.h" />
+    <ClInclude Include="leds\patterns\rain_single.h" />
+    <ClInclude Include="leds\patterns\single_color.h" />
+    <ClInclude Include="leds\patterns\wave.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
