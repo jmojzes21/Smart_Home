@@ -15,6 +15,8 @@ namespace utils {
 
     Color lerpColor(Color a, Color b, float p);
 
+    Color getRainbowColor(uint8_t hue);
+
     int getRandomNumber(int max);
 
 }
