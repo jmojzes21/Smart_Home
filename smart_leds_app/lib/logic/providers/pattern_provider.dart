@@ -8,7 +8,7 @@ class PatternProvider {
   var properties = PatternProperties();
 
   void showPattern(ColorPattern pattern) {
-    Device.currentDevice.leds.showPattern(pattern!, properties);
+    Device.currentDevice.leds.showPattern(pattern, properties);
   }
 
   void clearPattern() {

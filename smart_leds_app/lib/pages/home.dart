@@ -64,19 +64,6 @@ class _Patterns extends StatelessWidget {
           controlDialog: (p) => RainbowPatternControl(p),
         ),
         /*
-   
-        _PatternCard(
-          name: 'Dugine boje',
-          icon: 'rainbow.png',
-          onPrimaryTap: () {},
-          onSecondaryTap: () {},
-        ),
-        _PatternCard(
-          name: 'Pojedina dugina boja',
-          icon: 'rainbow_single.png',
-          onPrimaryTap: () {},
-          onSecondaryTap: () {},
-        ),
         _PatternCard(
           name: 'Šarena kiša',
           icon: 'rain.png',
@@ -89,12 +76,7 @@ class _Patterns extends StatelessWidget {
           onPrimaryTap: () {},
           onSecondaryTap: () {},
         ),
-        _PatternCard(
-          name: 'Ugasi lampice',
-          icon: 'clear.png',
-          onPrimaryTap: () => clearPattern(),
-          onSecondaryTap: () {},
-        ),*/
+       */
         _RawPatternCard(
           name: 'Ugasi lampice',
           icon: 'clear.png',

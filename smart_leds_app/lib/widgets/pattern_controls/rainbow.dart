@@ -3,8 +3,6 @@ import 'package:smart_leds_app/logic/providers/pattern_provider.dart';
 import 'package:smart_leds_app/models/patterns/patterns.dart';
 import 'package:smart_leds_app/models/patterns/property_values.dart';
 import 'package:smart_leds_app/widgets/misc/segmented_button_picker.dart';
-import 'package:smart_leds_app/widgets/pattern_properties/dir.dart';
-import 'package:smart_leds_app/widgets/pattern_properties/rspeed.dart';
 
 class RainbowPatternControl extends StatefulWidget {
   final ColorPattern pattern;

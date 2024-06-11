@@ -2,12 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:smart_leds_app/logic/providers/pattern_provider.dart';
 import 'package:smart_leds_app/models/patterns/patterns.dart';
 import 'package:smart_leds_app/models/patterns/property_values.dart';
-import 'package:smart_leds_app/widgets/misc/checkbox.dart';
 import 'package:smart_leds_app/widgets/misc/segmented_button_picker.dart';
 import 'package:smart_leds_app/widgets/misc/simple_color_picker.dart';
-import 'package:smart_leds_app/widgets/pattern_properties/dir.dart';
-import 'package:smart_leds_app/widgets/pattern_properties/rspeed.dart';
-import 'package:smart_leds_app/widgets/pattern_properties/size.dart';
 
 class WavePatternControl extends StatefulWidget {
   final ColorPattern pattern;
@@ -59,36 +55,6 @@ class _WavePatternControlState extends State<WavePatternControl> {
             patternProvider.showPattern(widget.pattern);
           }),
         ),
-        /*const SizedBox(height: 20),
-        DirPropertyWidget(
-          dir: properties.dir,
-          onChange: (value) {
-            setState(() {
-              properties.dir = value;
-              patternProvider.updatePattern();
-            });
-          },
-        ),
-        const SizedBox(height: 20),
-        RSpeedPropertyWidget(
-          rspeed: properties.rSpeed,
-          onChange: (value) {
-            setState(() {
-              properties.rSpeed = value;
-              patternProvider.updatePattern();
-            });
-          },
-        ),
-        const SizedBox(height: 20),
-        SizePropertyWidget(
-          size: properties.size,
-          onChange: (value) {
-            setState(() {
-              properties.size = value;
-              patternProvider.updatePattern();
-            });
-          },
-        ),*/
       ],
     );
   }
