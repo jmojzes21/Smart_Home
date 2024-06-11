@@ -11,7 +11,7 @@
 #include "leds/patterns/single_color.h"
 #include "leds/patterns/wave.h"
 #include "leds/patterns/rainbow.h"
-#include "leds/patterns/rainbow_single.h"
+#include "leds/patterns/rainbow_balls.h"
 #include "leds/patterns/rain.h"
 #include "leds/patterns/rain_single.h"
 
@@ -26,7 +26,7 @@ static void start() {
     srand(time(NULL));
     ledDriver.init(ipAddress, port);
 
-    ColorPattern* pattern = new SingleColorPattern();
+    ColorPattern* pattern = new RainbowBallsPattern();
 
     while (true) {
 

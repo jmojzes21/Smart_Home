@@ -170,7 +170,7 @@
     <ClInclude Include="leds\patterns\color_pattern.h" />
     <ClInclude Include="leds\patterns\rain.h" />
     <ClInclude Include="leds\patterns\rainbow.h" />
-    <ClInclude Include="leds\patterns\rainbow_single.h" />
+    <ClInclude Include="leds\patterns\rainbow_balls.h" />
     <ClInclude Include="leds\patterns\rain_single.h" />
     <ClInclude Include="leds\patterns\single_color.h" />
     <ClInclude Include="leds\patterns\wave.h" />

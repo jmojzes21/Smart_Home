@@ -3,21 +3,29 @@
 
 #include "color_pattern.h"
 
-class RainbowPattern : public ColorPattern {
+class RainbowBallsPattern : public ColorPattern {
 
 public:
 
     uint8_t hue = 0;
     Timer speedTimer;
 
-    RainbowPattern() {}
+    RainbowBallsPattern() {
+        speedTimer.setPeriod(20);
+    }
 
     void loop() override {
-        
+
         if (speedTimer.run()) {
 
-            Color color = utils::getRainbowColor(hue);
-            ledDriver.showColor(color);
+            uint8_t tempHue = hue;
+
+            for (int i = 1; i < ledCount; i++) {
+                leds[i] = utils::getRainbowColor(tempHue);
+                tempHue += 42;
+            }
+
+            ledDriver.show();
 
             hue++;
         }

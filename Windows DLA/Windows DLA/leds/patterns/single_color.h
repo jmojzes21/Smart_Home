@@ -60,6 +60,4 @@ public:
         return true;
     }
 
-    void dispose() override {}
-
 };
