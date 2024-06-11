@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/logic/providers/pattern_provider.dart';
-import 'package:smart_leds_app/models/patterns/color_patterns.dart';
+import 'package:smart_leds_app/models/patterns/patterns.dart';
 import 'package:smart_leds_app/theme.dart';
 import 'package:smart_leds_app/widgets/dialogs/brightness.dart';
 import 'package:smart_leds_app/widgets/dialogs/pattern_control.dart';
@@ -42,6 +42,12 @@ class _Patterns extends StatelessWidget {
           icon: 'single.png',
           pattern: SingleColorPattern(),
           controlDialog: (p) => SingleColorPatternControl(p),
+        ),
+        _PatternCard(
+          name: 'Valovi',
+          icon: 'waves.png',
+          pattern: WavePattern(),
+          controlDialog: (p) => Placeholder(),
         ),
         /*
         _PatternCard(

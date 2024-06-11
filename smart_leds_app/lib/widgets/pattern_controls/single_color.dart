@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/logic/providers/pattern_provider.dart';
-import 'package:smart_leds_app/models/patterns/color_patterns.dart';
+import 'package:smart_leds_app/models/patterns/patterns.dart';
 import 'package:smart_leds_app/widgets/pattern_properties/color.dart';
 
 class SingleColorPatternControl extends StatefulWidget {

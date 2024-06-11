@@ -1,21 +1,14 @@
 import 'dart:ui';
 
+import 'package:smart_leds_app/models/patterns/properties.dart';
+
 abstract class ColorPattern {
   Map<String, dynamic> toJson(PatternProperties properties);
-}
-
-class PatternProperties {
-  Color color = Color.fromARGB(0, 0, 0, 0);
-
-  int waveSpeed = 10;
-  bool waveChangeColors = false;
 }
 
 extension ColorExtension on Color {
   int get rgb => value & 0xFFFFFF;
 }
-
-// Color patterns
 
 class SingleColorPattern extends ColorPattern {
   @override
