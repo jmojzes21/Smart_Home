@@ -7,14 +7,18 @@ class Timer {
 
 private:
 
-    uint32_t _period;
-    uint32_t _start;
+    uint64_t _period;
+    uint64_t _start;
+    uint64_t _rawProgress;
 
 public:
 
     Timer();
 
-    void setPeriod(uint32_t period);
+    void setPeriod(uint32_t periodMillis);
+    void reset();
+    float getProgress();
+
     bool run();
 
 };
