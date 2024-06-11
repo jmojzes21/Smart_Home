@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/logic/providers/pattern_provider.dart';
+import 'package:smart_leds_app/models/patterns/color_patterns.dart';
 import 'package:smart_leds_app/theme.dart';
 import 'package:smart_leds_app/widgets/dialogs/brightness.dart';
 import 'package:smart_leds_app/widgets/dialogs/pattern_control.dart';
 import 'package:smart_leds_app/widgets/misc/navigation_drawer.dart';
-import 'package:smart_leds_app/widgets/pattern_controls/rainbow.dart';
-import 'package:smart_leds_app/widgets/pattern_controls/rainbow_single.dart';
-import 'package:smart_leds_app/widgets/pattern_controls/rainbow_wave.dart';
 import 'package:smart_leds_app/widgets/pattern_controls/single_color.dart';
-import 'package:smart_leds_app/widgets/pattern_controls/wave.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -59,6 +56,16 @@ class __PatternsState extends State<_Patterns> {
     super.initState();
   }
 
+  void showPattern(ColorPattern pattern) {
+    var patterns = PatternProvider.of(context);
+    patterns.showPattern(pattern);
+  }
+
+  void clearPattern() {
+    var patterns = PatternProvider.of(context);
+    patterns.clearPattern();
+  }
+
   void showControlDialog({required String title, required Widget child}) {
     showDialog(
       context: context,
@@ -70,8 +77,6 @@ class __PatternsState extends State<_Patterns> {
 
   @override
   Widget build(BuildContext context) {
-    var patterns = PatternProvider.of(context);
-
     return Wrap(
       spacing: 20,
       runSpacing: 20,
@@ -79,8 +84,11 @@ class __PatternsState extends State<_Patterns> {
         _PatternCard(
           name: 'Jedna boja',
           icon: 'single.png',
-          onPrimaryTap: () {},
-          onSecondaryTap: () {},
+          onPrimaryTap: () => showPattern(SingleColorPattern()),
+          onSecondaryTap: () => showControlDialog(
+            title: 'Jedna boja',
+            child: SingleColorPatternControl(),
+          ),
         ),
         _PatternCard(
           name: 'Valovi',
@@ -115,57 +123,9 @@ class __PatternsState extends State<_Patterns> {
         _PatternCard(
           name: 'Ugasi lampice',
           icon: 'clear.png',
-          onPrimaryTap: () {},
+          onPrimaryTap: () => clearPattern(),
           onSecondaryTap: () {},
         ),
-
-        /*
-        _PatternCard(
-          name: 'Jednobojno',
-          icon: 'pattern_single.png',
-          onPrimaryTap: () => patterns.showPattern(patterns.singleColorPattern),
-          onSecondaryTap: () => showControlDialog(
-              title: 'Jednobojno', child: SingleColorPatternControl()),
-        ),
-        _PatternCard(
-          name: 'Jednobojni val',
-          icon: 'pattern_wave.png',
-          onPrimaryTap: () => patterns.showPattern(patterns.wavePattern),
-          onSecondaryTap: () => showControlDialog(
-              title: 'Jednobojni val', child: WavePatternControl()),
-        ),
-        _PatternCard(
-          name: 'Dugine boje',
-          icon: 'pattern_rainbow.png',
-          onPrimaryTap: () => patterns.showPattern(patterns.rainbowPattern),
-          onSecondaryTap: () => showControlDialog(
-              title: 'Dugine boje', child: RainbowPatternControl()),
-        ),
-        _PatternCard(
-          name: 'Pojedina dugina boja',
-          icon: 'pattern_rainbow_single.png',
-          onPrimaryTap: () =>
-              patterns.showPattern(patterns.rainbowSinglePattern),
-          onSecondaryTap: () => showControlDialog(
-              title: 'Pojedina dugina boja',
-              child: RainbowSinglePatternControl()),
-        ),
-        _PatternCard(
-          name: 'Val duginih boja',
-          icon: 'pattern_rainbow_wave.png',
-          onPrimaryTap: () => patterns.showPattern(patterns.rainbowWavePattern),
-          onSecondaryTap: () => showControlDialog(
-              title: 'Val duginih boja', child: RainbowWavePatternControl()),
-        ),
-        _PatternCard(
-          name: 'Bez uzorka',
-          icon: 'pattern_none.png',
-          onPrimaryTap: () {
-            patterns.clearPattern();
-          },
-          onSecondaryTap: () {},
-        ),
-        */
       ],
     );
   }

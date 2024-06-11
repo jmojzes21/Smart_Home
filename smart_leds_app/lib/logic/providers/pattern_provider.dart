@@ -1,22 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_leds_app/logic/device/device.dart';
-import 'package:smart_leds_app/models/patterns/color_pattern.dart';
-import 'package:smart_leds_app/models/patterns/pattern_property.dart';
-import 'package:smart_leds_app/models/patterns/rainbow.dart';
-import 'package:smart_leds_app/models/patterns/rainbow_single.dart';
-import 'package:smart_leds_app/models/patterns/rainbow_wave.dart';
-import 'package:smart_leds_app/models/patterns/single_color.dart';
-import 'package:smart_leds_app/models/patterns/wave.dart';
+import 'package:smart_leds_app/models/patterns/color_patterns.dart';
 
 class PatternProvider {
   var properties = PatternProperties();
-
-  var singleColorPattern = SingleColorPattern();
-  var wavePattern = WavePattern();
-  var rainbowPattern = RainbowPattern();
-  var rainbowSinglePattern = RainbowSinglePattern();
-  var rainbowWavePattern = RainbowWavePattern();
 
   ColorPattern? _currentPattern;
 

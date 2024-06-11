@@ -1,9 +1,7 @@
 import 'package:smart_leds_app/logic/device/device.dart';
-import 'package:smart_leds_app/models/patterns/color_pattern.dart';
-import 'package:smart_leds_app/models/patterns/pattern_property.dart';
+import 'package:smart_leds_app/models/patterns/color_patterns.dart';
 
 class LedController {
-  // ignore: unused_field
   final Device _device;
 
   LedController(this._device);
@@ -11,9 +9,14 @@ class LedController {
   Future<void> showPattern(
     ColorPattern pattern,
     PatternProperties properties,
-  ) async {}
+  ) async {
+    var body = pattern.toJson(properties);
+    await _device.postHttp(path: '/pattern', body: body);
+  }
 
-  Future<void> clearPattern() async {}
+  Future<void> clearPattern() async {
+    await _device.postHttp(path: '/clear_pattern', body: {});
+  }
 
   Future<void> startDla() async {
     await _device.postHttp(path: '/dla_start', body: {});

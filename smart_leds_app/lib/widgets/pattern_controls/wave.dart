@@ -4,7 +4,7 @@ import 'package:smart_leds_app/widgets/pattern_properties/color.dart';
 import 'package:smart_leds_app/widgets/pattern_properties/dir.dart';
 import 'package:smart_leds_app/widgets/pattern_properties/rspeed.dart';
 import 'package:smart_leds_app/widgets/pattern_properties/size.dart';
-
+/*
 class WavePatternControl extends StatefulWidget {
   const WavePatternControl({super.key});
   @override
@@ -61,3 +61,4 @@ class _WavePatternControlState extends State<WavePatternControl> {
     );
   }
 }
+*/

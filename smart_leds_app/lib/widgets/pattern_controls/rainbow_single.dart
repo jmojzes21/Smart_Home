@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/logic/providers/pattern_provider.dart';
 import 'package:smart_leds_app/widgets/pattern_properties/cspeed.dart';
-
+/*
 class RainbowSinglePatternControl extends StatefulWidget {
   const RainbowSinglePatternControl({super.key});
   @override
@@ -33,3 +33,4 @@ class _RainbowSinglePatternControlState
     );
   }
 }
+*/
