@@ -5,6 +5,7 @@ import 'package:smart_leds_app/theme.dart';
 import 'package:smart_leds_app/widgets/dialogs/brightness.dart';
 import 'package:smart_leds_app/widgets/dialogs/pattern_control.dart';
 import 'package:smart_leds_app/widgets/misc/navigation_drawer.dart';
+import 'package:smart_leds_app/widgets/pattern_controls/rainbow.dart';
 import 'package:smart_leds_app/widgets/pattern_controls/single_color.dart';
 import 'package:smart_leds_app/widgets/pattern_controls/wave.dart';
 
@@ -50,13 +51,20 @@ class _Patterns extends StatelessWidget {
           pattern: WavePattern(),
           controlDialog: (p) => WavePatternControl(p),
         ),
-        /*
         _PatternCard(
-          name: 'Valovi',
-          icon: 'waves.png',
-          onPrimaryTap: () {},
-          onSecondaryTap: () {},
+          name: 'Duga',
+          icon: 'rainbow.png',
+          pattern: RainbowPattern(),
+          controlDialog: (p) => RainbowPatternControl(p),
         ),
+        _PatternCard(
+          name: 'Dugine boje',
+          icon: 'rainbow_balls.png',
+          pattern: RainbowBallsPattern(),
+          controlDialog: (p) => RainbowPatternControl(p),
+        ),
+        /*
+   
         _PatternCard(
           name: 'Dugine boje',
           icon: 'rainbow.png',

@@ -31,3 +31,23 @@ class WavePattern extends ColorPattern {
     };
   }
 }
+
+class RainbowPattern extends ColorPattern {
+  @override
+  Map<String, dynamic> toJson(PatternProperties properties) {
+    return {
+      'name': 'rainbow',
+      'speed': properties.rainbowSpeed,
+    };
+  }
+}
+
+class RainbowBallsPattern extends ColorPattern {
+  @override
+  Map<String, dynamic> toJson(PatternProperties properties) {
+    return {
+      'name': 'rainbow_balls',
+      'speed': properties.rainbowSpeed,
+    };
+  }
+}

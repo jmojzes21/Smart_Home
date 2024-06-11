@@ -4,6 +4,8 @@
 #include "patterns/color_pattern.h"
 #include "patterns/single_color.h"
 #include "patterns/wave.h"
+#include "patterns/rainbow.h"
+#include "patterns/rainbow_balls.h"
 
 #include "log.h"
 
@@ -186,6 +188,10 @@ ColorPattern* LedManager::_createPattern(std::string& name) {
         return new SingleColorPattern();
     }else if(name == "wave") {
         return new WavePattern();
+    }else if(name == "rainbow") {
+        return new RainbowPattern();
+    }else if(name == "rainbow_balls") {
+        return new RainbowBallsPattern();
     }
 
     return nullptr;

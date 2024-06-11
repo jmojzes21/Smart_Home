@@ -20,6 +20,7 @@ public:
 
             uint8_t tempHue = hue;
 
+            leds[0] = Colors::Black;
             for (int i = 1; i < ledCount; i++) {
                 leds[i] = utils::getRainbowColor(tempHue);
                 tempHue += 42;

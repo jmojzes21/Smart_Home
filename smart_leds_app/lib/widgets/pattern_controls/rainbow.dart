@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/logic/providers/pattern_provider.dart';
+import 'package:smart_leds_app/models/patterns/patterns.dart';
+import 'package:smart_leds_app/models/patterns/property_values.dart';
+import 'package:smart_leds_app/widgets/misc/segmented_button_picker.dart';
 import 'package:smart_leds_app/widgets/pattern_properties/dir.dart';
 import 'package:smart_leds_app/widgets/pattern_properties/rspeed.dart';
-// TODO izmjeni
-/*
+
 class RainbowPatternControl extends StatefulWidget {
-  const RainbowPatternControl({super.key});
+  final ColorPattern pattern;
+
+  const RainbowPatternControl(this.pattern, {super.key});
+
   @override
   State<RainbowPatternControl> createState() => _RainbowPatternControlState();
 }
@@ -20,27 +25,16 @@ class _RainbowPatternControlState extends State<RainbowPatternControl> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        DirPropertyWidget(
-          dir: properties.dir,
-          onChange: (value) {
-            setState(() {
-              properties.dir = value;
-              patternProvider.updatePattern();
-            });
-          },
-        ),
-        const SizedBox(height: 20),
-        RSpeedPropertyWidget(
-          rspeed: properties.rSpeed,
-          onChange: (value) {
-            setState(() {
-              properties.rSpeed = value;
-              patternProvider.updatePattern();
-            });
-          },
+        SegmentedButtonPicker(
+          label: 'Brzina promjene',
+          value: properties.rainbowSpeed,
+          values: PatternPropertyValues.rainbowSpeedValues,
+          onChange: (value) => setState(() {
+            properties.waveSpeed = value;
+            patternProvider.showPattern(widget.pattern);
+          }),
         ),
       ],
     );
   }
 }
-*/

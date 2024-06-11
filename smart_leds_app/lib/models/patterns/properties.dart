@@ -5,4 +5,6 @@ class PatternProperties {
 
   int waveSpeed = 10;
   bool waveChangeColors = false;
+
+  int rainbowSpeed = 40;
 }
