@@ -26,16 +26,18 @@ class LedManager {
     void loop();
 
     bool updatePattern(JsonObject json);
+    void clearPattern();
     void setBrightness(uint8_t value);
 
-    bool enableDLA();
+    void enableDLA();
 
     private:
 
     bool _changePattern(std::string& name, JsonObject json);
     bool _updatePattern(JsonObject json);
+    void _clearPattern();
 
-    bool _enableDLA();
+    void _enableDLA();
     void _onUdpPacket(AsyncUDPPacket& packet);
 
     ColorPattern* _createPattern(std::string& name);

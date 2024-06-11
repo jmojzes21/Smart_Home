@@ -2,8 +2,8 @@
 #include "led_manager.h"
 
 #include "patterns/color_pattern.h"
-#include "patterns/solid_color.h"
-#include "patterns/fade_pattern.h"
+#include "patterns/single_color.h"
+#include "patterns/wave.h"
 
 #include "log.h"
 
@@ -41,6 +41,7 @@ bool LedManager::updatePattern(JsonObject json) {
     if(_directAccess == false) {
 
         std::string name = json["name"];
+
         if(name == _currentPatternName) {
             result = _updatePattern(json);
         }else{
@@ -54,6 +55,16 @@ bool LedManager::updatePattern(JsonObject json) {
 
 }
 
+void LedManager::clearPattern() {
+
+    xSemaphoreTake(_mutex, portMAX_DELAY);
+
+    _clearPattern();
+
+    xSemaphoreGive(_mutex);
+    
+}
+
 void LedManager::setBrightness(uint8_t value) {
 
     xSemaphoreTake(_mutex, portMAX_DELAY);
@@ -64,14 +75,13 @@ void LedManager::setBrightness(uint8_t value) {
 
 }
 
-bool LedManager::enableDLA() {
+void LedManager::enableDLA() {
 
     xSemaphoreTake(_mutex, portMAX_DELAY);
 
-    bool result = _enableDLA();
-    
+    _enableDLA();
+
     xSemaphoreGive(_mutex);
-    return result;
 
 }
 
@@ -79,8 +89,6 @@ bool LedManager::_changePattern(std::string& name, JsonObject json) {
 
     ColorPattern* newPattern = _createPattern(name);
     if(newPattern == nullptr) return false;
-
-    newPattern->setup();
 
     bool result = newPattern->update(json);
     if(result == false) {
@@ -107,21 +115,30 @@ bool LedManager::_updatePattern(JsonObject json) {
 
 }
 
-bool LedManager::_enableDLA() {
-
-    if(_directAccess) return false;
+void LedManager::_clearPattern() {
 
     if(_currentPattern != nullptr) {
+
         _currentPattern->dispose();
         delete _currentPattern;
+
+        _currentPatternName = "";
         _currentPattern = nullptr;
     }
 
     ledDriver.clear();
+    ledDriver.show();
+
+}
+
+void LedManager::_enableDLA() {
+
+    if(_directAccess) return;
+
+    _clearPattern();
 
     _udp.listen(7000);
     _directAccess = true;
-    return true;
 
 }
 
@@ -164,10 +181,10 @@ void LedManager::_onUdpPacket(AsyncUDPPacket& packet) {
 
 ColorPattern* LedManager::_createPattern(std::string& name) {
 
-    if(name == "solid") {
-        return new SolidColorPattern();
-    }else if(name == "fade") {
-        return new FadePattern();
+    if(name == "single") {
+        return new SingleColorPattern();
+    }else if(name == "wave") {
+        return new WavePattern();
     }
 
     return nullptr;

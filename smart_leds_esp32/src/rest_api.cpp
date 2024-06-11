@@ -76,6 +76,16 @@ void DeviceRestApi::_initLedApi() {
     });
     httpServer.addHandler(postBrightness);
 
+    // POST /clear_pattern
+
+    httpServer.on("/clear_pattern", HTTP_POST, [&](AsyncWebServerRequest* request) {
+
+        if(!authenticate(request)) return;
+
+        ledManager.clearPattern();
+        respondCode(request, 201);
+    });
+
 }
 
 void DeviceRestApi::_initDeviceApi() {
@@ -263,8 +273,8 @@ void DeviceRestApi::_initMiscApi() {
 
         if(!authenticate(request)) return;
 
-        bool result = ledManager.enableDLA();
-        respondCode(request, result ? 201 : 400);
+        ledManager.enableDLA();
+        respondCode(request, 201);
     });
 
     // POST /wipe_data

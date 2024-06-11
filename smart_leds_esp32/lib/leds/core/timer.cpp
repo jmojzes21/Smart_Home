@@ -1,7 +1,9 @@
 
 #include "timer.h"
 
-#ifdef _WIN32
+#ifdef ARDUINO
+#include <Arduino.h>
+#elif _WIN32
 uint64_t micros();
 #endif
 
