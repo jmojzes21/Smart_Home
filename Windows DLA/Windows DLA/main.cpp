@@ -23,6 +23,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
     const char* ipAddress = "192.168.8.108";
     int port = 7000;
 
+    srand(time(NULL));
     ledDriver.init(ipAddress, port);
     
     ColorPattern* pattern = new WavePattern();

@@ -11,14 +11,19 @@ public:
     uint16_t speed = 0;
     float x = 0;
 
+    std::vector<Color> basicColors;
+    bool changeColors = false;
+
     Timer speedTimer;
 
-    WavePattern() {}
+    WavePattern() {
+        utils::getBasicColors(basicColors);
+    }
 
     void preview() override {
         color = Colors::Purple;
-        speed = 15;
-
+        speed = 5;
+        changeColors = true;
         speedTimer.setPeriod(speed);
     }
 
@@ -29,9 +34,13 @@ public:
             x += 0.01;
             if (x >= M_PI) {
                 x = 0;
+
+                if (changeColors) {
+                    color = utils::getRandomColor(basicColors);
+                }
             }
 
-            float value = 0.95 * sinf(x) + 0.05;
+            float value = sinf(x);
 
             float r = value * (float)color.r;
             float g = value * (float)color.g;
@@ -48,13 +57,13 @@ public:
 
         int rgb = p["color"];
         uint16_t speed = p["speed"];
+        bool changeColors = p["changeColors"];
 
         this->color = rgb;
         this->speed = speed;
+        this->changeColors = changeColors;
 
         return true;
     }
-
-    void dispose() override {}
 
 };
