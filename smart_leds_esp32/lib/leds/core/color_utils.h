@@ -13,6 +13,8 @@ namespace utils {
     Color getRandomColor(std::vector<Color> colors);
     void getBasicColors(std::vector<Color>& colors);
 
+    Color lerpColor(Color a, Color b, float p);
+
     int getRandomNumber(int max);
 
 }

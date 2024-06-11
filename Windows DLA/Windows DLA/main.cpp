@@ -18,15 +18,15 @@
 LedDriver ledDriver;
 std::chrono::steady_clock::time_point _startTimePoint;
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow) {
-    
+static void start() {
+
     const char* ipAddress = "192.168.8.108";
     int port = 7000;
 
     srand(time(NULL));
     ledDriver.init(ipAddress, port);
-    
-    ColorPattern* pattern = new WavePattern();
+
+    ColorPattern* pattern = new SingleColorPattern();
     pattern->preview();
 
     while (true) {
@@ -38,15 +38,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
 
     pattern->dispose();
     delete pattern;
-    
+
+}
+
+int main() {
+    start();
     return 0;
 }
 
-uint32_t millis() {
+uint64_t micros() {
 
     auto now = std::chrono::high_resolution_clock::now();
     auto elapsed = now - _startTimePoint;
 
-    uint64_t ms = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
-    return ms;
+    uint64_t us = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
+    return us;
 }

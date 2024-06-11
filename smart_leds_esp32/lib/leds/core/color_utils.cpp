@@ -3,6 +3,14 @@
 
 namespace utils {
 
+    uint8_t _lertRgbValue(float a, float b, float p) {
+        float v = a + (b - a) * p;
+        if (v < 0) v = 0;
+        else if (v > 255) v = 255;
+
+        return v;
+    }
+
     Color getRandomColor(std::vector<Color> colors) {
         int i = getRandomNumber(colors.size());
         return colors[i];
@@ -27,6 +35,15 @@ namespace utils {
         colors.emplace_back(255, 87, 34);
         colors.emplace_back(121, 85, 72);
         colors.emplace_back(96, 125, 139);
+    }
+
+    Color lerpColor(Color begin, Color end, float p) {
+
+        uint8_t r = _lertRgbValue(begin.r, end.r, p);
+        uint8_t g = _lertRgbValue(begin.g, end.g, p);
+        uint8_t b = _lertRgbValue(begin.b, end.b, p);
+
+        return Color(r, g, b);
     }
 
     int getRandomNumber(int max) {

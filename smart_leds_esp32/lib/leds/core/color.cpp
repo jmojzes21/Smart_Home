@@ -18,3 +18,7 @@ Color::Color(uint32_t code) {
     g = (code >> 8) & 0xFF;
     b = code & 0xFF;
 }
+
+bool Color::operator==(const Color& other) const {
+    return r == other.r && g == other.g && b == other.b;
+}

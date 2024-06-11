@@ -10,9 +10,9 @@
 
 #pragma comment(lib, "Ws2_32.lib")
 
-uint32_t millis();
+uint64_t micros();
 
-#define SHOW_PERIOD_MS 5 
+#define SHOW_PERIOD_MICROS 5000 
 
 namespace platform_led_driver {
 
@@ -20,7 +20,7 @@ namespace platform_led_driver {
     static SOCKET client = INVALID_SOCKET;
     static Color* colors = nullptr;
     static int ledCount = 0;
-    static uint32_t lastShow = 0;
+    static uint64_t lastShow = 0;
 
     static char buffer[100];
 
@@ -68,15 +68,14 @@ namespace platform_led_driver {
         }
 
         memset(colors, 0, 3 * ledCount);
-        show();
-
+        
     }
 
     void show() {
 
-        uint32_t now = millis();
+        uint64_t now = micros();
 
-        if (now - lastShow >= SHOW_PERIOD_MS) {
+        if (now - lastShow >= SHOW_PERIOD_MICROS) {
 
             lastShow = now;
 
