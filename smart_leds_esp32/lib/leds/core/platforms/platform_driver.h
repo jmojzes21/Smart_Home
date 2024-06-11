@@ -15,9 +15,7 @@ namespace platform_led_driver {
 #endif
 
     void show();
-
     void setBrightness(uint8_t value);
-    void clear();
 
 #ifdef _WIN32
     void dispose();

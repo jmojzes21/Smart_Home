@@ -38,7 +38,9 @@ void LedDriver::setBrightness(uint8_t value) {
 }
 
 void LedDriver::clear() {
-    platform_led_driver::clear();
+    for (int i = 0; i < _ledCount; i++) {
+        _colors[i] = 0;
+    }
 }
 
 Color* LedDriver::colors() {

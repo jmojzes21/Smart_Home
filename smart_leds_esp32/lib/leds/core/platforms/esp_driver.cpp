@@ -33,10 +33,6 @@ namespace platform_led_driver {
 
     }
 
-    void clear() {
-        FastLED.clear(true);
-    }
-
 }
 
 #endif

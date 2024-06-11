@@ -87,14 +87,6 @@ namespace platform_led_driver {
 
     }
 
-    void clear() {
-
-        buffer[0] = 20;
-
-        sendData(buffer, 1);
-
-    }
-
     void dispose() {
         closesocket(client);
         WSACleanup();
