@@ -14,7 +14,7 @@ class ChangePasswordDialog extends StatefulWidget {
   static Future<bool> show(BuildContext context) async {
     var result = await showDialog<bool>(
       context: context,
-      builder: (context) => ChangePasswordDialog(),
+      builder: (context) => const ChangePasswordDialog(),
     );
     return result ?? false;
   }
@@ -73,17 +73,17 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Promjena lozinke'),
+      title: const Text('Promjena lozinke'),
       actions: [
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text('Odustani'),
+          child: const Text('Odustani'),
         ),
         FilledButton(
           onPressed: () => changePassword(),
-          child: Text('Promijeni'),
+          child: const Text('Promijeni'),
         ),
       ],
       content: Padding(
@@ -94,40 +94,40 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Trenutna lozinka'),
+              const Text('Trenutna lozinka'),
               const SizedBox(height: 10),
               TextField(
                 controller: tcOldPassword,
                 obscureText: showPassword == false,
                 enableSuggestions: false,
                 autocorrect: false,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   isDense: true,
                   border: OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 20),
-              Text('Nova lozinka'),
+              const Text('Nova lozinka'),
               const SizedBox(height: 10),
               TextField(
                 controller: tcNewPassword,
                 obscureText: showPassword == false,
                 enableSuggestions: false,
                 autocorrect: false,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   isDense: true,
                   border: OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 20),
-              Text('Potvrda lozinke'),
+              const Text('Potvrda lozinke'),
               const SizedBox(height: 10),
               TextField(
                 controller: tcConfirmPassword,
                 obscureText: showPassword == false,
                 enableSuggestions: false,
                 autocorrect: false,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   isDense: true,
                   border: OutlineInputBorder(),
                 ),

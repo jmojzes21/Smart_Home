@@ -46,7 +46,7 @@ class _WavePatternControlState extends State<WavePatternControl> {
         SegmentedButtonPicker(
           label: 'Način rada',
           value: properties.waveChangeColors,
-          values: [
+          values: const [
             (value: false, label: 'Jednobojno'),
             (value: true, label: 'Mijenjaj boje'),
           ],

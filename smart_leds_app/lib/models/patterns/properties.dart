@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 class PatternProperties {
-  Color color = Color.fromARGB(0, 0, 0, 0);
+  Color color = const Color.fromARGB(0, 0, 0, 0);
 
   int waveSpeed = 10;
   bool waveChangeColors = false;

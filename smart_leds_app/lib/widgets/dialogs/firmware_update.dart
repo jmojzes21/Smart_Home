@@ -16,7 +16,7 @@ class FirmwareUpdateDialog extends StatefulWidget {
     var result = await showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => FirmwareUpdateDialog(),
+      builder: (context) => const FirmwareUpdateDialog(),
     );
     return result;
   }
@@ -38,9 +38,9 @@ class _FirmwareUpdateDialogState extends State<FirmwareUpdateDialog> {
 
   void openFile() async {
     var result = await fs.openFile(acceptedTypeGroups: [
-      fs.XTypeGroup(
+      const fs.XTypeGroup(
         label: 'Datoteka programa',
-        extensions: const ['bin'],
+        extensions: ['bin'],
       )
     ]);
 
@@ -111,7 +111,7 @@ class _FirmwareUpdateDialogState extends State<FirmwareUpdateDialog> {
 
     if (isPreparing) {
       if (firmware == null) {
-        content = Column(
+        content = const Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -126,16 +126,16 @@ class _FirmwareUpdateDialogState extends State<FirmwareUpdateDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Datoteka', style: MyTheme.bodyMediumBold),
+            const Text('Datoteka', style: MyTheme.bodyMediumBold),
             Text(firmwareFile, style: MyTheme.bodyMedium),
-            SizedBox(height: 10),
-            Text('Veličina programa', style: MyTheme.bodyMediumBold),
+            const SizedBox(height: 10),
+            const Text('Veličina programa', style: MyTheme.bodyMediumBold),
             Text(calculateFirmwareSize(firmware!), style: MyTheme.bodyMedium),
-            SizedBox(height: 10),
-            Text('Verzija starog programa', style: MyTheme.bodyMediumBold),
+            const SizedBox(height: 10),
+            const Text('Verzija starog programa', style: MyTheme.bodyMediumBold),
             Text(device.firmwareVersion, style: MyTheme.bodyMedium),
-            SizedBox(height: 10),
-            Text('Verzija novog programa', style: MyTheme.bodyMediumBold),
+            const SizedBox(height: 10),
+            const Text('Verzija novog programa', style: MyTheme.bodyMediumBold),
             Text(firmware!.version, style: MyTheme.bodyMedium),
           ],
         );
@@ -144,19 +144,19 @@ class _FirmwareUpdateDialogState extends State<FirmwareUpdateDialog> {
       actions = [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: Text('Odustani'),
+          child: const Text('Odustani'),
         ),
         TextButton(
           onPressed: () => openFile(),
-          child: Text('Odaberi datoteku'),
+          child: const Text('Odaberi datoteku'),
         ),
         FilledButton(
           onPressed: firmware != null ? () => startUpdate() : null,
-          child: Text('Ažuriraj'),
+          child: const Text('Ažuriraj'),
         ),
       ];
     } else {
-      content = SizedBox(
+      content = const SizedBox(
         width: 400,
         height: 400,
         child: Column(
@@ -178,10 +178,10 @@ class _FirmwareUpdateDialogState extends State<FirmwareUpdateDialog> {
     }
 
     return AlertDialog(
-      title: Text('Ažuriranje programa'),
+      title: const Text('Ažuriranje programa'),
       actions: actions,
       content: ConstrainedBox(
-        constraints: BoxConstraints(
+        constraints: const BoxConstraints(
           minWidth: 600,
           minHeight: 300,
         ),

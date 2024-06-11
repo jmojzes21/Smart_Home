@@ -6,7 +6,7 @@ class BrightnessDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
+    return const AlertDialog(
       content: SizedBox(
         width: 500,
         child: _BrightnessControl(),
@@ -18,7 +18,7 @@ class BrightnessDialog extends StatelessWidget {
     showDialog(
       context: context,
       barrierDismissible: true,
-      builder: (context) => BrightnessDialog(),
+      builder: (context) => const BrightnessDialog(),
     );
   }
 }
@@ -43,8 +43,8 @@ class _BrightnessControlState extends State<_BrightnessControl> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text('Jačina svjetla', style: MyTheme.titleLarge),
-        SizedBox(height: 10),
+        const Text('Jačina svjetla', style: MyTheme.titleLarge),
+        const SizedBox(height: 10),
         Slider(
           value: brightness,
           min: 0,
@@ -53,7 +53,7 @@ class _BrightnessControlState extends State<_BrightnessControl> {
         ),
         Center(
           child:
-              Text('${brightness.round()} %', style: TextStyle(fontSize: 20)),
+              Text('${brightness.round()} %', style: const TextStyle(fontSize: 20)),
         ),
       ],
     );

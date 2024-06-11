@@ -18,7 +18,7 @@ class DirectConnectionDialog extends StatefulWidget {
     var result = await showDialog<Device>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => DirectConnectionDialog(),
+      builder: (context) => const DirectConnectionDialog(),
     );
 
     return result;
@@ -106,21 +106,21 @@ class _DirectConnectionDialogState extends State<DirectConnectionDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Izravno povezivanje'),
+      title: const Text('Izravno povezivanje'),
       actions: [
         TextButton(
           onPressed: () => close(),
-          child: Text('Odustani'),
+          child: const Text('Odustani'),
         ),
         if (isConnecting)
           FilledButton(
             onPressed: () => stop(),
-            child: Text('Zaustavi'),
+            child: const Text('Zaustavi'),
           ),
         if (isConnecting == false)
           FilledButton(
             onPressed: () => connect(),
-            child: Text('Poveži'),
+            child: const Text('Poveži'),
           ),
       ],
       content: Padding(
@@ -131,20 +131,20 @@ class _DirectConnectionDialogState extends State<DirectConnectionDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('IP adresa'),
+              const Text('IP adresa'),
               const SizedBox(height: 10),
               TextField(
                 controller: tcIpAddress,
                 enableSuggestions: false,
                 autocorrect: false,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   isDense: true,
                   border: OutlineInputBorder(),
                 ),
               ),
               if (isConnecting) const SizedBox(height: 20),
               if (isConnecting)
-                Row(
+                const Row(
                   children: [
                     SizedBox.square(
                       dimension: 24,

@@ -146,13 +146,13 @@ class _WifiNetworkInputDialogState extends State<WifiNetworkInputDialog> {
         if (editMode)
           TextButton(
             onPressed: () => delete(),
-            child: Text('Obriši'),
+            child: const Text('Obriši'),
           ),
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text('Odustani'),
+          child: const Text('Odustani'),
         ),
         FilledButton(
           onPressed: () => addOrSave(),
@@ -167,32 +167,32 @@ class _WifiNetworkInputDialogState extends State<WifiNetworkInputDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Naziv'),
+              const Text('Naziv'),
               const SizedBox(height: 10),
               TextField(
                 controller: tcName,
                 readOnly: editMode,
                 enableSuggestions: false,
                 autocorrect: false,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   isDense: true,
                   border: OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 20),
-              Text('Lozinka'),
+              const Text('Lozinka'),
               const SizedBox(height: 10),
               TextField(
                 controller: tcPassword,
                 obscureText: showPassword == false,
                 enableSuggestions: false,
                 autocorrect: false,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   isDense: true,
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               CheckboxText(
                 value: showPassword,
                 text: 'Prikaži lozinku',

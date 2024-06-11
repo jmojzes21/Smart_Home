@@ -8,10 +8,10 @@ class ErrorText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.only(top: 10),
       child: Text(
         data,
-        style: TextStyle(color: Colors.red, fontSize: 16),
+        style: const TextStyle(color: Colors.red, fontSize: 16),
       ),
     );
   }

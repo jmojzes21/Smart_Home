@@ -187,7 +187,7 @@ class Device {
 extension on http.Response {
   JsonObject get json {
     if (body.isEmpty) return {};
-    var jsonText = Utf8Decoder().convert(bodyBytes);
+    var jsonText = const Utf8Decoder().convert(bodyBytes);
     return jsonDecode(jsonText);
   }
 }

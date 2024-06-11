@@ -100,7 +100,7 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
     Device.currentDevice = device;
 
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => HomePage()),
+      MaterialPageRoute(builder: (context) => const HomePage()),
     );
   }
 
@@ -140,24 +140,24 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
                       },
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       TextButton(
                         onPressed: () => connectDirectly(),
-                        child: Text('Izravno povezivanje'),
+                        child: const Text('Izravno povezivanje'),
                       ),
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
                       if (isDiscovering == false)
                         FilledButton(
                           onPressed: () => startScan(),
-                          child: Text('Pretraži uređaje'),
+                          child: const Text('Pretraži uređaje'),
                         ),
                       if (isDiscovering)
                         FilledButton(
                           onPressed: () => stopScan(),
-                          child: Text('Zaustavi pretraživanje'),
+                          child: const Text('Zaustavi pretraživanje'),
                         ),
                     ],
                   ),

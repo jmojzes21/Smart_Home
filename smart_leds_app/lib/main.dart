@@ -20,7 +20,7 @@ class MainApp extends StatelessWidget {
           useMaterial3: true,
           colorSchemeSeed: Colors.blue,
         ),
-        home: DeviceDiscoveryPage(),
+        home: const DeviceDiscoveryPage(),
       ),
     );
   }

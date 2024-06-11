@@ -62,15 +62,15 @@ class _LoginDialogState extends State<LoginDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Prijava'),
+      title: const Text('Prijava'),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: Text('Odustani'),
+          child: const Text('Odustani'),
         ),
         FilledButton(
           onPressed: () => login(),
-          child: Text('Prijavi se'),
+          child: const Text('Prijavi se'),
         ),
       ],
       content: Padding(
@@ -81,14 +81,14 @@ class _LoginDialogState extends State<LoginDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Lozinka'),
+              const Text('Lozinka'),
               const SizedBox(height: 10),
               TextField(
                 controller: tcPassword,
                 obscureText: showPassword == false,
                 enableSuggestions: false,
                 autocorrect: false,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   isDense: true,
                   border: OutlineInputBorder(),
                 ),

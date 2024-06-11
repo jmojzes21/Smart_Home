@@ -17,7 +17,7 @@ class SimpleColorPicker extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Boja', style: MyTheme.patternPropertyTitle),
+        const Text('Boja', style: MyTheme.patternPropertyTitle),
         const SizedBox(height: 10),
         Wrap(
           spacing: 10,
@@ -28,7 +28,7 @@ class SimpleColorPicker extends StatelessWidget {
               child: InkWell(
                 splashColor: e,
                 onTap: () => onColor(e),
-                child: SizedBox.square(
+                child: const SizedBox.square(
                   dimension: 50,
                 ),
               ),

@@ -16,7 +16,7 @@ class SimpleDialogs {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('Ok'),
+            child: const Text('Ok'),
           ),
         ],
       ),
@@ -35,11 +35,11 @@ class SimpleDialogs {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text('Ne'),
+            child: const Text('Ne'),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: Text('Da'),
+            child: const Text('Da'),
           ),
         ],
       ),
@@ -93,7 +93,7 @@ class _ExtraConfirmDialogState extends State<_ExtraConfirmDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(widget.message),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           CheckboxText(
             value: isChecked,
             text: widget.checkboxText,
@@ -104,11 +104,11 @@ class _ExtraConfirmDialogState extends State<_ExtraConfirmDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: Text('Ne'),
+          child: const Text('Ne'),
         ),
         TextButton(
           onPressed: isChecked ? confirm : null,
-          child: Text('Da'),
+          child: const Text('Da'),
         ),
       ],
     );

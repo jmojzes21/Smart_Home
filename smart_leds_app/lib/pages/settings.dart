@@ -88,7 +88,7 @@ class _SettingsPageState extends State<SettingsPage> {
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => DeviceDiscoveryPage(),
+          builder: (context) => const DeviceDiscoveryPage(),
         ),
       );
     }
@@ -131,9 +131,9 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Postavke'),
+        title: const Text('Postavke'),
       ),
-      drawer: AppNavigationDrawer(),
+      drawer: const AppNavigationDrawer(),
       body: buildBody(context),
     );
   }
@@ -145,24 +145,24 @@ class _SettingsPageState extends State<SettingsPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ExpansionTile(
-            title: Text('Osnovne informacije', style: MyTheme.titleLarge),
+            title: const Text('Osnovne informacije', style: MyTheme.titleLarge),
             expandedCrossAxisAlignment: CrossAxisAlignment.start,
             expandedAlignment: Alignment.topLeft,
-            childrenPadding: EdgeInsets.all(20),
+            childrenPadding: const EdgeInsets.all(20),
             children: buildDeviceInfoSection(context),
           ),
           ExpansionTile(
-            title: Text('Povezivanje', style: MyTheme.titleLarge),
+            title: const Text('Povezivanje', style: MyTheme.titleLarge),
             expandedCrossAxisAlignment: CrossAxisAlignment.start,
             expandedAlignment: Alignment.topLeft,
-            childrenPadding: EdgeInsets.all(20),
+            childrenPadding: const EdgeInsets.all(20),
             children: buildConnectivitySection(context),
           ),
           ExpansionTile(
-            title: Text('Sustav', style: MyTheme.titleLarge),
+            title: const Text('Sustav', style: MyTheme.titleLarge),
             expandedCrossAxisAlignment: CrossAxisAlignment.start,
             expandedAlignment: Alignment.topLeft,
-            childrenPadding: EdgeInsets.all(20),
+            childrenPadding: const EdgeInsets.all(20),
             children: buildSystemSection(context),
           ),
         ],
@@ -179,78 +179,78 @@ class _SettingsPageState extends State<SettingsPage> {
 
   List<Widget> buildDeviceInfoSection(BuildContext context) {
     return [
-      Text('Naziv', style: MyTheme.bodyMediumBold),
+      const Text('Naziv', style: MyTheme.bodyMediumBold),
       Text(device.name, style: MyTheme.bodyMedium),
-      SizedBox(height: 10),
-      Text('Verzija', style: MyTheme.bodyMediumBold),
+      const SizedBox(height: 10),
+      const Text('Verzija', style: MyTheme.bodyMediumBold),
       Text(device.firmwareVersion, style: MyTheme.bodyMedium),
-      SizedBox(height: 10),
-      Text('WiFi mreža', style: MyTheme.bodyMediumBold),
+      const SizedBox(height: 10),
+      const Text('WiFi mreža', style: MyTheme.bodyMediumBold),
       Text(device.wifi.wifiSsid, style: MyTheme.bodyMedium),
-      SizedBox(height: 10),
-      Text('IP adresa', style: MyTheme.bodyMediumBold),
+      const SizedBox(height: 10),
+      const Text('IP adresa', style: MyTheme.bodyMediumBold),
       Text(device.ipAddress.address, style: MyTheme.bodyMedium),
     ];
   }
 
   List<Widget> buildConnectivitySection(BuildContext context) {
     return [
-      Text('WiFi mreže', style: MyTheme.bodyMediumBold),
-      SizedBox(height: 10),
+      const Text('WiFi mreže', style: MyTheme.bodyMediumBold),
+      const SizedBox(height: 10),
       ListView.builder(
         itemCount: wifiNetworks.length,
         shrinkWrap: true,
         itemBuilder: (context, index) {
           return ListTile(
             title: Text(wifiNetworks[index].ssid),
-            leading: Icon(Icons.wifi),
+            leading: const Icon(Icons.wifi),
             onTap: () => editWifiNetwork(wifiNetworks[index]),
           );
         },
       ),
-      SizedBox(height: 10),
+      const SizedBox(height: 10),
       OutlinedButton.icon(
         onPressed: () => addWifiNetwork(),
-        icon: Icon(Icons.add),
-        label: Text('Dodaj mrežu'),
+        icon: const Icon(Icons.add),
+        label: const Text('Dodaj mrežu'),
       ),
     ];
   }
 
   List<Widget> buildSystemSection(BuildContext context) {
     return [
-      Text('Sigurnost', style: MyTheme.bodyMediumBold),
-      SizedBox(height: 20),
+      const Text('Sigurnost', style: MyTheme.bodyMediumBold),
+      const SizedBox(height: 20),
       OutlinedButton.icon(
         onPressed: () => changePassword(),
-        icon: Icon(Icons.lock_outline),
-        label: Text('Promijeni lozinku'),
+        icon: const Icon(Icons.lock_outline),
+        label: const Text('Promijeni lozinku'),
       ),
-      SizedBox(height: 20),
+      const SizedBox(height: 20),
       OutlinedButton.icon(
         onPressed: () => wipeData(),
-        icon: Icon(Icons.delete_outline),
-        label: Text('Obriši sve podatke'),
+        icon: const Icon(Icons.delete_outline),
+        label: const Text('Obriši sve podatke'),
       ),
-      SizedBox(height: 40),
-      Text('Uređaj', style: MyTheme.bodyMediumBold),
-      SizedBox(height: 20),
+      const SizedBox(height: 40),
+      const Text('Uređaj', style: MyTheme.bodyMediumBold),
+      const SizedBox(height: 20),
       OutlinedButton.icon(
         onPressed: () => restartDevice(),
-        icon: Icon(Icons.restart_alt),
-        label: Text('Ponovno pokreni uređaj'),
+        icon: const Icon(Icons.restart_alt),
+        label: const Text('Ponovno pokreni uređaj'),
       ),
-      SizedBox(height: 20),
+      const SizedBox(height: 20),
       OutlinedButton.icon(
         onPressed: () => startDla(),
-        icon: Icon(Icons.lightbulb_outline),
-        label: Text('Pokreni DLA'),
+        icon: const Icon(Icons.lightbulb_outline),
+        label: const Text('Pokreni DLA'),
       ),
-      SizedBox(height: 20),
+      const SizedBox(height: 20),
       OutlinedButton.icon(
         onPressed: () => updateFirmware(),
-        icon: Icon(Icons.upgrade),
-        label: Text('Ažuriraj ugradbeni program'),
+        icon: const Icon(Icons.upgrade),
+        label: const Text('Ažuriraj ugradbeni program'),
       ),
     ];
   }

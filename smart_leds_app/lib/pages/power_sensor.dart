@@ -28,7 +28,7 @@ class _PowerSensorPageState extends State<PowerSensorPage> {
 
     if (data.isActive) {
       refreshTimer ??=
-          Timer.periodic(Duration(seconds: 2), (timer) => refresh());
+          Timer.periodic(const Duration(seconds: 2), (timer) => refresh());
     } else {
       refreshTimer?.cancel();
       refreshTimer = null;
@@ -49,9 +49,9 @@ class _PowerSensorPageState extends State<PowerSensorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Potrošnja energije'),
+        title: const Text('Potrošnja energije'),
       ),
-      drawer: AppNavigationDrawer(),
+      drawer: const AppNavigationDrawer(),
       body: buildBody(context),
     );
   }
@@ -84,15 +84,15 @@ class _PowerSensorPageState extends State<PowerSensorPage> {
             ),
           ],
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         FilledButton(
           onPressed: () => changePowerSensorState(false),
-          child: Text('Isključi senzor'),
+          child: const Text('Isključi senzor'),
         ),
       ];
     } else {
       content = [
-        SizedBox(
+        const SizedBox(
           width: 300,
           height: 200,
           child: Center(
@@ -103,10 +103,10 @@ class _PowerSensorPageState extends State<PowerSensorPage> {
             ),
           ),
         ),
-        SizedBox(height: 40),
+        const SizedBox(height: 40),
         FilledButton(
           onPressed: () => changePowerSensorState(true),
-          child: Text('Uključi senzor'),
+          child: const Text('Uključi senzor'),
         ),
       ];
     }
@@ -148,9 +148,9 @@ class _PowerSensorPageState extends State<PowerSensorPage> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(value),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           LinearProgressIndicator(value: progress),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           Text(minValue),
           Text(maxValue),
         ],

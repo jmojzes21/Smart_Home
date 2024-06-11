@@ -12,7 +12,7 @@ class AppNavigationDrawer extends StatelessWidget {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) {
-          return HomePage();
+          return const HomePage();
         },
       ),
     );
@@ -22,7 +22,7 @@ class AppNavigationDrawer extends StatelessWidget {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) {
-          return PowerSensorPage();
+          return const PowerSensorPage();
         },
       ),
     );
@@ -32,7 +32,7 @@ class AppNavigationDrawer extends StatelessWidget {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) {
-          return SettingsPage();
+          return const SettingsPage();
         },
       ),
     );
@@ -46,7 +46,7 @@ class AppNavigationDrawer extends StatelessWidget {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) {
-          return DeviceDiscoveryPage();
+          return const DeviceDiscoveryPage();
         },
       ),
     );
@@ -61,24 +61,24 @@ class AppNavigationDrawer extends StatelessWidget {
         child: Column(
           children: [
             ListTile(
-              title: Text('Početna'),
-              leading: Icon(Icons.home),
+              title: const Text('Početna'),
+              leading: const Icon(Icons.home),
               onTap: () => openHomePage(context),
             ),
             ListTile(
-              title: Text('Potrošnja energije'),
-              leading: Icon(Icons.battery_charging_full),
+              title: const Text('Potrošnja energije'),
+              leading: const Icon(Icons.battery_charging_full),
               onTap: () => openPowerSensorPage(context),
             ),
             ListTile(
-              title: Text('Postavke'),
-              leading: Icon(Icons.settings),
+              title: const Text('Postavke'),
+              leading: const Icon(Icons.settings),
               onTap: () => openSettings(context),
             ),
-            Spacer(),
+            const Spacer(),
             ListTile(
-              title: Text('Zatvori uređaj'),
-              leading: Icon(Icons.logout),
+              title: const Text('Zatvori uređaj'),
+              leading: const Icon(Icons.logout),
               onTap: () => closeDevice(context),
             ),
           ],

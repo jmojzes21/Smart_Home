@@ -43,7 +43,7 @@ class FirmwareLoader {
 
   dynamic _parseHeader(Uint8List bytes) {
     try {
-      String json = Utf8Decoder().convert(bytes);
+      String json = const Utf8Decoder().convert(bytes);
       return jsonDecode(json);
     } on Exception catch (_) {
       throw InvalidFirmwareFileException();

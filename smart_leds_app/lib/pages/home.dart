@@ -16,16 +16,16 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Početna'),
+        title: const Text('Početna'),
       ),
-      drawer: AppNavigationDrawer(),
+      drawer: const AppNavigationDrawer(),
       floatingActionButton: IconButton.filled(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         onPressed: () => BrightnessDialog.show(context),
-        icon: Icon(Icons.light_mode, size: 26),
+        icon: const Icon(Icons.light_mode, size: 26),
       ),
       body: Padding(
-        padding: EdgeInsets.all(40),
+        padding: const EdgeInsets.all(40),
         child: _Patterns(),
       ),
     );
@@ -157,7 +157,7 @@ class _RawPatternCard extends StatelessWidget {
       onSecondaryTap: onSecondaryTap,
       onLongPress: onSecondaryTap,
       child: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

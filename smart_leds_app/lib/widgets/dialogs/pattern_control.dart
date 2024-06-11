@@ -17,7 +17,7 @@ class PatternControlDialog extends StatelessWidget {
       content: SizedBox(
         width: 800,
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 20),
+          padding: const EdgeInsets.symmetric(vertical: 20),
           child: child,
         ),
       ),
