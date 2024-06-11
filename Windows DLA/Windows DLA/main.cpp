@@ -33,7 +33,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
         if (GetAsyncKeyState(VK_ESCAPE)) break;
 
         pattern->loop();
-        Sleep(1);
     }
 
     pattern->dispose();

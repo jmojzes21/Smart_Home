@@ -10,12 +10,17 @@
 
 #pragma comment(lib, "Ws2_32.lib")
 
+uint32_t millis();
+
+#define SHOW_PERIOD_MS 5 
+
 namespace platform_led_driver {
 
     static WSADATA wsaData;
     static SOCKET client = INVALID_SOCKET;
     static Color* colors = nullptr;
     static int ledCount = 0;
+    static uint32_t lastShow = 0;
 
     static char buffer[100];
 
@@ -69,12 +74,20 @@ namespace platform_led_driver {
 
     void show() {
 
-        buffer[0] = 10;
-        memcpy_s(buffer + 1, sizeof(buffer) - 1, colors, 3 * ledCount);
+        uint32_t now = millis();
 
-        int size = 3 * ledCount + 1;
+        if (now - lastShow >= SHOW_PERIOD_MS) {
 
-        sendData(buffer, size);
+            lastShow = now;
+
+            buffer[0] = 10;
+            memcpy_s(buffer + 1, sizeof(buffer) - 1, colors, 3 * ledCount);
+
+            int size = 3 * ledCount + 1;
+
+            sendData(buffer, size);
+
+        }
 
     }
 

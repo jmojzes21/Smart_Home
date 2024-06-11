@@ -17,7 +17,7 @@ public:
 
     void preview() override {
         color = Colors::Purple;
-        speed = 5;
+        speed = 15;
 
         speedTimer.setPeriod(speed);
     }
@@ -26,12 +26,12 @@ public:
         
         if (speedTimer.run()) {
 
-            x += 0.02;
+            x += 0.01;
             if (x >= M_PI) {
                 x = 0;
             }
 
-            float value = 0.9 * sinf(x) + 0.1;
+            float value = 0.95 * sinf(x) + 0.05;
 
             float r = value * (float)color.r;
             float g = value * (float)color.g;
