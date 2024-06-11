@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_leds_app/logic/providers/pattern_provider.dart';
 import 'package:smart_leds_app/models/patterns/patterns.dart';
 import 'package:smart_leds_app/models/patterns/property_values.dart';
+import 'package:smart_leds_app/widgets/misc/checkbox.dart';
 import 'package:smart_leds_app/widgets/misc/segmented_button_picker.dart';
 import 'package:smart_leds_app/widgets/misc/simple_color_picker.dart';
 import 'package:smart_leds_app/widgets/pattern_properties/dir.dart';
@@ -29,10 +30,11 @@ class _WavePatternControlState extends State<WavePatternControl> {
       children: [
         SimpleColorPicker(
           colors: PatternPropertyValues.basicColors,
-          onColor: (color) {
+          onColor: (color) => setState(() {
             properties.color = color;
+            properties.waveChangeColors = false;
             patternProvider.showPattern(widget.pattern);
-          },
+          }),
         ),
         const SizedBox(height: 20),
         SegmentedButtonPicker(
@@ -41,6 +43,19 @@ class _WavePatternControlState extends State<WavePatternControl> {
           values: PatternPropertyValues.waveSpeedValues,
           onChange: (value) => setState(() {
             properties.waveSpeed = value;
+            patternProvider.showPattern(widget.pattern);
+          }),
+        ),
+        const SizedBox(height: 20),
+        SegmentedButtonPicker(
+          label: 'Način rada',
+          value: properties.waveChangeColors,
+          values: [
+            (value: false, label: 'Jednobojno'),
+            (value: true, label: 'Mijenjaj boje'),
+          ],
+          onChange: (value) => setState(() {
+            properties.waveChangeColors = value;
             patternProvider.showPattern(widget.pattern);
           }),
         ),

@@ -103,6 +103,7 @@ bool LedManager::_changePattern(std::string& name, JsonObject json) {
     }
 
     _currentPattern = newPattern;
+    _currentPatternName = name;
     return true;
     
 }
