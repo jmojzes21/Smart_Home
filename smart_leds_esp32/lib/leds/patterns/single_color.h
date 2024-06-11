@@ -7,18 +7,55 @@ class SingleColorPattern : public ColorPattern {
 
 public:
 
-    Color color = Colors::Black;
+    Color oldColor = Colors::Black;
+    Color newColor = Colors::Black;
 
-    SingleColorPattern() {}
+    Color actualColor = Colors::Black;
 
-    void loop() override {}
+    bool inAnimation = false;
+    Timer animationTimer;
+
+    SingleColorPattern() {
+        animationTimer.setPeriod(400);
+    }
+
+    void loop() override {
+        
+        if (inAnimation) {
+
+            if (animationTimer.run()) {
+                inAnimation = false;
+            }
+
+            float p = animationTimer.getProgress();
+
+            actualColor = utils::lerpColor(oldColor, newColor, p);
+            ledDriver.showColor(actualColor);
+            
+        }
+    
+    }
 
     bool update(JsonObject p) override {
 
-        int rgb = p["color"];
-        color = rgb;
+        int color = p["color"];
+        
+        if (actualColor == Colors::Black) {
+            
+            actualColor = color;
+            newColor = color;
 
-        ledDriver.showColor(color);
+            ledDriver.showColor(actualColor);
+
+            inAnimation = false;
+            return true;
+        }
+
+        oldColor = actualColor;
+        newColor = color;
+
+        inAnimation = true;
+        animationTimer.reset();
 
         return true;
     }
