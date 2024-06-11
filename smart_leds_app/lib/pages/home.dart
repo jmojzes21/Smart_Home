@@ -6,6 +6,7 @@ import 'package:smart_leds_app/widgets/dialogs/brightness.dart';
 import 'package:smart_leds_app/widgets/dialogs/pattern_control.dart';
 import 'package:smart_leds_app/widgets/misc/navigation_drawer.dart';
 import 'package:smart_leds_app/widgets/pattern_controls/single_color.dart';
+import 'package:smart_leds_app/widgets/pattern_controls/wave.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -47,7 +48,7 @@ class _Patterns extends StatelessWidget {
           name: 'Valovi',
           icon: 'waves.png',
           pattern: WavePattern(),
-          controlDialog: (p) => Placeholder(),
+          controlDialog: (p) => WavePatternControl(p),
         ),
         /*
         _PatternCard(

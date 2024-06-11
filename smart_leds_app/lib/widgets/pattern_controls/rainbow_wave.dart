@@ -4,6 +4,7 @@ import 'package:smart_leds_app/widgets/pattern_properties/cspeed.dart';
 import 'package:smart_leds_app/widgets/pattern_properties/dir.dart';
 import 'package:smart_leds_app/widgets/pattern_properties/rspeed.dart';
 import 'package:smart_leds_app/widgets/pattern_properties/size.dart';
+// TODO izmjeni
 /*
 class RainbowWavePatternControl extends StatefulWidget {
   const RainbowWavePatternControl({super.key});

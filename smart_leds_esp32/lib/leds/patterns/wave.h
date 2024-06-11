@@ -8,7 +8,6 @@ class WavePattern : public ColorPattern {
 public:
 
     Color color = Colors::Black;
-    uint16_t speed = 0;
     float x = 0;
 
     std::vector<Color> basicColors;
@@ -18,13 +17,6 @@ public:
 
     WavePattern() {
         utils::getBasicColors(basicColors);
-    }
-
-    void preview() override {
-        color = Colors::Purple;
-        speed = 5;
-        changeColors = true;
-        speedTimer.setPeriod(speed);
     }
 
     void loop() override {
@@ -60,8 +52,8 @@ public:
         bool changeColors = p["changeColors"];
 
         this->color = rgb;
-        this->speed = speed;
         this->changeColors = changeColors;
+        speedTimer.setPeriod(speed);
 
         return true;
     }

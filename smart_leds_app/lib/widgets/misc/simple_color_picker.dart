@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/theme.dart';
 
-class ColorPropertyWidget extends StatelessWidget {
-  final List<Color> colors = Colors.primaries;
+class SimpleColorPicker extends StatelessWidget {
+  final List<Color> colors;
   final void Function(Color color) onColor;
 
-  const ColorPropertyWidget({super.key, required this.onColor});
+  const SimpleColorPicker({
+    super.key,
+    required this.colors,
+    required this.onColor,
+  });
 
   @override
   Widget build(BuildContext context) {

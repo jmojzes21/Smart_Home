@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_leds_app/logic/providers/pattern_provider.dart';
 import 'package:smart_leds_app/widgets/pattern_properties/dir.dart';
 import 'package:smart_leds_app/widgets/pattern_properties/rspeed.dart';
+// TODO izmjeni
 /*
 class RainbowPatternControl extends StatefulWidget {
   const RainbowPatternControl({super.key});

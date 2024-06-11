@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/logic/providers/pattern_provider.dart';
 import 'package:smart_leds_app/models/patterns/patterns.dart';
-import 'package:smart_leds_app/widgets/pattern_properties/color.dart';
+import 'package:smart_leds_app/models/patterns/property_values.dart';
+import 'package:smart_leds_app/widgets/misc/simple_color_picker.dart';
 
 class SingleColorPatternControl extends StatefulWidget {
   final ColorPattern pattern;
@@ -23,7 +24,8 @@ class _SingleColorPatternControlState extends State<SingleColorPatternControl> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ColorPropertyWidget(
+        SimpleColorPicker(
+          colors: PatternPropertyValues.basicColors,
           onColor: (color) {
             properties.color = color;
             patternProvider.showPattern(widget.pattern);
