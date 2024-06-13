@@ -66,6 +66,16 @@ namespace utils {
         colors.emplace_back(96, 125, 139);
     }
 
+    Color scaleColor(Color color, float scale) {
+
+        Color scaledColor;
+        scaledColor.r = scale * (float)color.r;
+        scaledColor.g = scale * (float)color.g;
+        scaledColor.b = scale * (float)color.b;
+
+        return scaledColor;
+    }
+
     Color lerpColor(Color begin, Color end, float p) {
 
         uint8_t r = _lertRgbValue(begin.r, end.r, p);

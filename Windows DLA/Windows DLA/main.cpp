@@ -13,7 +13,6 @@
 #include "leds/patterns/rainbow.h"
 #include "leds/patterns/rainbow_balls.h"
 #include "leds/patterns/rain.h"
-#include "leds/patterns/rain_single.h"
 
 LedDriver ledDriver;
 std::chrono::steady_clock::time_point _startTimePoint;
@@ -26,7 +25,7 @@ static void start() {
     srand(time(NULL));
     ledDriver.init(ipAddress, port);
 
-    ColorPattern* pattern = new RainbowBallsPattern();
+    ColorPattern* pattern = new RainPattern();
 
     while (true) {
 

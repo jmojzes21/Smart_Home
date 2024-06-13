@@ -13,6 +13,7 @@ namespace utils {
     Color getRandomColor(std::vector<Color> colors);
     void getBasicColors(std::vector<Color>& colors);
 
+    Color scaleColor(Color color, float scale);
     Color lerpColor(Color a, Color b, float p);
 
     Color getRainbowColor(uint8_t hue);

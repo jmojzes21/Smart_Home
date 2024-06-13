@@ -34,11 +34,7 @@ public:
 
             float value = sinf(x);
 
-            float r = value * (float)color.r;
-            float g = value * (float)color.g;
-            float b = value * (float)color.b;
-
-            Color actualColor = Color(r, g, b);
+            Color actualColor = utils::scaleColor(color, value);
             ledDriver.showColor(actualColor);
 
         }

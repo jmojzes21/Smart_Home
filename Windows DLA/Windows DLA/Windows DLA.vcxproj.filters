@@ -59,9 +59,6 @@
     <ClInclude Include="leds\patterns\rain.h">
       <Filter>LED Patterns</Filter>
     </ClInclude>
-    <ClInclude Include="leds\patterns\rain_single.h">
-      <Filter>LED Patterns</Filter>
-    </ClInclude>
     <ClInclude Include="leds\patterns\rainbow.h">
       <Filter>LED Patterns</Filter>
     </ClInclude>
