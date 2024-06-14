@@ -102,6 +102,7 @@ void DeviceRestApi::_initDeviceApi() {
         doc["ip"] = WiFi.localIP().toString();
         doc["mac"] = WiFi.macAddress();
         doc["ssid"] = WiFi.SSID();
+        doc["rssi"] = (int)WiFi.RSSI();
 
         respondJson(request, 200, doc);
 

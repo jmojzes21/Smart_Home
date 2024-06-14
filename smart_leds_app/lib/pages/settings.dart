@@ -182,14 +182,32 @@ class _SettingsPageState extends State<SettingsPage> {
       const Text('Naziv', style: MyTheme.bodyMediumBold),
       Text(device.name, style: MyTheme.bodyMedium),
       const SizedBox(height: 10),
+      //
       const Text('Verzija', style: MyTheme.bodyMediumBold),
       Text(device.firmwareVersion, style: MyTheme.bodyMedium),
       const SizedBox(height: 10),
+      //
       const Text('WiFi mreža', style: MyTheme.bodyMediumBold),
-      Text(device.wifi.wifiSsid, style: MyTheme.bodyMedium),
+      Text(device.wifi.ssid, style: MyTheme.bodyMedium),
       const SizedBox(height: 10),
+      //
+      const Text('WiFi RSSI', style: MyTheme.bodyMediumBold),
+      Text('${device.wifi.rssi} dBm', style: MyTheme.bodyMedium),
+      const SizedBox(height: 10),
+      //
       const Text('IP adresa', style: MyTheme.bodyMediumBold),
       Text(device.ipAddress.address, style: MyTheme.bodyMedium),
+      const SizedBox(height: 10),
+      //
+      const Text('MAC adresa', style: MyTheme.bodyMediumBold),
+      Text(device.macAddress, style: MyTheme.bodyMedium),
+      const SizedBox(height: 20),
+      //
+      OutlinedButton.icon(
+        onPressed: () => refresh(),
+        icon: const Icon(Icons.refresh),
+        label: const Text('Osvježi'),
+      ),
     ];
   }
 

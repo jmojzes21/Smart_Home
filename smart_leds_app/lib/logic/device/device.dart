@@ -41,12 +41,15 @@ class Device {
     String firmwareVersion = json['version'];
     String macAddress = json['mac'];
     String ssid = json['ssid'];
+    int rssi = json['rssi'];
 
     this.name = name;
     this.type = type;
     this.firmwareVersion = firmwareVersion;
     this.macAddress = macAddress;
-    wifi.wifiSsid = ssid;
+
+    wifi.ssid = ssid;
+    wifi.rssi = rssi;
   }
 
   Future<void> login(String password) async {
