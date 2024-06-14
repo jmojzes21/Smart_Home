@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_leds_app/logic/device/device.dart';
 import 'package:smart_leds_app/theme.dart';
 
 class BrightnessDialog extends StatelessWidget {
@@ -30,11 +31,20 @@ class _BrightnessControl extends StatefulWidget {
 }
 
 class _BrightnessControlState extends State<_BrightnessControl> {
-  double brightness = 20;
+  late Device device;
+  double brightnessPercent = 0;
 
   @override
   void initState() {
     super.initState();
+    device = Device.currentDevice;
+
+    brightnessPercent = device.leds.brightness / 255;
+  }
+
+  void setBrightness(double brightnessPercent) {
+    int brightness = (brightnessPercent * 255).round();
+    device.leds.setBrightness(brightness);
   }
 
   @override
@@ -46,14 +56,17 @@ class _BrightnessControlState extends State<_BrightnessControl> {
         const Text('Jačina svjetla', style: MyTheme.titleLarge),
         const SizedBox(height: 10),
         Slider(
-          value: brightness,
+          value: brightnessPercent,
           min: 0,
-          max: 100,
-          onChanged: (value) => setState(() => brightness = value),
+          max: 1,
+          onChanged: (value) => setState(() => brightnessPercent = value),
+          onChangeEnd: (value) => setBrightness(value),
         ),
         Center(
-          child:
-              Text('${brightness.round()} %', style: const TextStyle(fontSize: 20)),
+          child: Text(
+            '${(brightnessPercent * 100).round()} %',
+            style: const TextStyle(fontSize: 20),
+          ),
         ),
       ],
     );
