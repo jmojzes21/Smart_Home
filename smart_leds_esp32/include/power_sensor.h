@@ -24,7 +24,6 @@ class PowerSensor {
 
     Adafruit_INA219 _ina219;
     PowerSensorData _data;
-    bool _useRealSensor = false;
 
     bool _isActive = false;
     TaskHandle_t _sensorTask = nullptr;

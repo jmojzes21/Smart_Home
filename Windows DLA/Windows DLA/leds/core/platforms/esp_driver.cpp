@@ -16,7 +16,8 @@ namespace platform_led_driver {
         FastLED.addLeds<WS2812B, LED_DATA_PIN, GRB>(data, ledCount);
         FastLED.clear(true);
 
-        FastLED.setBrightness(80);
+        FastLED.setMaxPowerInVoltsAndMilliamps(5, 300);
+        FastLED.setBrightness(51);
 
     }
 
@@ -25,12 +26,8 @@ namespace platform_led_driver {
     }
 
     void setBrightness(uint8_t value) {
-
-        if (value > 80) value = 80;
-
         FastLED.setBrightness(value);
         FastLED.show();
-
     }
 
 }
