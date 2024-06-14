@@ -1,6 +1,5 @@
 
 #include "power_sensor.h"
-#include "log.h"
 
 void PowerSensor::setup() {
 

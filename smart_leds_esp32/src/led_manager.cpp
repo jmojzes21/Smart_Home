@@ -7,8 +7,6 @@
 #include "patterns/rainbow.h"
 #include "patterns/rainbow_balls.h"
 
-#include "log.h"
-
 #define DLA_PAYLOAD_SIZE (sizeof(Color) * LED_COUNT)
 
 void LedManager::setup() {

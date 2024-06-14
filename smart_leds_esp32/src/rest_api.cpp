@@ -4,7 +4,6 @@
 #include "rest_api.h"
 #include "power_sensor.h"
 #include "settings.h"
-#include "log.h"
 
 extern AsyncWebServer httpServer;
 extern Device device;
@@ -287,21 +286,6 @@ void DeviceRestApi::_initMiscApi() {
 
         device.restart(2000);
         respondCode(request, 201);
-    });
-
-
-    // GET /logs
-
-    httpServer.on("/logs", HTTP_GET, [&](AsyncWebServerRequest* request) {
-        std::string logs = qlog_get_logs();
-        request->send(200, "text/plain", logs.c_str());
-    });
-
-    // DELETE /logs
-
-    httpServer.on("/logs", HTTP_DELETE, [&](AsyncWebServerRequest* request) {
-        qlog_clear();
-        request->send(201);
     });
 
 }

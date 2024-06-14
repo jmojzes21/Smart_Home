@@ -16,7 +16,6 @@
 #include "power_sensor.h"
 
 #include "settings.h"
-#include "log.h"
 
 const char* firmwareVersion = "v0.2.0";
 const char* deviceHostname = "smart_leds";
@@ -35,14 +34,10 @@ PowerSensor powerSensor;
 
 void setup() {
 
-    #ifdef SERIAL_DEBUG
     Serial.begin(115200);
-    #endif
-
-    qlog_setup(2048);
 
     // učitaj postavke
-    qlog("Učitaj postavke");
+    Serial.printf("Učitaj postavke\n");
 
     LittleFS.begin(true);
     Settings settings;
@@ -56,7 +51,7 @@ void setup() {
     device.version = firmwareVersion;
     device.deviceType = deviceType;
 
-    qlog("Uređaj naziv: %s, verzija: %s, tip: %s", device.name.c_str(), device.version, device.deviceType);
+    Serial.printf("Uređaj, naziv: %s, verzija: %s, tip: %s\n", device.name.c_str(), device.version, device.deviceType);
 
     // postavi FastLED
     ledManager.setup();
