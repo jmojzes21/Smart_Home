@@ -10,8 +10,6 @@ class WifiManager {
 
     public:
 
-    void setup();
-
     void connectToWifi();
 
     private:

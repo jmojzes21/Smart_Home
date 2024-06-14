@@ -5,8 +5,6 @@ static const int wifiConnectTimeout = 4000;
 
 extern Device device;
 
-void WifiManager::setup() {}
-
 void WifiManager::connectToWifi() {
 
     Settings settings;
@@ -18,6 +16,7 @@ void WifiManager::connectToWifi() {
     // ako nema wifi mreža,
     // otvori wifi pristupnu točku
     if(networks.size() == 0) {
+        Serial.printf("Nema wifi mreža za povezivanje\n");
         _startAccessPoint();
         return;
     }
@@ -45,6 +44,7 @@ void WifiManager::connectToWifi() {
 
     if(best == -1 || best == preferred) {
         // nema dostupnih wifi mreža na koje se možemo povezati
+        Serial.printf("Nema dostupnih wifi mreža za povezivanje\n");
         _startAccessPoint();
         return;
     }
@@ -66,6 +66,8 @@ void WifiManager::connectToWifi() {
 
 bool WifiManager::_connectToNetwork(WifiNetwork& network) {
 
+    Serial.printf("Poveži se na wifi mrežu %s\n", network.ssid.c_str());
+
     WiFi.disconnect();
     WiFi.mode(WIFI_STA);
     WiFi.begin(network.ssid.c_str(), network.password.c_str());
@@ -77,6 +79,7 @@ bool WifiManager::_connectToNetwork(WifiNetwork& network) {
         if(now - start > wifiConnectTimeout) {
             // nismo se uspjeli povezati na wifi mrežu
             // unutar određenog perioda
+            Serial.printf("Povezivanje na mrežu nije uspjelo\n");
             return false;
         }
 
@@ -84,12 +87,16 @@ bool WifiManager::_connectToNetwork(WifiNetwork& network) {
     }
 
     // povezali smo se na wifi mrežu
+    Serial.printf("Povezano\n");
+    Serial.printf("  IP: %s\n", WiFi.localIP().toString().c_str());
+
     return true;
 }
 
 int WifiManager::_findBestNetwork(std::vector<WifiNetwork>& networks) {
 
     // pretraži dostupne wifi mreže
+    Serial.printf("Pretraži dostupne wifi mreže\n");
 
     WiFi.disconnect();
     WiFi.mode(WIFI_STA);
@@ -101,10 +108,14 @@ int WifiManager::_findBestNetwork(std::vector<WifiNetwork>& networks) {
     int bestIndex = -1;
     int bestRssi = -1000;
 
+    Serial.printf("Pronađene mreže:\n");
+
     for(int i = 0; i < netCount; i++) {
 
         std::string ssid = WiFi.SSID(i).c_str();
         int rssi = WiFi.RSSI(i);
+
+        Serial.printf("  %s [%d]\n", ssid.c_str(), rssi);
 
         // možemo li se povezati na mrežu (ssid)
         // tj. imamo li konfiguraciju za nju
@@ -140,7 +151,9 @@ void WifiManager::_startAccessPoint() {
     WiFi.mode(WIFI_AP);
 
     std::string& ssid = device.name;
-    Serial.println(ssid.c_str());
+    
+    Serial.printf("Pokreni wifi pristupnu točku\n");
+    Serial.printf("  Naziv: %s\n", ssid.c_str());
 
     WiFi.softAP(ssid.c_str());
     

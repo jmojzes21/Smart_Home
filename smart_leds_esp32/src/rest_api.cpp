@@ -11,6 +11,9 @@ extern LedManager ledManager;
 extern PowerSensor powerSensor;
 
 void DeviceRestApi::setup() {
+
+    Serial.printf("Postavi rest api\n");
+
     _initLedApi();
     _initDeviceApi();
     _initWifiApi();

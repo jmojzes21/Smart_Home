@@ -18,6 +18,8 @@ OtaUpdate::OtaUpdate() {
 }
 
 void OtaUpdate::setup() {
+
+    Serial.printf("Postavi OTA update\n");
     
     // POST /firmware_update
 

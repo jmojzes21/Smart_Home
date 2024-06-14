@@ -5,7 +5,13 @@ static const char* _settingsPath = "/settings";
 
 void Settings::load() {
 
+    Serial.printf("Učitaj postavke\n");
+
     if(LittleFS.exists(_settingsPath) == false) {
+
+        Serial.printf("Datoteka postavki ne postoji\n");
+        Serial.printf("Stvori zadane postavke\n");
+
         _loadInitial();
         save();
         return;
@@ -44,6 +50,8 @@ void Settings::load() {
 void Settings::save() {
 
     if(_isLoaded == false) return;
+
+    Serial.printf("Spremi postavke\n");
 
     JsonDocument document;
 

@@ -3,6 +3,8 @@
 
 void PowerSensor::setup() {
 
+    Serial.printf("Postavi senzor potrošnje energije\n");
+
     _mutex = xSemaphoreCreateMutex();
     _ina219.begin();
 

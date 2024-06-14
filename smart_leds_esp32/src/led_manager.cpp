@@ -11,6 +11,8 @@
 
 void LedManager::setup() {
 
+    Serial.printf("Postavi LED upravitelja\n");
+
     _mutex = xSemaphoreCreateMutex();
 
     ledDriver.init();

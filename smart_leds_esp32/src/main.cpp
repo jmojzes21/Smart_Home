@@ -35,10 +35,9 @@ PowerSensor powerSensor;
 void setup() {
 
     Serial.begin(115200);
+    Serial.printf("Postavi uređaj\n");
 
     // učitaj postavke
-    Serial.printf("Učitaj postavke\n");
-
     LittleFS.begin(true);
     Settings settings;
     settings.load();
@@ -51,16 +50,16 @@ void setup() {
     device.version = firmwareVersion;
     device.deviceType = deviceType;
 
-    Serial.printf("Uređaj, naziv: %s, verzija: %s, tip: %s\n", device.name.c_str(), device.version, device.deviceType);
+    Serial.printf("Uređaj\n");
+    Serial.printf("  Naziv: %s\n", device.name.c_str());
+    Serial.printf("  Tip: %s\n", device.deviceType);
+    Serial.printf("  Verzija: %s\n", device.version);
 
     // postavi FastLED
     ledManager.setup();
 
     // postavi senzor struje
     powerSensor.setup();
-
-    // postavi wifi manager
-    wifiManager.setup();
 
     // postavi rest api
     restApi.setup();
@@ -72,12 +71,16 @@ void setup() {
     wifiManager.connectToWifi();
 
     // postavi mdns
+    Serial.printf("Postavi mdns\n");
     MDNS.begin(deviceHostname);
     MDNS.setInstanceName(device.name.c_str());
     MDNS.addService("http", "tcp", httpPort);
 
     // pokreni http server
+    Serial.printf("Pokreni http server\n");
     httpServer.begin();
+
+    Serial.printf("Postavljanje uređaja gotovo\n");
 
 }
 
