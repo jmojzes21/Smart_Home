@@ -19,7 +19,7 @@ std::chrono::steady_clock::time_point _startTimePoint;
 
 static void start() {
 
-    const char* ipAddress = "192.168.8.108";
+    const char* ipAddress = "192.168.8.110";
     int port = 7000;
 
     srand(time(NULL));

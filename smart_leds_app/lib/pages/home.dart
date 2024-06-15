@@ -63,20 +63,17 @@ class _Patterns extends StatelessWidget {
           pattern: RainbowBallsPattern(),
           controlDialog: (p) => RainbowPatternControl(p),
         ),
-        /*
-        _PatternCard(
-          name: 'Šarena kiša',
-          icon: 'rain.png',
-          onPrimaryTap: () {},
-          onSecondaryTap: () {},
-        ),
         _PatternCard(
           name: 'Kiša',
           icon: 'rain_single.png',
-          onPrimaryTap: () {},
-          onSecondaryTap: () {},
+          pattern: RainPattern(),
+          controlDialog: (p) => SingleColorPatternControl(p),
         ),
-       */
+        _PatternCard(
+          name: 'Šarena kiša',
+          icon: 'rain.png',
+          pattern: ColorfulRainPattern(),
+        ),
         _RawPatternCard(
           name: 'Ugasi lampice',
           icon: 'clear.png',
@@ -95,13 +92,13 @@ class _PatternCard extends StatelessWidget {
   final String name;
   final String icon;
   final ColorPattern pattern;
-  final Widget Function(ColorPattern p) controlDialog;
+  final Widget Function(ColorPattern p)? controlDialog;
 
   const _PatternCard({
     required this.name,
     required this.icon,
     required this.pattern,
-    required this.controlDialog,
+    this.controlDialog,
   });
 
   void showPattern(BuildContext context) {
@@ -128,11 +125,14 @@ class _PatternCard extends StatelessWidget {
       name: name,
       icon: icon,
       onPrimaryTap: () => showPattern(context),
-      onSecondaryTap: () => showControlDialog(
-        context: context,
-        title: name,
-        child: controlDialog(pattern),
-      ),
+      onSecondaryTap: () {
+        if (controlDialog == null) return;
+        showControlDialog(
+          context: context,
+          title: name,
+          child: controlDialog!(pattern),
+        );
+      },
     );
   }
 }

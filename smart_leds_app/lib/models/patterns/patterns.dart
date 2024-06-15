@@ -51,3 +51,25 @@ class RainbowBallsPattern extends ColorPattern {
     };
   }
 }
+
+class RainPattern extends ColorPattern {
+  @override
+  Map<String, dynamic> toJson(PatternProperties properties) {
+    return {
+      'name': 'rain',
+      'color': properties.color.rgb,
+      'multipleColors': false,
+    };
+  }
+}
+
+class ColorfulRainPattern extends ColorPattern {
+  @override
+  Map<String, dynamic> toJson(PatternProperties properties) {
+    return {
+      'name': 'rain',
+      'color': properties.color.rgb,
+      'multipleColors': true,
+    };
+  }
+}

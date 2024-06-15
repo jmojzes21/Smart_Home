@@ -6,6 +6,7 @@
 #include "patterns/wave.h"
 #include "patterns/rainbow.h"
 #include "patterns/rainbow_balls.h"
+#include "patterns/rain.h"
 
 #define DLA_PAYLOAD_SIZE (sizeof(Color) * LED_COUNT)
 
@@ -192,6 +193,8 @@ ColorPattern* LedManager::_createPattern(std::string& name) {
         return new RainbowPattern();
     }else if(name == "rainbow_balls") {
         return new RainbowBallsPattern();
+    }else if(name == "rain") {
+        return new RainPattern();
     }
 
     return nullptr;

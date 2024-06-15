@@ -8,42 +8,57 @@ class RainDroplet {
 public:
 
     float x = 0;
+    float hue = 0;
 
-    bool visible = false;
-    Color targetColor = Colors::Black;
-    Color actualColor = Colors::Black;
+    bool isFalling = false;
+    bool useMultipleColors = false;
+
+    Color targetColor;
+    Color actualColor;
 
     RainDroplet() {}
+    
+    void setSingleColorMode(Color color) {
+        useMultipleColors = false;
 
-    void spawn(Color color) {
-        visible = true;
+        if (!isFalling) actualColor = color;
         targetColor = color;
-        actualColor = Colors::Black;
-        x = 0;
     }
 
-    void despawn() {
+    void setMultipleColorsMode() {
+        useMultipleColors = true;
+
+        Color color = utils::getRainbowColor(hue);
+
+        if (!isFalling) actualColor = color;
+        targetColor = color;
+    }
+
+    void fall() {
+        isFalling = true;
+        actualColor = targetColor;
         x = 0;
-        visible = false;
-        actualColor = Colors::Black;
     }
 
     void loop() {
 
-        if (!visible) return;
+        if (isFalling) {
 
-        actualColor = utils::scaleColor(targetColor, x);
+            if (useMultipleColors) {
+                targetColor = utils::getRainbowColor(hue);
+                hue += 0.2;
+                if (hue >= 256) hue = 0;
+            }
+            
+            float scale = 1.0 - sin(x);
+            actualColor = utils::scaleColor(targetColor, scale);
 
-        if (x < 0.2 || x >= 0.8) {
-            x += 0.0005;
-        }
-        else {
-            x += 0.002;
-        }
+            x += 0.008;
+            if (x >= M_PI) {
+                isFalling = false;
+                actualColor = targetColor;
+            }
 
-        if (x >= 1) {
-            despawn();
-            return;
         }
 
     }
@@ -54,90 +69,68 @@ class RainPattern : public ColorPattern {
 
 public:
 
-    Color color = Colors::Black;
-    bool useMultipleColors = false;
-
-    std::vector<Color> basicColors;
     std::vector<RainDroplet> droplets;
 
-    Timer spawnDropletsTimer;
-    Timer dropletLoopTimer;
+    Timer msTimer;
+    Timer rainTimer;
 
     RainPattern() {
 
-        useMultipleColors = true;
-        color = Colors::Blue;
-
-        spawnDropletsTimer.setPeriod(2000);
-        dropletLoopTimer.setPeriod(20);
-
-        //
-
-        utils::getBasicColors(basicColors);
+        msTimer.setPeriod(2);
+        rainTimer.setPeriod(200);
 
         for (int i = 0; i < ledCount; i++) {
             droplets.push_back(RainDroplet());
         }
-    }
-
-    void showDroplets() {
-
-        for (int i = 0; i < ledCount; i++) {
-            leds[i] = droplets[i].actualColor;
-        }
-
-        ledDriver.show();
 
     }
 
-    void spawnDroplet() {
-
+    void startDropletFall() {
         for (int i = 0; i < ledCount; i++) {
 
             int p = utils::getRandomNumber(ledCount);
 
-            if (droplets[p].visible == false) {
-
-                Color color;
-
-                if (useMultipleColors) {
-                    color = utils::getRandomColor(basicColors);
-                }
-                else {
-                    color = this->color;
-                }
-
-                droplets[p].spawn(color);
-
+            if (!droplets[p].isFalling) {
+                droplets[p].fall();
                 return;
             }
 
         }
-
     }
 
     void loop() override {
-        
-        if (spawnDropletsTimer.run()) {
-            spawnDroplet();
+
+        if (rainTimer.run()) {
+            startDropletFall();
         }
 
-        if (dropletLoopTimer.run()) {
+        if (msTimer.run()) {
             
             for (int i = 0; i < ledCount; i++) {
                 droplets[i].loop();
+                leds[i] = droplets[i].actualColor;
             }
 
-            showDroplets();
+            ledDriver.show();
+
         }
 
     }
 
     bool update(JsonObject p) override {
         
+        int rgb = p["color"];
         bool multipleColors = p["multipleColors"];
 
-        useMultipleColors = multipleColors;
+        for (int i = 0; i < ledCount; i++) {
+            RainDroplet& droplet = droplets[i];
+
+            if (multipleColors) {
+                droplet.setMultipleColorsMode();
+            } else {
+                droplet.setSingleColorMode(rgb);
+            }
+        }
 
         return true;
     }
