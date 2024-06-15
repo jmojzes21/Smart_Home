@@ -28,7 +28,7 @@ class _RainbowPatternControlState extends State<RainbowPatternControl> {
           value: properties.rainbowSpeed,
           values: PatternPropertyValues.rainbowSpeedValues,
           onChange: (value) => setState(() {
-            properties.waveSpeed = value;
+            properties.rainbowSpeed = value;
             patternProvider.showPattern(widget.pattern);
           }),
         ),
