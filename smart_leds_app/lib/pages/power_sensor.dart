@@ -71,7 +71,7 @@ class _PowerSensorPageState extends State<PowerSensorPage> {
               minValue: powerSensorData.minCurrentString,
               maxValue: powerSensorData.maxCurrentString,
               progressValue: powerSensorData.current,
-              progressMaxValue: 3000,
+              progressMaxValue: 500,
             ),
             buildDataTile(
               icon: Icons.battery_0_bar_outlined,
