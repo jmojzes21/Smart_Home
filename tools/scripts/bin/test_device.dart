@@ -34,7 +34,7 @@ void deviceApi() {
     return response(200, {
       'name': 'Testni uređaj',
       'version': 'v1.0.0',
-      'type': 'Smart LEDs L24',
+      'type': 'Smart LEDs L7',
       'ip': '127.0.0.1',
       'mac': '00:00:00:00:00:00',
       'ssid': 'local_network'

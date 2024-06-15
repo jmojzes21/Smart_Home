@@ -21,7 +21,7 @@ class Firmware {
 }
 
 Firmware loadFirmware() {
-  String deviceType = 'Smart LEDs L24';
+  String deviceType = 'Smart LEDs L7';
 
   List<int> hmacKey = [
     72, 4, 232, 223, 231, 86, 70, 190, 236, 105, 77, 223, 246, 182, 30, 25, 74,
