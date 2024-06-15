@@ -17,7 +17,7 @@
 
 #include "settings.h"
 
-const char* firmwareVersion = "v0.2.0";
+const char* firmwareVersion = "v1.0.0";
 const char* deviceHostname = "smart_leds";
 const char* deviceType = "Smart LEDs L7";
 const int httpPort = 80;
