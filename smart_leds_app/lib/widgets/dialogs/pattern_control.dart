@@ -16,9 +16,11 @@ class PatternControlDialog extends StatelessWidget {
       title: Text(title),
       content: SizedBox(
         width: 800,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          child: child,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: child,
+          ),
         ),
       ),
     );

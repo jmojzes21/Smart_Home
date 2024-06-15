@@ -25,11 +25,12 @@ class _SingleColorPatternControlState extends State<SingleColorPatternControl> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SimpleColorPicker(
+          color: properties.color,
           colors: PatternPropertyValues.basicColors,
-          onColor: (color) {
+          onColor: (color) => setState(() {
             properties.color = color;
             patternProvider.showPattern(widget.pattern);
-          },
+          }),
         ),
       ],
     );

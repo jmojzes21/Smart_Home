@@ -25,6 +25,7 @@ class _WavePatternControlState extends State<WavePatternControl> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SimpleColorPicker(
+          color: properties.color,
           colors: PatternPropertyValues.basicColors,
           onColor: (color) => setState(() {
             properties.color = color;
