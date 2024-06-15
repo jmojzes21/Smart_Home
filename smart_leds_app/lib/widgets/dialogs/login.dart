@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_leds_app/logic/device/device.dart';
 import 'package:smart_leds_app/logic/device_service.dart';
 import 'package:smart_leds_app/models/exceptions.dart';
+import 'package:smart_leds_app/widgets/dialogs/simple_dialogs.dart';
 import 'package:smart_leds_app/widgets/misc/checkbox.dart';
 import 'package:smart_leds_app/widgets/misc/error_text.dart';
 
@@ -59,6 +60,33 @@ class _LoginDialogState extends State<LoginDialog> {
     setState(() => errorMessage = message);
   }
 
+  void resetPassword() async {
+    var result = await SimpleDialogs.showExtraConfirm(
+      context: context,
+      title: 'Zaboravljena lozinka',
+      message:
+          'Ukoliko ste zaboravili lozinku, uređaj možete ponovno postaviti. Tako će se spremljeni podaci '
+          'obrisati, a lozinka će se vratiti na zadanu vrijednost. Želite li nastaviti?',
+      checkboxText: 'Potvrda ponovnog postavljanja uređaja',
+    );
+
+    if (result) {
+      var device = widget.device;
+      await device.wipeData();
+
+      if (!mounted) return;
+      await SimpleDialogs.showMessage(
+        context: context,
+        title: 'Ponovno postavljanje uređaja',
+        message:
+            'Uređaj se ponovno postavio i svi prijašnji podaci su obrisani.',
+      );
+
+      if (!mounted) return;
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -104,6 +132,11 @@ class _LoginDialogState extends State<LoginDialog> {
                 value: stayLoggedIn,
                 text: 'Ostani prijavljen',
                 onChanged: (value) => setState(() => stayLoggedIn = value),
+              ),
+              const SizedBox(height: 5),
+              TextButton(
+                onPressed: () => resetPassword(),
+                child: const Text('Zaboravljena lozinka'),
               ),
               if (errorMessage.isNotEmpty) ErrorText(errorMessage),
             ],

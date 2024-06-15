@@ -240,9 +240,6 @@ void DeviceRestApi::_initMiscApi() {
     // POST /restart
 
     httpServer.on("/restart", HTTP_POST, [&](AsyncWebServerRequest* request) {
-
-        if(!authenticate(request)) return;
-
         device.restart(2000);
         respondCode(request, 201);
     });
