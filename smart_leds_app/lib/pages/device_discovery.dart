@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_leds_app/logic/device/device.dart';
 import 'package:smart_leds_app/logic/device_discovery.dart';
@@ -46,7 +47,7 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
       isDiscovering = true;
       discoveredDevices.clear();
 
-      if (showTestDevice) {
+      if (showTestDevice && kDebugMode) {
         discoveredDevices.add(Device(
           name: 'Testni uređaj',
           ipAddress: InternetAddress('127.0.0.1'),
