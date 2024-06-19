@@ -235,11 +235,9 @@ packages:
   multicast_dns:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "19f70faaaedf1a6f0ca10988b0e1661f5f120912"
-      url: "https://github.com/jmojzes21/multicast_dns.git"
-    source: git
+      path: "packages/multicast_dns"
+      relative: true
+    source: path
     version: "0.3.2+7"
   nested:
     dependency: transitive
