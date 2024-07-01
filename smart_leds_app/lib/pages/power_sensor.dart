@@ -66,7 +66,7 @@ class _PowerSensorPageState extends State<PowerSensorPage> {
           children: [
             buildDataTile(
               icon: Icons.power_outlined,
-              title: 'Jačina strije',
+              title: 'Jačina struje',
               value: powerSensorData.currentString,
               minValue: powerSensorData.minCurrentString,
               maxValue: powerSensorData.maxCurrentString,
