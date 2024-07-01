@@ -14,6 +14,7 @@ extern DeviceRestApi restApi;
 extern Device device;
 
 OtaUpdate::OtaUpdate() {
+    // Uređaj je spreman za OTA update
     _otaState = OTA_UPDATE_STATE_READY;
 }
 
@@ -39,6 +40,8 @@ void OtaUpdate::setup() {
 
 }
 
+/// @brief Pripremi potrebne podatke za OTA update.
+/// @param request 
 void OtaUpdate::_prepareUpdate(AsyncWebServerRequest* request) {
 
     if(_otaState != OTA_UPDATE_STATE_READY) {
@@ -52,6 +55,8 @@ void OtaUpdate::_prepareUpdate(AsyncWebServerRequest* request) {
         _errorMessage = "Authentication failed";
         return;
     }
+
+    // Dohvati iz zaglavlja potrebne podatke
 
     auto deviceTypeHeader = request->getHeader("Device-Type");
     auto sizeHeader = request->getHeader("Firmware-Size");
@@ -89,7 +94,7 @@ void OtaUpdate::_prepareUpdate(AsyncWebServerRequest* request) {
         return;
     }
 
-    String hmac = hmacHeader->value();
+    std::string hmac = hmacHeader->value().c_str();
     if(hmac.length() == 0 || hmac.length() > 60) {
         _otaState = OTA_UPDATE_STATE_ERROR;
         _errorMessage = "Invalid Firmware HMAC";
@@ -97,11 +102,13 @@ void OtaUpdate::_prepareUpdate(AsyncWebServerRequest* request) {
     }
 
     _firmwareSize = size;
-    _firmwareHmac = std::string(hmac.c_str());
+    _firmwareHmac = hmac;
 
+    // Spremno za prihvaćanje programa
     _otaState = OTA_UPDATE_STATE_UPLOAD_FIRMWARE;
 }
 
+/// @brief Započni OTA update.
 void OtaUpdate::_beginUpdate() {
 
     if(_otaState != OTA_UPDATE_STATE_UPLOAD_FIRMWARE) {
@@ -118,9 +125,11 @@ void OtaUpdate::_beginUpdate() {
         return;
     }
 
-    _otaState = OTA_UPDATE_STATE_UPLOAD_FIRMWARE;
 }
 
+/// @brief Zapiši dio programa.
+/// @param data pokazivač na buffer koji sadrži dio programa
+/// @param length broj bajtova
 void OtaUpdate::_writeData(uint8_t* data, size_t length) {
 
     if(_otaState != OTA_UPDATE_STATE_UPLOAD_FIRMWARE) {
@@ -138,6 +147,7 @@ void OtaUpdate::_writeData(uint8_t* data, size_t length) {
 
 }
 
+/// @brief Završi OTA update.
 void OtaUpdate::_finishUpdate() {
 
     if(_otaState != OTA_UPDATE_STATE_UPLOAD_FIRMWARE) {
@@ -148,6 +158,8 @@ void OtaUpdate::_finishUpdate() {
     std::string actualHmac = _finishHmac();
 
     if(actualHmac != _firmwareHmac) {
+        // HMAC digitalni potpis nije valjani
+
         Update.abort();
         _otaState = OTA_UPDATE_STATE_ERROR;
         _errorMessage = "Firmware HMAC check failed";
@@ -162,6 +174,7 @@ void OtaUpdate::_finishUpdate() {
         return;
     }
 
+    // OTA update je uspio
     _otaState = OTA_UPDATE_STATE_DONE;
 
 }
