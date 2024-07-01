@@ -21,6 +21,9 @@
   <ItemGroup>
     <ClInclude Include="ArduinoJson.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ArduinoJson.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
