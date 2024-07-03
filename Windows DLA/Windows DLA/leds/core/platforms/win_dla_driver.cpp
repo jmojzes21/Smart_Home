@@ -12,7 +12,7 @@
 
 uint64_t micros();
 
-#define SHOW_PERIOD_MICROS 5000 
+#define SHOW_PERIOD_MICROS 2000 
 
 namespace platform_led_driver {
 

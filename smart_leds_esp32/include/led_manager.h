@@ -38,6 +38,7 @@ class LedManager {
     void _clearPattern();
 
     void _enableDLA();
+    void _disableDLA();
     void _onUdpPacket(AsyncUDPPacket& packet);
 
     ColorPattern* _createPattern(std::string& name);

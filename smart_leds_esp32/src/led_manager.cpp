@@ -41,18 +41,19 @@ bool LedManager::updatePattern(JsonObject json) {
     xSemaphoreTake(_mutex, portMAX_DELAY);
 
     bool result = false;
-    if(_directAccess == false) {
 
-        std::string name = json["name"];
-
-        if(name == _currentPatternName) {
-            result = _updatePattern(json);
-        }else{
-            result = _changePattern(name, json);
-        }
-
+    if(_directAccess) {
+        _disableDLA();
     }
-    
+
+    std::string name = json["name"];
+
+    if(name == _currentPatternName) {
+        result = _updatePattern(json);
+    }else{
+        result = _changePattern(name, json);
+    }
+
     xSemaphoreGive(_mutex);
     return result;
 
@@ -61,6 +62,10 @@ bool LedManager::updatePattern(JsonObject json) {
 void LedManager::clearPattern() {
 
     xSemaphoreTake(_mutex, portMAX_DELAY);
+
+    if(_directAccess) {
+        _disableDLA();
+    }
 
     _clearPattern();
 
@@ -143,6 +148,15 @@ void LedManager::_enableDLA() {
 
     _udp.listen(7000);
     _directAccess = true;
+
+}
+
+void LedManager::_disableDLA() {
+
+    if(_directAccess) {
+        _udp.close();
+        _directAccess = false;
+    }
 
 }
 
