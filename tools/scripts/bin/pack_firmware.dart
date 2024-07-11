@@ -6,11 +6,13 @@ import 'package:path/path.dart' as p;
 import 'package:scripts/firmware.dart';
 
 void main() {
-  String outputPath = p.join(p.current, 'out', 'firmware.bin');
   print('Zapakiraj ugradbeni program');
 
   Firmware firmware = loadFirmware();
   Uint8List bytes = packFirmware(firmware);
+
+  String outputPath =
+      p.join(p.current, 'out', 'Smart LEDs Firmware ${firmware.version}.bin');
 
   File outputFile = File(outputPath);
   outputFile.writeAsBytesSync(bytes);
