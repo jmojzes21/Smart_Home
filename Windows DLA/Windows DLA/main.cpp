@@ -19,16 +19,19 @@ std::chrono::steady_clock::time_point _startTimePoint;
 
 static void start() {
 
-    const char* ipAddress = "192.168.8.102";
+    const char* ipAddress = "192.168.137.114";
     int port = 7000;
 
     srand(time(NULL));
     ledDriver.init(ipAddress, port);
 
     ColorPattern* pattern = new RainPattern();
+    //ColorPattern* pattern = new RainbowPattern();
 
     JsonDocument doc;
+    doc["color"] = 0x0000FF;
     doc["multipleColors"] = true;
+    doc["speed"] = 20;
 
     pattern->update(doc.as<JsonObject>());
 
