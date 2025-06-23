@@ -1,18 +1,26 @@
-#include <Arduino.h>
 
-// put function declarations here:
-int myFunction(int, int);
+#include <Arduino.h>
+#include <SHTC3-SOLDERED.h>
+
+#include "ble_controller.h"
+
+SHTC3 shtc3Sensor;
+BleController bleController;
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  shtc3Sensor.begin();
+  bleController.init();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+  shtc3Sensor.sample();
+
+  float temperature = shtc3Sensor.readTempC();
+  float humidity = shtc3Sensor.readHumidity();
+
+  bleController.sendSensorData(temperature, humidity);
+
+  delay(2000);
+
 }
