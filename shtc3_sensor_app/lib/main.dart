@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shtc3_sensor_app/pages/device_discovery_page.dart';
+import 'package:shtc3_sensor_app/pages/device_page.dart';
 
 void main() {
   runApp(const MainApp());
@@ -13,7 +13,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(colorSchemeSeed: Colors.blue),
-      home: DeviceDiscoveryPage(),
+      home: DevicePage(),
     );
   }
 }
