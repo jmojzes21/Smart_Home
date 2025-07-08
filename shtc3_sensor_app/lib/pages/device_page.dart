@@ -5,6 +5,7 @@ import 'package:shtc3_sensor_app/logic/device_controller.dart';
 import 'package:shtc3_sensor_app/logic/exceptions.dart';
 import 'package:shtc3_sensor_app/models/sensor_data.dart';
 import 'package:shtc3_sensor_app/pages/device_error_page.dart';
+import 'package:shtc3_sensor_app/widgets/sensor_data_widget.dart';
 
 class DevicePage extends StatefulWidget {
   const DevicePage({super.key});
@@ -15,8 +16,6 @@ class DevicePage extends StatefulWidget {
 
 class _DevicePageState extends State<DevicePage> {
   var deviceController = DeviceController();
-
-  var isLoading = true;
 
   SensorData? sensorData;
   Timer? timer;
@@ -34,14 +33,14 @@ class _DevicePageState extends State<DevicePage> {
       if (!mounted) return;
       setState(() {
         this.sensorData = sensorData;
-        isLoading = false;
       });
-
-      timer = Timer.periodic(Duration(milliseconds: 2000), (timer) => getSensorData());
     } on AppException catch (e) {
       if (!mounted) return;
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => DeviceErrorPage(e.message)));
+      return;
     }
+
+    timer = Timer.periodic(Duration(milliseconds: 2000), (timer) => getSensorData());
   }
 
   Future<void> getSensorData() async {
@@ -65,19 +64,14 @@ class _DevicePageState extends State<DevicePage> {
   Widget build(BuildContext context) {
     Widget body;
 
-    if (isLoading) {
-      body = Center(child: CircularProgressIndicator());
-    } else {
-      body = Padding(
-        padding: EdgeInsets.all(40),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Temperatura: ${sensorData!.temperature.toStringAsFixed(1)} °C'),
-            Text('Vlaga zraka: ${sensorData!.humidity.round()} %'),
-          ],
-        ),
+    if (sensorData != null) {
+      body = LayoutBuilder(
+        builder: (context, constraints) {
+          return SizedBox.fromSize(size: constraints.biggest, child: SensorDataWidget(sensorData!));
+        },
       );
+    } else {
+      body = Center(child: CircularProgressIndicator());
     }
 
     return Scaffold(

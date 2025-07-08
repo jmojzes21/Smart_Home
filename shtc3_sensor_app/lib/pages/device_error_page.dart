@@ -11,21 +11,22 @@ class DeviceErrorPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Greška')),
       body: Padding(
-        padding: EdgeInsets.all(40),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(errorMessage),
-            SizedBox(height: 20),
-            Center(
-              child: TextButton(
+        padding: EdgeInsets.all(20),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(errorMessage),
+              SizedBox(height: 20),
+              FilledButton(
                 onPressed: () {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => DevicePage()));
                 },
                 child: Text('Pokušaj ponovno'),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
