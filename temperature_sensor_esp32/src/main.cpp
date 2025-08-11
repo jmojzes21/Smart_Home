@@ -3,19 +3,21 @@
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h>
 #include <ESPmDNS.h>
+#include <Adafruit_BME280.h>
 #include <SHTC3-SOLDERED.h>
 #include <ArduinoJson.h>
 #include <LittleFS.h>
 
 #include "dasduino_led.h"
 
-#define DEVICE_HOSTNAME "shtc3_sensor"
+#define DEVICE_HOSTNAME "temperature_sensor"
 #define HTTP_SERVER_PORT 80
 
 #define WIFI_CONNECT_TIMEOUT 4000
 
+Adafruit_BME280 bme280Sensor;
 SHTC3 shtc3Sensor;
-SemaphoreHandle_t shtc3SensorMutex;
+SemaphoreHandle_t sensorMutex;
 
 AsyncWebServer httpServer(HTTP_SERVER_PORT);
 DasduinoLed dasduinoLed;
@@ -30,11 +32,24 @@ void handleSensorDataRequest(AsyncWebServerRequest* request);
 
 void setup() {
 
+  Serial.begin(115200);
+
   dasduinoLed.begin();
   dasduinoLed.setBrightness(20);
 
-  shtc3Sensor.begin();
-  shtc3SensorMutex = xSemaphoreCreateMutex();
+  Wire.begin();
+
+  if(!bme280Sensor.begin(BME280_ADDRESS_ALTERNATE)) {
+    dasduinoLed.showColor(CRGB::Orange);
+    haltDevice();
+  }
+
+  if(!shtc3Sensor.begin()) {
+    dasduinoLed.showColor(CRGB::Orange);
+    haltDevice();
+  }
+
+  sensorMutex = xSemaphoreCreateMutex();
 
   connectWifi();
   initHttpServer();
@@ -46,31 +61,31 @@ void loop() {
   delay(1000);
 }
 
-void readSensorData(float& temperature, float& humidity) {
+void readSensorData(JsonDocument& document) {
   
-  xSemaphoreTake(shtc3SensorMutex, portMAX_DELAY);
+  xSemaphoreTake(sensorMutex, portMAX_DELAY);
+
+  JsonObject bme280 = document["bme280"].to<JsonObject>();
+  JsonObject shtc3 = document["shtc3"].to<JsonObject>();
+
+  bme280["temperature"] = (float)bme280Sensor.readTemperature();
+  bme280["humidity"] = (float)bme280Sensor.readHumidity();
+  bme280["pressure"] = (float)(bme280Sensor.readPressure() / 100.0f);
 
   shtc3Sensor.sample();
+  shtc3["temperature"] = (float)shtc3Sensor.readTempC();
+  shtc3["humidity"] = (float)shtc3Sensor.readHumidity();
 
-  temperature = shtc3Sensor.readTempC();
-  humidity = shtc3Sensor.readHumidity();
-
-  xSemaphoreGive(shtc3SensorMutex);
+  xSemaphoreGive(sensorMutex);
 
 }
 
 void handleSensorDataRequest(AsyncWebServerRequest* request) {
 
-  float temperature = 0;
-  float humidity = 0;
-
-  readSensorData(temperature, humidity);
+  JsonDocument document;
+  readSensorData(document);
 
   AsyncResponseStream* response = request->beginResponseStream("application/json");
-
-  JsonDocument document;
-  document["temperature"] = temperature;
-  document["humidity"] = humidity;
 
   serializeJson(document, *response);
   request->send(response);
