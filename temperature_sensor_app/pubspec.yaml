@@ -1,4 +1,4 @@
-name: shtc3_sensor_app
+name: temperature_sensor_app
 description: 
 publish_to: 'none'
 version: 0.1.0

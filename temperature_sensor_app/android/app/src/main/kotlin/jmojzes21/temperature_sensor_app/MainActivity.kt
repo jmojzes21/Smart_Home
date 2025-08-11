@@ -1,4 +1,4 @@
-package jmojzes21.shtc3_sensor_app
+package jmojzes21.temperature_sensor_app
 
 import io.flutter.embedding.android.FlutterActivity
 

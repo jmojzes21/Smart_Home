@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:shtc3_sensor_app/logic/exceptions.dart';
-import 'package:shtc3_sensor_app/models/sensor_data.dart';
+import 'package:temperature_sensor_app/logic/exceptions.dart';
+import 'package:temperature_sensor_app/models/sensor_data.dart';
 
 class DeviceController {
   static const String _deviceHostname = 'shtc3_sensor.local';

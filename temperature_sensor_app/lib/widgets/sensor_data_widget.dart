@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shtc3_sensor_app/models/sensor_data.dart';
+import 'package:temperature_sensor_app/models/sensor_data.dart';
 
 class SensorDataWidget extends StatelessWidget {
   final SensorData sensorData;
