@@ -1,4 +1,4 @@
-name: temperature_sensor_app
+name: meteo_sensor_app
 description: 
 publish_to: 'none'
 version: 0.1.0
