@@ -5,7 +5,7 @@ import 'package:temperature_sensor_app/logic/exceptions.dart';
 import 'package:temperature_sensor_app/models/sensor_data.dart';
 
 class DeviceController {
-  static const String _deviceHostname = 'shtc3_sensor.local';
+  static const String _deviceHostname = 'temperature_sensor.local';
 
   Future<SensorData> getSensorData() async {
     try {

@@ -13,7 +13,7 @@
 #define DEVICE_HOSTNAME "temperature_sensor"
 #define HTTP_SERVER_PORT 80
 
-#define WIFI_CONNECT_TIMEOUT 4000
+#define WIFI_CONNECT_TIMEOUT 5000
 
 Adafruit_BME280 bme280Sensor;
 SHTC3 shtc3Sensor;

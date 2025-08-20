@@ -65,17 +65,13 @@ class _DevicePageState extends State<DevicePage> {
     Widget body;
 
     if (sensorData != null) {
-      body = LayoutBuilder(
-        builder: (context, constraints) {
-          return SizedBox.fromSize(size: constraints.biggest, child: SensorDataWidget(sensorData!));
-        },
-      );
+      body = SensorDataWidget(sensorData!);
     } else {
       body = Center(child: CircularProgressIndicator());
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text('SHTC3 senzor temperature')),
+      appBar: AppBar(title: Text('Senzor temperature')),
       body: body,
     );
   }
