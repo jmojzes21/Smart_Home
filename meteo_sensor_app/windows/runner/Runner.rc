@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "jmojzes21" "\0"
-            VALUE "FileDescription", "temperature_sensor_app" "\0"
+            VALUE "FileDescription", "meteo_sensor_app" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "temperature_sensor_app" "\0"
+            VALUE "InternalName", "meteo_sensor_app" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2025 jmojzes21. All rights reserved." "\0"
-            VALUE "OriginalFilename", "temperature_sensor_app.exe" "\0"
-            VALUE "ProductName", "temperature_sensor_app" "\0"
+            VALUE "OriginalFilename", "meteo_sensor_app.exe" "\0"
+            VALUE "ProductName", "meteo_sensor_app" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "jmojzes21.temperature_sensor_app"
+    namespace = "jmojzes21.meteo_sensor_app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "jmojzes21.temperature_sensor_app"
+        applicationId = "jmojzes21.meteo_sensor_app"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
