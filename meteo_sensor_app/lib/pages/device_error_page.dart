@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:temperature_sensor_app/pages/device_page.dart';
+import 'package:meteo_sensor_app/pages/device_page.dart';
 
 class DeviceErrorPage extends StatelessWidget {
   final String errorMessage;

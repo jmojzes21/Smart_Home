@@ -10,7 +10,7 @@
 
 #include "dasduino_led.h"
 
-#define DEVICE_HOSTNAME "temperature_sensor"
+#define DEVICE_HOSTNAME "meteo_sensor"
 #define HTTP_SERVER_PORT 80
 
 #define WIFI_CONNECT_TIMEOUT 5000
