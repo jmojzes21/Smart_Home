@@ -1,4 +1,4 @@
-name: meteo_sensor_app
+name: air_quality_app
 description: 
 publish_to: 'none'
 version: 0.1.0

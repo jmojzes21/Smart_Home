@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:meteo_sensor_app/models/sensor_data.dart';
+import 'package:air_quality_app/models/sensor_data.dart';
 
 class SensorDataWidget extends StatelessWidget {
   final SensorData sensorData;

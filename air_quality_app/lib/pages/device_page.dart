@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:meteo_sensor_app/logic/device_controller.dart';
-import 'package:meteo_sensor_app/logic/exceptions.dart';
-import 'package:meteo_sensor_app/models/sensor_data.dart';
-import 'package:meteo_sensor_app/pages/device_error_page.dart';
-import 'package:meteo_sensor_app/widgets/sensor_data_widget.dart';
+import 'package:air_quality_app/logic/device_controller.dart';
+import 'package:air_quality_app/logic/exceptions.dart';
+import 'package:air_quality_app/models/sensor_data.dart';
+import 'package:air_quality_app/pages/device_error_page.dart';
+import 'package:air_quality_app/widgets/sensor_data_widget.dart';
 
 class DevicePage extends StatefulWidget {
   const DevicePage({super.key});
