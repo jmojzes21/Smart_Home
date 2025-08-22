@@ -10,8 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  provider: ^6.1.5
   http: ^1.4.0
-  font_awesome_flutter: ^10.9.0
   
 dev_dependencies:
   flutter_test:
@@ -20,3 +20,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/
