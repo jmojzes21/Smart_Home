@@ -1,5 +1,5 @@
+import 'package:air_quality_app/pages/home_page.dart';
 import 'package:flutter/material.dart';
-import 'package:air_quality_app/pages/device_page.dart';
 
 void main() {
   runApp(const MainApp());
@@ -13,7 +13,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(colorSchemeSeed: Colors.blue),
-      home: DevicePage(),
+      home: HomePage(),
     );
   }
 }
