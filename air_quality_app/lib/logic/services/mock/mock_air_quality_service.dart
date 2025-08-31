@@ -13,6 +13,7 @@ class MockAirQualityService implements IAirQualityService {
         temperature: 10 + 30 * random.nextDouble(),
         humidity: 100 * random.nextDouble(),
         pressure: 990 + 30 * random.nextDouble(),
+        pm25: 5 + random.nextInt(95),
       ),
     );
   }

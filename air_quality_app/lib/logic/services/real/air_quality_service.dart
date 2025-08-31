@@ -13,6 +13,7 @@ class AirQualityService extends IAirQualityService {
       temperature: sensorData.bme280Temperature,
       humidity: sensorData.bme280Humidity,
       pressure: sensorData.bme280Pressure,
+      pm25: sensorData.pm25,
     );
   }
 }
