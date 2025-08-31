@@ -23,6 +23,7 @@ class HomePage extends StatelessWidget {
   }
 
   Widget buildBody(BuildContext context, HomePageViewModel model) {
+    var textTheme = Theme.of(context).textTheme;
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.all(40),
@@ -32,26 +33,40 @@ class HomePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             spacing: 40,
             children: [
-              buildCard(
-                context,
-                image: 'assets/temperature_2944651.png',
-                text: '${model.airQuality.temperature.toStringAsFixed(1)} °C',
+              _Card(
+                image: getImage('assets/temperature_2944651.png'),
+                text: Text('${model.airQuality.temperature.toStringAsFixed(1)} °C', style: textTheme.titleLarge),
                 progress: model.temperatureProgress,
                 progressColor: Color(0xFFFF485D),
               ),
-              buildCard(
-                context,
-                image: 'assets/humidity_2903592.png',
-                text: '${model.airQuality.humidity.round()} %',
+              _Card(
+                image: getImage('assets/humidity_2903592.png'),
+                text: Text('${model.airQuality.humidity.round()} %', style: textTheme.titleLarge),
                 progress: model.humidityProgress,
                 progressColor: Color(0xFF0A64EA),
               ),
-              buildCard(
-                context,
-                image: 'assets/clouds_704845.png',
-                text: '${model.airQuality.pressure.toStringAsFixed(1)} hPa',
+              _Card(
+                image: getImage('assets/clouds_704845.png'),
+                text: Text('${model.airQuality.pressure.toStringAsFixed(1)} hPa', style: textTheme.titleLarge),
                 progress: model.pressureProgress,
                 progressColor: Color(0xFFFCCA05),
+              ),
+              _Card(
+                image: getImage('assets/wind_6347828.png'),
+                text: RichText(
+                  text: TextSpan(
+                    style: textTheme.titleLarge,
+                    children: [
+                      TextSpan(text: '${model.airQuality.pm25} µg/m'),
+                      TextSpan(
+                        text: '3',
+                        style: textTheme.titleLarge!.copyWith(fontFeatures: [FontFeature.superscripts()]),
+                      ),
+                    ],
+                  ),
+                ),
+                progress: model.pm25Progress,
+                progressColor: Color(0xFF0A64EA),
               ),
               FilledButton(
                 onPressed: () async {
@@ -73,24 +88,33 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget buildCard(
-    BuildContext context, {
-    required String image,
-    required String text,
-    required double progress,
-    required Color progressColor,
-  }) {
+  Widget getImage(String name) {
+    return Image.asset(name, width: 80, height: 80, filterQuality: FilterQuality.medium);
+  }
+}
+
+class _Card extends StatelessWidget {
+  final Widget image;
+  final Widget text;
+
+  final double progress;
+  final Color progressColor;
+
+  const _Card({required this.image, required this.text, required this.progress, required this.progressColor});
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Image.asset(image, width: 80, height: 80, filterQuality: FilterQuality.medium),
+        image,
         SizedBox(width: 20),
         Expanded(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(text, style: Theme.of(context).textTheme.titleLarge),
+              text,
               SizedBox(height: 5),
               LinearProgressIndicator(
                 color: progressColor,

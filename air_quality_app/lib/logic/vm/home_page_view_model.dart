@@ -9,6 +9,7 @@ class HomePageViewModel extends ViewModel {
   double temperatureProgress = 0;
   double humidityProgress = 0;
   double pressureProgress = 0;
+  double pm25Progress = 0;
 
   HomePageViewModel({required this.aqService});
 
@@ -17,6 +18,7 @@ class HomePageViewModel extends ViewModel {
     temperatureProgress = _getProgress(airQuality.temperature, 0, 40);
     humidityProgress = _getProgress(airQuality.humidity, 0, 100);
     pressureProgress = _getProgress(airQuality.pressure, 990, 1020);
+    pm25Progress = _getProgress(airQuality.pm25.toDouble(), 0, 100);
     notifyListeners();
   }
 
