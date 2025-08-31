@@ -34,25 +34,25 @@ class HomePage extends StatelessWidget {
             spacing: 40,
             children: [
               _Card(
-                image: getImage('assets/temperature_2944651.png'),
+                image: getImage('assets/temperature.png'),
                 text: Text('${model.airQuality.temperature.toStringAsFixed(1)} °C', style: textTheme.titleLarge),
                 progress: model.temperatureProgress,
                 progressColor: Color(0xFFFF485D),
               ),
               _Card(
-                image: getImage('assets/humidity_2903592.png'),
+                image: getImage('assets/humidity.png'),
                 text: Text('${model.airQuality.humidity.round()} %', style: textTheme.titleLarge),
                 progress: model.humidityProgress,
                 progressColor: Color(0xFF0A64EA),
               ),
               _Card(
-                image: getImage('assets/clouds_704845.png'),
+                image: getImage('assets/cloudy.png'),
                 text: Text('${model.airQuality.pressure.toStringAsFixed(1)} hPa', style: textTheme.titleLarge),
                 progress: model.pressureProgress,
                 progressColor: Color(0xFFFCCA05),
               ),
               _Card(
-                image: getImage('assets/wind_6347828.png'),
+                image: getImage('assets/wind.png'),
                 text: RichText(
                   text: TextSpan(
                     style: textTheme.titleLarge,
