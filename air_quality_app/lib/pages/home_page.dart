@@ -1,5 +1,4 @@
-import 'package:air_quality_app/logic/exceptions.dart';
-import 'package:air_quality_app/logic/services/real/air_quality_service.dart';
+import 'package:air_quality_app/logic/services/service_factory.dart';
 import 'package:air_quality_app/logic/vm/home_page_view_model.dart';
 import 'package:air_quality_app/pages/exception_page.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,12 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(title: Text('Kvaliteta zraka')),
       drawer: AppNavigationDrawer(),
       body: ChangeNotifierProvider(
-        create: (context) => HomePageViewModel(aqService: AirQualityService()),
+        create: (context) => HomePageViewModel(
+          aqService: ServiceFactory.getAirQualityService(),
+          openExceptionPage: (message) {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ExceptionPage(message)));
+          },
+        ),
         //child: buildBody(context),
         child: Consumer<HomePageViewModel>(builder: (context, model, child) => buildBody(context, model)),
       ),
@@ -23,6 +27,10 @@ class HomePage extends StatelessWidget {
   }
 
   Widget buildBody(BuildContext context, HomePageViewModel model) {
+    if (model.isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
+
     var textTheme = Theme.of(context).textTheme;
     return SingleChildScrollView(
       child: Padding(
@@ -35,25 +43,29 @@ class HomePage extends StatelessWidget {
             children: [
               _Card(
                 image: getImage('assets/temperature.png'),
-                text: Text('${model.airQuality.temperature.toStringAsFixed(1)} °C', style: textTheme.titleLarge),
+                title: Text('Temperatura', style: textTheme.titleMedium),
+                valueText: Text('${model.airQuality.temperature.toStringAsFixed(1)} °C', style: textTheme.titleLarge),
                 progress: model.temperatureProgress,
                 progressColor: Color(0xFFFF485D),
               ),
               _Card(
                 image: getImage('assets/humidity.png'),
-                text: Text('${model.airQuality.humidity.round()} %', style: textTheme.titleLarge),
+                title: Text('Vlaga', style: textTheme.titleMedium),
+                valueText: Text('${model.airQuality.humidity.round()} %', style: textTheme.titleLarge),
                 progress: model.humidityProgress,
                 progressColor: Color(0xFF0A64EA),
               ),
               _Card(
                 image: getImage('assets/cloudy.png'),
-                text: Text('${model.airQuality.pressure.toStringAsFixed(1)} hPa', style: textTheme.titleLarge),
+                title: Text('Tlak', style: textTheme.titleMedium),
+                valueText: Text('${model.airQuality.pressure.toStringAsFixed(1)} hPa', style: textTheme.titleLarge),
                 progress: model.pressureProgress,
                 progressColor: Color(0xFFFCCA05),
               ),
               _Card(
                 image: getImage('assets/wind.png'),
-                text: RichText(
+                title: Text('PM2.5', style: textTheme.titleMedium),
+                valueText: RichText(
                   text: TextSpan(
                     style: textTheme.titleLarge,
                     children: [
@@ -67,19 +79,6 @@ class HomePage extends StatelessWidget {
                 ),
                 progress: model.pm25Progress,
                 progressColor: Color(0xFF0A64EA),
-              ),
-              FilledButton(
-                onPressed: () async {
-                  try {
-                    await model.getAirQuality();
-                  } on AppException catch (e) {
-                    if (!context.mounted) return;
-                    Navigator.of(
-                      context,
-                    ).pushReplacement(MaterialPageRoute(builder: (context) => ExceptionPage(e.message)));
-                  }
-                },
-                child: Text('Dohvati kvalitetu zraka'),
               ),
             ],
           ),
@@ -95,12 +94,19 @@ class HomePage extends StatelessWidget {
 
 class _Card extends StatelessWidget {
   final Widget image;
-  final Widget text;
+  final Widget title;
+  final Widget valueText;
 
   final double progress;
   final Color progressColor;
 
-  const _Card({required this.image, required this.text, required this.progress, required this.progressColor});
+  const _Card({
+    required this.image,
+    required this.title,
+    required this.valueText,
+    required this.progress,
+    required this.progressColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -114,8 +120,9 @@ class _Card extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              text,
-              SizedBox(height: 5),
+              title,
+              valueText,
+              SizedBox(height: 10),
               LinearProgressIndicator(
                 color: progressColor,
                 backgroundColor: Color(0xFFEBEBEB),
