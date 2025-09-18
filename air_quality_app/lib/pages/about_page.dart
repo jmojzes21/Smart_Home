@@ -26,13 +26,10 @@ class AboutPage extends StatelessWidget {
               SizedBox(height: 20),
 
               Text('Korištene ikone', style: textTheme.titleLarge),
-              _IconCredits(
-                imageName: 'assets/temperature.png',
-                url: 'https://www.freepik.com/icon/temperature_2944651',
-              ),
-              _IconCredits(imageName: 'assets/humidity.png', url: 'https://www.freepik.com/icon/humidity_2903592'),
-              _IconCredits(imageName: 'assets/cloudy.png', url: 'https://www.flaticon.com/free-icon/cloudy_2272194'),
-              _IconCredits(imageName: 'assets/wind.png', url: 'https://www.freepik.com/icon/wind_6347828'),
+              _IconCredits(imageName: 'assets/temperature.png', url: 'https://www.flaticon.com/free-icon/temperature_107818'),
+              _IconCredits(imageName: 'assets/humidity.png', url: 'https://www.flaticon.com/free-icon/humidity_728093'),
+              _IconCredits(imageName: 'assets/cloud.png', url: 'https://www.flaticon.com/free-icon/cloud_2929984'),
+              _IconCredits(imageName: 'assets/wind.png', url: 'https://www.flaticon.com/free-icon/wind_2011448'),
             ],
           ),
         ),

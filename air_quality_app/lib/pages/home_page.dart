@@ -56,7 +56,7 @@ class HomePage extends StatelessWidget {
                 progressColor: Color(0xFF0A64EA),
               ),
               _Card(
-                image: getImage('assets/cloudy.png'),
+                image: getImage('assets/cloud.png'),
                 title: Text('Tlak', style: textTheme.titleMedium),
                 valueText: Text('${model.airQuality.pressure.toStringAsFixed(1)} hPa', style: textTheme.titleLarge),
                 progress: model.pressureProgress,
@@ -78,7 +78,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 progress: model.pm25Progress,
-                progressColor: Color(0xFF0A64EA),
+                progressColor: Color(0xFF0094FF),
               ),
             ],
           ),
@@ -100,13 +100,7 @@ class _Card extends StatelessWidget {
   final double progress;
   final Color progressColor;
 
-  const _Card({
-    required this.image,
-    required this.title,
-    required this.valueText,
-    required this.progress,
-    required this.progressColor,
-  });
+  const _Card({required this.image, required this.title, required this.valueText, required this.progress, required this.progressColor});
 
   @override
   Widget build(BuildContext context) {
@@ -123,13 +117,7 @@ class _Card extends StatelessWidget {
               title,
               valueText,
               SizedBox(height: 10),
-              LinearProgressIndicator(
-                color: progressColor,
-                backgroundColor: Color(0xFFEBEBEB),
-                minHeight: 10,
-                borderRadius: BorderRadius.circular(5),
-                value: progress,
-              ),
+              LinearProgressIndicator(color: progressColor, backgroundColor: Color(0xFFEBEBEB), minHeight: 10, borderRadius: BorderRadius.circular(5), value: progress),
             ],
           ),
         ),
