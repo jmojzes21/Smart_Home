@@ -1,4 +1,4 @@
-import 'package:air_quality_app/pages/home_page.dart';
+import 'package:air_quality/src/pages/home_page.dart';
 import 'package:flutter/material.dart';
 
 class ExceptionPage extends StatelessWidget {

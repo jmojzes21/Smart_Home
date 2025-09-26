@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:air_quality_app/logic/exceptions.dart';
-import 'package:air_quality_app/logic/services/air_quality_service.dart';
-import 'package:air_quality_app/logic/vm/view_model.dart';
-import 'package:air_quality_app/models/air_quality.dart';
+import 'package:air_quality/src/logic/exceptions.dart';
+import 'package:air_quality/src/logic/services/air_quality_service.dart';
+import 'package:air_quality/src/logic/vm/view_model.dart';
+import 'package:air_quality/src/models/air_quality.dart';
 
 class HomePageViewModel extends ViewModel {
   final IAirQualityService aqService;

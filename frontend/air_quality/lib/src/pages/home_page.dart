@@ -1,8 +1,8 @@
-import 'package:air_quality_app/logic/services/service_factory.dart';
-import 'package:air_quality_app/logic/vm/home_page_view_model.dart';
-import 'package:air_quality_app/pages/exception_page.dart';
+import 'package:air_quality/src/logic/services/service_factory.dart';
+import 'package:air_quality/src/logic/vm/home_page_view_model.dart';
+import 'package:air_quality/src/pages/exception_page.dart';
 import 'package:flutter/material.dart';
-import 'package:air_quality_app/widgets/navigation_drawer.dart';
+import 'package:air_quality/src/widgets/navigation_drawer.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -42,28 +42,28 @@ class HomePage extends StatelessWidget {
             spacing: 40,
             children: [
               _Card(
-                image: getImage('assets/temperature.png'),
+                image: getImage('assets/air_quality/temperature.png'),
                 title: Text('Temperatura', style: textTheme.titleMedium),
                 valueText: Text('${model.airQuality.temperature.toStringAsFixed(1)} °C', style: textTheme.titleLarge),
                 progress: model.temperatureProgress,
                 progressColor: Color(0xFFFF485D),
               ),
               _Card(
-                image: getImage('assets/humidity.png'),
+                image: getImage('assets/air_quality/humidity.png'),
                 title: Text('Vlaga', style: textTheme.titleMedium),
                 valueText: Text('${model.airQuality.humidity.round()} %', style: textTheme.titleLarge),
                 progress: model.humidityProgress,
                 progressColor: Color(0xFF0A64EA),
               ),
               _Card(
-                image: getImage('assets/cloud.png'),
+                image: getImage('assets/air_quality/cloud.png'),
                 title: Text('Tlak', style: textTheme.titleMedium),
                 valueText: Text('${model.airQuality.pressure.toStringAsFixed(1)} hPa', style: textTheme.titleLarge),
                 progress: model.pressureProgress,
                 progressColor: Color(0xFFFCCA05),
               ),
               _Card(
-                image: getImage('assets/wind.png'),
+                image: getImage('assets/air_quality/wind.png'),
                 title: Text('PM2.5', style: textTheme.titleMedium),
                 valueText: RichText(
                   text: TextSpan(

@@ -10,6 +10,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  air_quality:
+    path: ../air_quality
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -17,3 +20,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/air_quality/
+    

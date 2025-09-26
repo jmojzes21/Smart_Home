@@ -1,5 +1,5 @@
-import 'package:air_quality_app/widgets/hyperlink.dart';
-import 'package:air_quality_app/widgets/navigation_drawer.dart';
+import 'package:air_quality/src/widgets/hyperlink.dart';
+import 'package:air_quality/src/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 
 class AboutPage extends StatelessWidget {
@@ -26,10 +26,10 @@ class AboutPage extends StatelessWidget {
               SizedBox(height: 20),
 
               Text('Korištene ikone', style: textTheme.titleLarge),
-              _IconCredits(imageName: 'assets/temperature.png', url: 'https://www.flaticon.com/free-icon/temperature_107818'),
-              _IconCredits(imageName: 'assets/humidity.png', url: 'https://www.flaticon.com/free-icon/humidity_728093'),
-              _IconCredits(imageName: 'assets/cloud.png', url: 'https://www.flaticon.com/free-icon/cloud_2929984'),
-              _IconCredits(imageName: 'assets/wind.png', url: 'https://www.flaticon.com/free-icon/wind_2011448'),
+              _IconCredits(imageName: 'assets/air_quality/temperature.png', url: 'https://www.flaticon.com/free-icon/temperature_107818'),
+              _IconCredits(imageName: 'assets/air_quality/humidity.png', url: 'https://www.flaticon.com/free-icon/humidity_728093'),
+              _IconCredits(imageName: 'assets/air_quality/cloud.png', url: 'https://www.flaticon.com/free-icon/cloud_2929984'),
+              _IconCredits(imageName: 'assets/air_quality/wind.png', url: 'https://www.flaticon.com/free-icon/wind_2011448'),
             ],
           ),
         ),
