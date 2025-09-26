@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:smart_leds_app/models/exceptions.dart';
-import 'package:smart_leds_app/models/misc/firmware.dart';
+import 'package:smart_leds/src/models/exceptions.dart';
+import 'package:smart_leds/src/models/misc/firmware.dart';
 
 class FirmwareLoader {
   Future<Firmware> loadFirmware(String path) async {
@@ -33,12 +33,7 @@ class FirmwareLoader {
       throw InvalidFirmwareFileException();
     }
 
-    return Firmware(
-      deviceType: header['deviceType'] ?? '',
-      version: header['version'] ?? '',
-      hmac: header['hmac'] ?? '',
-      bytes: firmware,
-    );
+    return Firmware(deviceType: header['deviceType'] ?? '', version: header['version'] ?? '', hmac: header['hmac'] ?? '', bytes: firmware);
   }
 
   dynamic _parseHeader(Uint8List bytes) {

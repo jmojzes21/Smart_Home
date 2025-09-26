@@ -1,26 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds_app/logic/device/device.dart';
-import 'package:smart_leds_app/theme.dart';
+import 'package:smart_leds/src/logic/device/device.dart';
+import 'package:smart_leds/src/theme.dart';
 
 class BrightnessDialog extends StatelessWidget {
   const BrightnessDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const AlertDialog(
-      content: SizedBox(
-        width: 500,
-        child: _BrightnessControl(),
-      ),
-    );
+    return const AlertDialog(content: SizedBox(width: 500, child: _BrightnessControl()));
   }
 
   static void show(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (context) => const BrightnessDialog(),
-    );
+    showDialog(context: context, barrierDismissible: true, builder: (context) => const BrightnessDialog());
   }
 }
 
@@ -55,19 +46,8 @@ class _BrightnessControlState extends State<_BrightnessControl> {
       children: [
         const Text('Jačina svjetla', style: MyTheme.titleLarge),
         const SizedBox(height: 10),
-        Slider(
-          value: brightnessPercent,
-          min: 0,
-          max: 1,
-          onChanged: (value) => setState(() => brightnessPercent = value),
-          onChangeEnd: (value) => setBrightness(value),
-        ),
-        Center(
-          child: Text(
-            '${(brightnessPercent * 100).round()} %',
-            style: const TextStyle(fontSize: 20),
-          ),
-        ),
+        Slider(value: brightnessPercent, min: 0, max: 1, onChanged: (value) => setState(() => brightnessPercent = value), onChangeEnd: (value) => setBrightness(value)),
+        Center(child: Text('${(brightnessPercent * 100).round()} %', style: const TextStyle(fontSize: 20))),
       ],
     );
   }

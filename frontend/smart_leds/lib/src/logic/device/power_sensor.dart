@@ -1,5 +1,5 @@
-import 'package:smart_leds_app/logic/device/device.dart';
-import 'package:smart_leds_app/models/misc/power_sensor_data.dart';
+import 'package:smart_leds/src/logic/device/device.dart';
+import 'package:smart_leds/src/models/misc/power_sensor_data.dart';
 
 class PowerSensor {
   final Device _device;
@@ -7,10 +7,7 @@ class PowerSensor {
   PowerSensor(this._device);
 
   Future<void> setState(bool active) async {
-    await _device.postHttp(
-      path: '/power_sensor',
-      body: {'active': active},
-    );
+    await _device.postHttp(path: '/power_sensor', body: {'active': active});
   }
 
   Future<PowerSensorData> getData() async {

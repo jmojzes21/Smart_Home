@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds_app/logic/providers/pattern_provider.dart';
-import 'package:smart_leds_app/models/patterns/patterns.dart';
-import 'package:smart_leds_app/theme.dart';
-import 'package:smart_leds_app/widgets/dialogs/brightness.dart';
-import 'package:smart_leds_app/widgets/dialogs/pattern_control.dart';
-import 'package:smart_leds_app/widgets/misc/navigation_drawer.dart';
-import 'package:smart_leds_app/widgets/pattern_controls/rainbow.dart';
-import 'package:smart_leds_app/widgets/pattern_controls/single_color.dart';
-import 'package:smart_leds_app/widgets/pattern_controls/wave.dart';
+import 'package:smart_leds/src/logic/providers/pattern_provider.dart';
+import 'package:smart_leds/src/models/patterns/patterns.dart';
+import 'package:smart_leds/src/theme.dart';
+import 'package:smart_leds/src/widgets/dialogs/brightness.dart';
+import 'package:smart_leds/src/widgets/dialogs/pattern_control.dart';
+import 'package:smart_leds/src/widgets/misc/navigation_drawer.dart';
+import 'package:smart_leds/src/widgets/pattern_controls/rainbow.dart';
+import 'package:smart_leds/src/widgets/pattern_controls/single_color.dart';
+import 'package:smart_leds/src/widgets/pattern_controls/wave.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -15,19 +15,10 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Početna'),
-      ),
+      appBar: AppBar(title: const Text('Početna')),
       drawer: const AppNavigationDrawer(),
-      floatingActionButton: IconButton.filled(
-        padding: const EdgeInsets.all(20),
-        onPressed: () => BrightnessDialog.show(context),
-        icon: const Icon(Icons.light_mode, size: 26),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(40),
-        child: _Patterns(),
-      ),
+      floatingActionButton: IconButton.filled(padding: const EdgeInsets.all(20), onPressed: () => BrightnessDialog.show(context), icon: const Icon(Icons.light_mode, size: 26)),
+      body: Padding(padding: const EdgeInsets.all(40), child: _Patterns()),
     );
   }
 }
@@ -39,41 +30,12 @@ class _Patterns extends StatelessWidget {
       spacing: 20,
       runSpacing: 20,
       children: [
-        _PatternCard(
-          name: 'Jedna boja',
-          icon: 'single.png',
-          pattern: SingleColorPattern(),
-          controlDialog: (p) => SingleColorPatternControl(p),
-        ),
-        _PatternCard(
-          name: 'Valovi',
-          icon: 'waves.png',
-          pattern: WavePattern(),
-          controlDialog: (p) => WavePatternControl(p),
-        ),
-        _PatternCard(
-          name: 'Duga',
-          icon: 'rainbow.png',
-          pattern: RainbowPattern(),
-          controlDialog: (p) => RainbowPatternControl(p),
-        ),
-        _PatternCard(
-          name: 'Dugine boje',
-          icon: 'rainbow_balls.png',
-          pattern: RainbowBallsPattern(),
-          controlDialog: (p) => RainbowPatternControl(p),
-        ),
-        _PatternCard(
-          name: 'Kiša',
-          icon: 'rain_single.png',
-          pattern: RainPattern(),
-          controlDialog: (p) => SingleColorPatternControl(p),
-        ),
-        _PatternCard(
-          name: 'Šarena kiša',
-          icon: 'rain.png',
-          pattern: ColorfulRainPattern(),
-        ),
+        _PatternCard(name: 'Jedna boja', icon: 'single.png', pattern: SingleColorPattern(), controlDialog: (p) => SingleColorPatternControl(p)),
+        _PatternCard(name: 'Valovi', icon: 'waves.png', pattern: WavePattern(), controlDialog: (p) => WavePatternControl(p)),
+        _PatternCard(name: 'Duga', icon: 'rainbow.png', pattern: RainbowPattern(), controlDialog: (p) => RainbowPatternControl(p)),
+        _PatternCard(name: 'Dugine boje', icon: 'rainbow_balls.png', pattern: RainbowBallsPattern(), controlDialog: (p) => RainbowPatternControl(p)),
+        _PatternCard(name: 'Kiša', icon: 'rain_single.png', pattern: RainPattern(), controlDialog: (p) => SingleColorPatternControl(p)),
+        _PatternCard(name: 'Šarena kiša', icon: 'rain.png', pattern: ColorfulRainPattern()),
         _RawPatternCard(
           name: 'Ugasi lampice',
           icon: 'clear.png',
@@ -94,23 +56,14 @@ class _PatternCard extends StatelessWidget {
   final ColorPattern pattern;
   final Widget Function(ColorPattern p)? controlDialog;
 
-  const _PatternCard({
-    required this.name,
-    required this.icon,
-    required this.pattern,
-    this.controlDialog,
-  });
+  const _PatternCard({required this.name, required this.icon, required this.pattern, this.controlDialog});
 
   void showPattern(BuildContext context) {
     var patterns = PatternProvider.of(context);
     patterns.showPattern(pattern);
   }
 
-  void showControlDialog({
-    required BuildContext context,
-    required String title,
-    required Widget child,
-  }) {
+  void showControlDialog({required BuildContext context, required String title, required Widget child}) {
     showDialog(
       context: context,
       builder: (context) {
@@ -127,11 +80,7 @@ class _PatternCard extends StatelessWidget {
       onPrimaryTap: () => showPattern(context),
       onSecondaryTap: () {
         if (controlDialog == null) return;
-        showControlDialog(
-          context: context,
-          title: name,
-          child: controlDialog!(pattern),
-        );
+        showControlDialog(context: context, title: name, child: controlDialog!(pattern));
       },
     );
   }
@@ -143,12 +92,7 @@ class _RawPatternCard extends StatelessWidget {
   final void Function() onPrimaryTap;
   final void Function() onSecondaryTap;
 
-  const _RawPatternCard({
-    required this.name,
-    required this.icon,
-    required this.onPrimaryTap,
-    required this.onSecondaryTap,
-  });
+  const _RawPatternCard({required this.name, required this.icon, required this.onPrimaryTap, required this.onSecondaryTap});
 
   @override
   Widget build(BuildContext context) {
@@ -161,12 +105,7 @@ class _RawPatternCard extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset(
-              'assets/patterns/$icon',
-              width: 100,
-              height: 100,
-              filterQuality: FilterQuality.medium,
-            ),
+            Image.asset('assets/smart_leds/$icon', width: 100, height: 100, filterQuality: FilterQuality.medium),
             Text(name, style: MyTheme.bodyMedium),
           ],
         ),

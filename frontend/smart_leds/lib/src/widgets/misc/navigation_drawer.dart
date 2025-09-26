@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds_app/logic/device_service.dart';
-import 'package:smart_leds_app/pages/device_discovery.dart';
-import 'package:smart_leds_app/pages/home.dart';
-import 'package:smart_leds_app/pages/power_sensor.dart';
-import 'package:smart_leds_app/pages/settings.dart';
+import 'package:smart_leds/src/logic/device_service.dart';
+import 'package:smart_leds/src/pages/device_discovery.dart';
+import 'package:smart_leds/src/pages/home.dart';
+import 'package:smart_leds/src/pages/power_sensor.dart';
+import 'package:smart_leds/src/pages/settings.dart';
 
 class AppNavigationDrawer extends StatelessWidget {
   const AppNavigationDrawer({super.key});
@@ -60,27 +60,11 @@ class AppNavigationDrawer extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
         child: Column(
           children: [
-            ListTile(
-              title: const Text('Početna'),
-              leading: const Icon(Icons.home),
-              onTap: () => openHomePage(context),
-            ),
-            ListTile(
-              title: const Text('Potrošnja energije'),
-              leading: const Icon(Icons.battery_charging_full),
-              onTap: () => openPowerSensorPage(context),
-            ),
-            ListTile(
-              title: const Text('Postavke'),
-              leading: const Icon(Icons.settings),
-              onTap: () => openSettings(context),
-            ),
+            ListTile(title: const Text('Početna'), leading: const Icon(Icons.home), onTap: () => openHomePage(context)),
+            ListTile(title: const Text('Potrošnja energije'), leading: const Icon(Icons.battery_charging_full), onTap: () => openPowerSensorPage(context)),
+            ListTile(title: const Text('Postavke'), leading: const Icon(Icons.settings), onTap: () => openSettings(context)),
             const Spacer(),
-            ListTile(
-              title: const Text('Zatvori uređaj'),
-              leading: const Icon(Icons.logout),
-              onTap: () => closeDevice(context),
-            ),
+            ListTile(title: const Text('Zatvori uređaj'), leading: const Icon(Icons.logout), onTap: () => closeDevice(context)),
           ],
         ),
       ),

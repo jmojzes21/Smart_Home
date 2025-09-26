@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:multicast_dns/multicast_dns.dart';
-import 'package:smart_leds_app/logic/device/device.dart';
+import 'package:smart_leds/src/logic/device/device.dart';
 
 class DeviceDiscovery {
   bool _isDiscovering = false;
@@ -36,25 +36,15 @@ class DeviceDiscovery {
       return;
     }
 
-    await for (final PtrResourceRecord ptr in _client!
-        .lookup<PtrResourceRecord>(
-            ResourceRecordQuery.serverPointer(serviceName))) {
-      await for (final SrvResourceRecord srv in _client!
-          .lookup<SrvResourceRecord>(
-              ResourceRecordQuery.service(ptr.domainName))) {
-        await for (final IPAddressResourceRecord ip in _client!
-            .lookup<IPAddressResourceRecord>(
-                ResourceRecordQuery.addressIPv4(srv.target))) {
+    await for (final PtrResourceRecord ptr in _client!.lookup<PtrResourceRecord>(ResourceRecordQuery.serverPointer(serviceName))) {
+      await for (final SrvResourceRecord srv in _client!.lookup<SrvResourceRecord>(ResourceRecordQuery.service(ptr.domainName))) {
+        await for (final IPAddressResourceRecord ip in _client!.lookup<IPAddressResourceRecord>(ResourceRecordQuery.addressIPv4(srv.target))) {
           if (srv.target == targetName) {
-            var deviceName =
-                srv.name.substring(0, srv.name.length - serviceName.length - 1);
+            var deviceName = srv.name.substring(0, srv.name.length - serviceName.length - 1);
 
             log('Pronađen uređaj $deviceName, IP: ${ip.address.address}');
 
-            streamController.sink.add(Device(
-              name: deviceName,
-              ipAddress: ip.address,
-            ));
+            streamController.sink.add(Device(name: deviceName, ipAddress: ip.address));
           }
         }
       }

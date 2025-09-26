@@ -5,11 +5,11 @@ import 'dart:io';
 
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:http/http.dart' as http;
-import 'package:smart_leds_app/logic/device/led_controller.dart';
-import 'package:smart_leds_app/logic/device/power_sensor.dart';
-import 'package:smart_leds_app/logic/device/wifi_controller.dart';
-import 'package:smart_leds_app/models/exceptions.dart';
-import 'package:smart_leds_app/models/misc/firmware.dart';
+import 'package:smart_leds/src/logic/device/led_controller.dart';
+import 'package:smart_leds/src/logic/device/power_sensor.dart';
+import 'package:smart_leds/src/logic/device/wifi_controller.dart';
+import 'package:smart_leds/src/models/exceptions.dart';
+import 'package:smart_leds/src/models/misc/firmware.dart';
 
 typedef JsonObject = Map<String, dynamic>;
 
@@ -62,11 +62,7 @@ class Device {
   }
 
   Future<void> changePassword(String oldPassword, String newPassword) async {
-    await postHttp(
-      path: '/auth',
-      body: {'pass': newPassword},
-      auth: oldPassword,
-    );
+    await postHttp(path: '/auth', body: {'pass': newPassword}, auth: oldPassword);
     _authentication = newPassword;
   }
 
@@ -141,19 +137,12 @@ class Device {
     return data;
   }
 
-  Future<JsonObject> postHttp({
-    required String path,
-    required JsonObject body,
-    String? auth,
-  }) async {
+  Future<JsonObject> postHttp({required String path, required JsonObject body, String? auth}) async {
     Uri uri = Uri.http(ipAddress.address, path);
     log('POST $path');
 
     String json = jsonEncode(body);
-    var headers = {
-      'Content-Type': 'application/json',
-      'Authorization': auth ?? _authentication,
-    };
+    var headers = {'Content-Type': 'application/json', 'Authorization': auth ?? _authentication};
 
     http.Response res;
     var st = Stopwatch()..start();

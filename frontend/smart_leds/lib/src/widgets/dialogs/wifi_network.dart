@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds_app/logic/device/device.dart';
-import 'package:smart_leds_app/models/exceptions.dart';
-import 'package:smart_leds_app/models/misc/wifi_network.dart';
-import 'package:smart_leds_app/widgets/dialogs/simple_dialogs.dart';
-import 'package:smart_leds_app/widgets/misc/checkbox.dart';
-import 'package:smart_leds_app/widgets/misc/error_text.dart';
+import 'package:smart_leds/src/logic/device/device.dart';
+import 'package:smart_leds/src/models/exceptions.dart';
+import 'package:smart_leds/src/models/misc/wifi_network.dart';
+import 'package:smart_leds/src/widgets/dialogs/simple_dialogs.dart';
+import 'package:smart_leds/src/widgets/misc/checkbox.dart';
+import 'package:smart_leds/src/widgets/misc/error_text.dart';
 
 class WifiNetworkInputDialog extends StatefulWidget {
   final List<WifiNetwork> networks;
@@ -14,22 +14,16 @@ class WifiNetworkInputDialog extends StatefulWidget {
   @override
   State<WifiNetworkInputDialog> createState() => _WifiNetworkInputDialogState();
 
-  static Future<bool> showAddNetwork(
-      BuildContext context, List<WifiNetwork> networks) async {
+  static Future<bool> showAddNetwork(BuildContext context, List<WifiNetwork> networks) async {
     return _show(context, networks, null);
   }
 
-  static Future<bool> showEditNetwork(BuildContext context,
-      List<WifiNetwork> networks, WifiNetwork network) async {
+  static Future<bool> showEditNetwork(BuildContext context, List<WifiNetwork> networks, WifiNetwork network) async {
     return _show(context, networks, network);
   }
 
-  static Future<bool> _show(BuildContext context, List<WifiNetwork> networks,
-      WifiNetwork? network) async {
-    var result = await showDialog<bool>(
-      context: context,
-      builder: (context) => WifiNetworkInputDialog(networks, network),
-    );
+  static Future<bool> _show(BuildContext context, List<WifiNetwork> networks, WifiNetwork? network) async {
+    var result = await showDialog<bool>(context: context, builder: (context) => WifiNetworkInputDialog(networks, network));
 
     return result ?? false;
   }
@@ -115,11 +109,7 @@ class _WifiNetworkInputDialogState extends State<WifiNetworkInputDialog> {
   }
 
   void delete() async {
-    var result = await SimpleDialogs.showConfirm(
-      context: context,
-      title: 'Brisanje WiFi mreže',
-      message: 'Jeste li sigurni da želite obrisati WiFi mrežu?',
-    );
+    var result = await SimpleDialogs.showConfirm(context: context, title: 'Brisanje WiFi mreže', message: 'Jeste li sigurni da želite obrisati WiFi mrežu?');
 
     if (result == false) return;
     if (!mounted) return;
@@ -143,21 +133,14 @@ class _WifiNetworkInputDialogState extends State<WifiNetworkInputDialog> {
     return AlertDialog(
       title: Text(editMode ? 'Uredi WiFi mrežu' : 'Dodaj WiFi mrežu'),
       actions: [
-        if (editMode)
-          TextButton(
-            onPressed: () => delete(),
-            child: const Text('Obriši'),
-          ),
+        if (editMode) TextButton(onPressed: () => delete(), child: const Text('Obriši')),
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
           child: const Text('Odustani'),
         ),
-        FilledButton(
-          onPressed: () => addOrSave(),
-          child: Text(editMode ? 'Spremi' : 'Dodaj'),
-        ),
+        FilledButton(onPressed: () => addOrSave(), child: Text(editMode ? 'Spremi' : 'Dodaj')),
       ],
       content: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20),
@@ -174,10 +157,7 @@ class _WifiNetworkInputDialogState extends State<WifiNetworkInputDialog> {
                 readOnly: editMode,
                 enableSuggestions: false,
                 autocorrect: false,
-                decoration: const InputDecoration(
-                  isDense: true,
-                  border: OutlineInputBorder(),
-                ),
+                decoration: const InputDecoration(isDense: true, border: OutlineInputBorder()),
               ),
               const SizedBox(height: 20),
               const Text('Lozinka'),
@@ -187,17 +167,10 @@ class _WifiNetworkInputDialogState extends State<WifiNetworkInputDialog> {
                 obscureText: showPassword == false,
                 enableSuggestions: false,
                 autocorrect: false,
-                decoration: const InputDecoration(
-                  isDense: true,
-                  border: OutlineInputBorder(),
-                ),
+                decoration: const InputDecoration(isDense: true, border: OutlineInputBorder()),
               ),
               const SizedBox(height: 5),
-              CheckboxText(
-                value: showPassword,
-                text: 'Prikaži lozinku',
-                onChanged: (value) => setState(() => showPassword = value),
-              ),
+              CheckboxText(value: showPassword, text: 'Prikaži lozinku', onChanged: (value) => setState(() => showPassword = value)),
               if (errorMessage.isNotEmpty) ErrorText(errorMessage),
             ],
           ),

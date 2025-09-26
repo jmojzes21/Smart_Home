@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds_app/logic/providers/pattern_provider.dart';
-import 'package:smart_leds_app/models/patterns/patterns.dart';
-import 'package:smart_leds_app/models/patterns/property_values.dart';
-import 'package:smart_leds_app/widgets/misc/segmented_button_picker.dart';
-import 'package:smart_leds_app/widgets/misc/simple_color_picker.dart';
+import 'package:smart_leds/src/logic/providers/pattern_provider.dart';
+import 'package:smart_leds/src/models/patterns/patterns.dart';
+import 'package:smart_leds/src/models/patterns/property_values.dart';
+import 'package:smart_leds/src/widgets/misc/segmented_button_picker.dart';
+import 'package:smart_leds/src/widgets/misc/simple_color_picker.dart';
 
 class WavePatternControl extends StatefulWidget {
   final ColorPattern pattern;
@@ -47,10 +47,7 @@ class _WavePatternControlState extends State<WavePatternControl> {
         SegmentedButtonPicker(
           label: 'Način rada',
           value: properties.waveChangeColors,
-          values: const [
-            (value: false, label: 'Jednobojno'),
-            (value: true, label: 'Mijenjaj boje'),
-          ],
+          values: const [(value: false, label: 'Jednobojno'), (value: true, label: 'Mijenjaj boje')],
           onChange: (value) => setState(() {
             properties.waveChangeColors = value;
             patternProvider.showPattern(widget.pattern);

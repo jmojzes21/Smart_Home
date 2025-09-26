@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds_app/logic/providers/pattern_provider.dart';
-import 'package:smart_leds_app/models/patterns/patterns.dart';
-import 'package:smart_leds_app/models/patterns/property_values.dart';
-import 'package:smart_leds_app/widgets/misc/simple_color_picker.dart';
+import 'package:smart_leds/src/logic/providers/pattern_provider.dart';
+import 'package:smart_leds/src/models/patterns/patterns.dart';
+import 'package:smart_leds/src/models/patterns/property_values.dart';
+import 'package:smart_leds/src/widgets/misc/simple_color_picker.dart';
 
 class SingleColorPatternControl extends StatefulWidget {
   final ColorPattern pattern;
@@ -10,8 +10,7 @@ class SingleColorPatternControl extends StatefulWidget {
   const SingleColorPatternControl(this.pattern, {super.key});
 
   @override
-  State<SingleColorPatternControl> createState() =>
-      _SingleColorPatternControlState();
+  State<SingleColorPatternControl> createState() => _SingleColorPatternControlState();
 }
 
 class _SingleColorPatternControlState extends State<SingleColorPatternControl> {

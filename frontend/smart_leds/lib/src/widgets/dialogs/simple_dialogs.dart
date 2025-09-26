@@ -1,46 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds_app/widgets/misc/checkbox.dart';
+import 'package:smart_leds/src/widgets/misc/checkbox.dart';
 
 class SimpleDialogs {
-  static Future<void> showMessage(
-      {required BuildContext context,
-      required String title,
-      required String message,
-      bool barrierDismissible = true}) {
+  static Future<void> showMessage({required BuildContext context, required String title, required String message, bool barrierDismissible = true}) {
     return showDialog(
       context: context,
       barrierDismissible: barrierDismissible,
       builder: (context) => AlertDialog(
         title: Text(title),
         content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Ok'),
-          ),
-        ],
+        actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Ok'))],
       ),
     );
   }
 
-  static Future<bool> showConfirm(
-      {required BuildContext context,
-      required String title,
-      required String message}) async {
+  static Future<bool> showConfirm({required BuildContext context, required String title, required String message}) async {
     bool? result = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(title),
         content: Text(message),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Ne'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Da'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Ne')),
+          TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Da')),
         ],
       ),
     );
@@ -48,12 +30,7 @@ class SimpleDialogs {
     return result ?? false;
   }
 
-  static Future<bool> showExtraConfirm({
-    required BuildContext context,
-    required String title,
-    required String message,
-    required String checkboxText,
-  }) async {
+  static Future<bool> showExtraConfirm({required BuildContext context, required String title, required String message, required String checkboxText}) async {
     var result = await showDialog<bool>(
       context: context,
       builder: (context) {
@@ -94,22 +71,12 @@ class _ExtraConfirmDialogState extends State<_ExtraConfirmDialog> {
         children: [
           Text(widget.message),
           const SizedBox(height: 10),
-          CheckboxText(
-            value: isChecked,
-            text: widget.checkboxText,
-            onChanged: (value) => setState(() => isChecked = value),
-          ),
+          CheckboxText(value: isChecked, text: widget.checkboxText, onChanged: (value) => setState(() => isChecked = value)),
         ],
       ),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(false),
-          child: const Text('Ne'),
-        ),
-        TextButton(
-          onPressed: isChecked ? confirm : null,
-          child: const Text('Da'),
-        ),
+        TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Ne')),
+        TextButton(onPressed: isChecked ? confirm : null, child: const Text('Da')),
       ],
     );
   }

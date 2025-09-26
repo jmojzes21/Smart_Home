@@ -1,6 +1,6 @@
-import 'package:smart_leds_app/logic/device/device.dart';
-import 'package:smart_leds_app/models/patterns/patterns.dart';
-import 'package:smart_leds_app/models/patterns/properties.dart';
+import 'package:smart_leds/src/logic/device/device.dart';
+import 'package:smart_leds/src/models/patterns/patterns.dart';
+import 'package:smart_leds/src/models/patterns/properties.dart';
 
 class LedController {
   final Device _device;
@@ -9,10 +9,7 @@ class LedController {
 
   LedController(this._device);
 
-  Future<void> showPattern(
-    ColorPattern pattern,
-    PatternProperties properties,
-  ) async {
+  Future<void> showPattern(ColorPattern pattern, PatternProperties properties) async {
     var body = pattern.toJson(properties);
     await _device.postHttp(path: '/pattern', body: body);
   }

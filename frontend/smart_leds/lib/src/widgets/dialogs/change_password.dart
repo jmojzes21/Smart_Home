@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds_app/logic/device/device.dart';
-import 'package:smart_leds_app/logic/device_service.dart';
-import 'package:smart_leds_app/models/exceptions.dart';
-import 'package:smart_leds_app/widgets/misc/checkbox.dart';
-import 'package:smart_leds_app/widgets/misc/error_text.dart';
+import 'package:smart_leds/src/logic/device/device.dart';
+import 'package:smart_leds/src/logic/device_service.dart';
+import 'package:smart_leds/src/models/exceptions.dart';
+import 'package:smart_leds/src/widgets/misc/checkbox.dart';
+import 'package:smart_leds/src/widgets/misc/error_text.dart';
 
 class ChangePasswordDialog extends StatefulWidget {
   const ChangePasswordDialog({super.key});
@@ -12,10 +12,7 @@ class ChangePasswordDialog extends StatefulWidget {
   State<ChangePasswordDialog> createState() => _ChangePasswordDialogState();
 
   static Future<bool> show(BuildContext context) async {
-    var result = await showDialog<bool>(
-      context: context,
-      builder: (context) => const ChangePasswordDialog(),
-    );
+    var result = await showDialog<bool>(context: context, builder: (context) => const ChangePasswordDialog());
     return result ?? false;
   }
 }
@@ -46,8 +43,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
     }
 
     if (confirmPassword != newPassword) {
-      setState(() =>
-          errorMessage = 'Potvrda lozinke mora odgovarati novoj lozinki.');
+      setState(() => errorMessage = 'Potvrda lozinke mora odgovarati novoj lozinki.');
       return;
     }
 
@@ -55,11 +51,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
     var device = Device.currentDevice;
 
     try {
-      await deviceService.changePassword(
-        device: device,
-        plainOldPassword: oldPassword,
-        plainNewPassword: newPassword,
-      );
+      await deviceService.changePassword(device: device, plainOldPassword: oldPassword, plainNewPassword: newPassword);
     } on DeviceException catch (e) {
       if (!mounted) return;
       setState(() => errorMessage = e.message);
@@ -81,10 +73,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
           },
           child: const Text('Odustani'),
         ),
-        FilledButton(
-          onPressed: () => changePassword(),
-          child: const Text('Promijeni'),
-        ),
+        FilledButton(onPressed: () => changePassword(), child: const Text('Promijeni')),
       ],
       content: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20),
@@ -101,10 +90,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                 obscureText: showPassword == false,
                 enableSuggestions: false,
                 autocorrect: false,
-                decoration: const InputDecoration(
-                  isDense: true,
-                  border: OutlineInputBorder(),
-                ),
+                decoration: const InputDecoration(isDense: true, border: OutlineInputBorder()),
               ),
               const SizedBox(height: 20),
               const Text('Nova lozinka'),
@@ -114,10 +100,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                 obscureText: showPassword == false,
                 enableSuggestions: false,
                 autocorrect: false,
-                decoration: const InputDecoration(
-                  isDense: true,
-                  border: OutlineInputBorder(),
-                ),
+                decoration: const InputDecoration(isDense: true, border: OutlineInputBorder()),
               ),
               const SizedBox(height: 20),
               const Text('Potvrda lozinke'),
@@ -127,17 +110,10 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                 obscureText: showPassword == false,
                 enableSuggestions: false,
                 autocorrect: false,
-                decoration: const InputDecoration(
-                  isDense: true,
-                  border: OutlineInputBorder(),
-                ),
+                decoration: const InputDecoration(isDense: true, border: OutlineInputBorder()),
               ),
               const SizedBox(height: 20),
-              CheckboxText(
-                value: showPassword,
-                text: 'Prikaži lozinke',
-                onChanged: (value) => setState(() => showPassword = value),
-              ),
+              CheckboxText(value: showPassword, text: 'Prikaži lozinke', onChanged: (value) => setState(() => showPassword = value)),
               if (errorMessage.isNotEmpty) ErrorText(errorMessage),
             ],
           ),

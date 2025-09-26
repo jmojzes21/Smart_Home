@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds_app/logic/device/device.dart';
-import 'package:smart_leds_app/logic/device_service.dart';
-import 'package:smart_leds_app/models/exceptions.dart';
-import 'package:smart_leds_app/widgets/dialogs/simple_dialogs.dart';
-import 'package:smart_leds_app/widgets/misc/checkbox.dart';
-import 'package:smart_leds_app/widgets/misc/error_text.dart';
+import 'package:smart_leds/src/logic/device/device.dart';
+import 'package:smart_leds/src/logic/device_service.dart';
+import 'package:smart_leds/src/models/exceptions.dart';
+import 'package:smart_leds/src/widgets/dialogs/simple_dialogs.dart';
+import 'package:smart_leds/src/widgets/misc/checkbox.dart';
+import 'package:smart_leds/src/widgets/misc/error_text.dart';
 
 class LoginDialog extends StatefulWidget {
   final Device device;
@@ -14,10 +14,7 @@ class LoginDialog extends StatefulWidget {
   State<LoginDialog> createState() => _LoginDialogState();
 
   static Future<bool> show(BuildContext context, Device device) async {
-    var result = await showDialog<bool>(
-      context: context,
-      builder: (context) => LoginDialog(device),
-    );
+    var result = await showDialog<bool>(context: context, builder: (context) => LoginDialog(device));
 
     return result ?? false;
   }
@@ -41,11 +38,7 @@ class _LoginDialogState extends State<LoginDialog> {
     var deviceService = DeviceService();
 
     try {
-      await deviceService.login(
-        device: device,
-        plainPassword: password,
-        stayLoggedIn: stayLoggedIn,
-      );
+      await deviceService.login(device: device, plainPassword: password, stayLoggedIn: stayLoggedIn);
     } on DeviceException catch (e) {
       setError(e.message);
       return;
@@ -75,12 +68,7 @@ class _LoginDialogState extends State<LoginDialog> {
       await device.wipeData();
 
       if (!mounted) return;
-      await SimpleDialogs.showMessage(
-        context: context,
-        title: 'Ponovno postavljanje uređaja',
-        message:
-            'Uređaj se ponovno postavio i svi prijašnji podaci su obrisani.',
-      );
+      await SimpleDialogs.showMessage(context: context, title: 'Ponovno postavljanje uređaja', message: 'Uređaj se ponovno postavio i svi prijašnji podaci su obrisani.');
 
       if (!mounted) return;
       Navigator.of(context).pop();
@@ -92,14 +80,8 @@ class _LoginDialogState extends State<LoginDialog> {
     return AlertDialog(
       title: const Text('Prijava'),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Odustani'),
-        ),
-        FilledButton(
-          onPressed: () => login(),
-          child: const Text('Prijavi se'),
-        ),
+        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Odustani')),
+        FilledButton(onPressed: () => login(), child: const Text('Prijavi se')),
       ],
       content: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20),
@@ -116,28 +98,14 @@ class _LoginDialogState extends State<LoginDialog> {
                 obscureText: showPassword == false,
                 enableSuggestions: false,
                 autocorrect: false,
-                decoration: const InputDecoration(
-                  isDense: true,
-                  border: OutlineInputBorder(),
-                ),
+                decoration: const InputDecoration(isDense: true, border: OutlineInputBorder()),
               ),
               const SizedBox(height: 10),
-              CheckboxText(
-                value: showPassword,
-                text: 'Prikaži lozinku',
-                onChanged: (value) => setState(() => showPassword = value),
-              ),
+              CheckboxText(value: showPassword, text: 'Prikaži lozinku', onChanged: (value) => setState(() => showPassword = value)),
               const SizedBox(height: 5),
-              CheckboxText(
-                value: stayLoggedIn,
-                text: 'Ostani prijavljen',
-                onChanged: (value) => setState(() => stayLoggedIn = value),
-              ),
+              CheckboxText(value: stayLoggedIn, text: 'Ostani prijavljen', onChanged: (value) => setState(() => stayLoggedIn = value)),
               const SizedBox(height: 5),
-              TextButton(
-                onPressed: () => resetPassword(),
-                child: const Text('Zaboravljena lozinka'),
-              ),
+              TextButton(onPressed: () => resetPassword(), child: const Text('Zaboravljena lozinka')),
               if (errorMessage.isNotEmpty) ErrorText(errorMessage),
             ],
           ),

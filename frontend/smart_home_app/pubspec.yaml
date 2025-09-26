@@ -13,6 +13,9 @@ dependencies:
   air_quality:
     path: ../air_quality
 
+  smart_leds:
+    path: ../smart_leds
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -22,4 +25,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/air_quality/
-    
+    - assets/smart_leds/

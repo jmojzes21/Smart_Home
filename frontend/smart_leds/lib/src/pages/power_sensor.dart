@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:smart_leds_app/logic/device/device.dart';
-import 'package:smart_leds_app/models/misc/power_sensor_data.dart';
-import 'package:smart_leds_app/theme.dart';
-import 'package:smart_leds_app/widgets/misc/navigation_drawer.dart';
+import 'package:smart_leds/src/logic/device/device.dart';
+import 'package:smart_leds/src/models/misc/power_sensor_data.dart';
+import 'package:smart_leds/src/theme.dart';
+import 'package:smart_leds/src/widgets/misc/navigation_drawer.dart';
 
 class PowerSensorPage extends StatefulWidget {
   const PowerSensorPage({super.key});
@@ -27,8 +27,7 @@ class _PowerSensorPageState extends State<PowerSensorPage> {
     var data = await device.powerSensor.getData();
 
     if (data.isActive) {
-      refreshTimer ??=
-          Timer.periodic(const Duration(seconds: 2), (timer) => refresh());
+      refreshTimer ??= Timer.periodic(const Duration(seconds: 2), (timer) => refresh());
     } else {
       refreshTimer?.cancel();
       refreshTimer = null;
@@ -48,9 +47,7 @@ class _PowerSensorPageState extends State<PowerSensorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Potrošnja energije'),
-      ),
+      appBar: AppBar(title: const Text('Potrošnja energije')),
       drawer: const AppNavigationDrawer(),
       body: buildBody(context),
     );
@@ -85,10 +82,7 @@ class _PowerSensorPageState extends State<PowerSensorPage> {
           ],
         ),
         const SizedBox(height: 20),
-        FilledButton(
-          onPressed: () => changePowerSensorState(false),
-          child: const Text('Isključi senzor'),
-        ),
+        FilledButton(onPressed: () => changePowerSensorState(false), child: const Text('Isključi senzor')),
       ];
     } else {
       content = [
@@ -96,18 +90,11 @@ class _PowerSensorPageState extends State<PowerSensorPage> {
           width: 300,
           height: 200,
           child: Center(
-            child: Text(
-              'Senzor potrošnje energije je isključen.',
-              textAlign: TextAlign.center,
-              style: MyTheme.titleLarge,
-            ),
+            child: Text('Senzor potrošnje energije je isključen.', textAlign: TextAlign.center, style: MyTheme.titleLarge),
           ),
         ),
         const SizedBox(height: 40),
-        FilledButton(
-          onPressed: () => changePowerSensorState(true),
-          child: const Text('Uključi senzor'),
-        ),
+        FilledButton(onPressed: () => changePowerSensorState(true), child: const Text('Uključi senzor')),
       ];
     }
 
@@ -117,10 +104,7 @@ class _PowerSensorPageState extends State<PowerSensorPage> {
           width: 400,
           child: Padding(
             padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: content,
-            ),
+            child: Column(mainAxisSize: MainAxisSize.min, children: content),
           ),
         ),
       ),

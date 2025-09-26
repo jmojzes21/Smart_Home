@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds_app/logic/providers/pattern_provider.dart';
-import 'package:smart_leds_app/models/patterns/patterns.dart';
-import 'package:smart_leds_app/models/patterns/property_values.dart';
-import 'package:smart_leds_app/widgets/misc/segmented_button_picker.dart';
+import 'package:smart_leds/src/logic/providers/pattern_provider.dart';
+import 'package:smart_leds/src/models/patterns/patterns.dart';
+import 'package:smart_leds/src/models/patterns/property_values.dart';
+import 'package:smart_leds/src/widgets/misc/segmented_button_picker.dart';
 
 class RainbowPatternControl extends StatefulWidget {
   final ColorPattern pattern;

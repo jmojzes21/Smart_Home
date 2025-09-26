@@ -1,5 +1,5 @@
-import 'package:smart_leds_app/logic/device/device.dart';
-import 'package:smart_leds_app/models/misc/wifi_network.dart';
+import 'package:smart_leds/src/logic/device/device.dart';
+import 'package:smart_leds/src/models/misc/wifi_network.dart';
 
 class WifiController {
   final Device _device;
@@ -19,8 +19,6 @@ class WifiController {
   }
 
   Future<void> updateNetworks(List<WifiNetwork> networks) async {
-    await _device.postHttp(path: '/wifi_networks', body: {
-      'networks': networks.map((e) => WifiNetwork.toJson(e)).toList(),
-    });
+    await _device.postHttp(path: '/wifi_networks', body: {'networks': networks.map((e) => WifiNetwork.toJson(e)).toList()});
   }
 }

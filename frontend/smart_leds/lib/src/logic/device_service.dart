@@ -1,14 +1,10 @@
-import 'package:smart_leds_app/logic/session_service.dart';
-import 'package:smart_leds_app/logic/device/device.dart';
-import 'package:smart_leds_app/models/exceptions.dart';
-import 'package:smart_leds_app/models/misc/session.dart';
+import 'package:smart_leds/src/logic/session_service.dart';
+import 'package:smart_leds/src/logic/device/device.dart';
+import 'package:smart_leds/src/models/exceptions.dart';
+import 'package:smart_leds/src/models/misc/session.dart';
 
 class DeviceService {
-  Future<void> login({
-    required Device device,
-    required String plainPassword,
-    required bool stayLoggedIn,
-  }) async {
+  Future<void> login({required Device device, required String plainPassword, required bool stayLoggedIn}) async {
     String password = device.hashPassword(plainPassword);
 
     await device.login(password);
@@ -46,11 +42,7 @@ class DeviceService {
     await sessionService.deleteSession();
   }
 
-  Future<void> changePassword({
-    required Device device,
-    required String plainOldPassword,
-    required String plainNewPassword,
-  }) async {
+  Future<void> changePassword({required Device device, required String plainOldPassword, required String plainNewPassword}) async {
     String oldPassword = device.hashPassword(plainOldPassword);
     String newPassword = device.hashPassword(plainNewPassword);
 

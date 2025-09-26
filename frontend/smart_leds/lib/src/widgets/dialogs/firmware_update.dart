@@ -1,11 +1,11 @@
 import 'package:file_selector/file_selector.dart' as fs;
 import 'package:flutter/material.dart';
-import 'package:smart_leds_app/helpers/firmware_loader.dart';
-import 'package:smart_leds_app/logic/device/device.dart';
-import 'package:smart_leds_app/models/exceptions.dart';
-import 'package:smart_leds_app/models/misc/firmware.dart';
-import 'package:smart_leds_app/theme.dart';
-import 'package:smart_leds_app/widgets/dialogs/simple_dialogs.dart';
+import 'package:smart_leds/src/helpers/firmware_loader.dart';
+import 'package:smart_leds/src/logic/device/device.dart';
+import 'package:smart_leds/src/models/exceptions.dart';
+import 'package:smart_leds/src/models/misc/firmware.dart';
+import 'package:smart_leds/src/theme.dart';
+import 'package:smart_leds/src/widgets/dialogs/simple_dialogs.dart';
 
 class FirmwareUpdateDialog extends StatefulWidget {
   const FirmwareUpdateDialog({super.key});
@@ -13,11 +13,7 @@ class FirmwareUpdateDialog extends StatefulWidget {
   State<FirmwareUpdateDialog> createState() => _FirmwareUpdateDialogState();
 
   static Future<void> show(BuildContext context) async {
-    var result = await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const FirmwareUpdateDialog(),
-    );
+    var result = await showDialog(context: context, barrierDismissible: false, builder: (context) => const FirmwareUpdateDialog());
     return result;
   }
 }
@@ -37,12 +33,11 @@ class _FirmwareUpdateDialogState extends State<FirmwareUpdateDialog> {
   }
 
   void openFile() async {
-    var result = await fs.openFile(acceptedTypeGroups: [
-      const fs.XTypeGroup(
-        label: 'Datoteka programa',
-        extensions: ['bin'],
-      )
-    ]);
+    var result = await fs.openFile(
+      acceptedTypeGroups: [
+        const fs.XTypeGroup(label: 'Datoteka programa', extensions: ['bin']),
+      ],
+    );
 
     if (result == null) return;
 
@@ -66,11 +61,7 @@ class _FirmwareUpdateDialogState extends State<FirmwareUpdateDialog> {
         firmware = null;
       });
 
-      SimpleDialogs.showMessage(
-        context: context,
-        title: 'Greška',
-        message: e.message,
-      );
+      SimpleDialogs.showMessage(context: context, title: 'Greška', message: e.message);
     }
   }
 
@@ -85,22 +76,12 @@ class _FirmwareUpdateDialogState extends State<FirmwareUpdateDialog> {
       if (!mounted) return;
       Navigator.of(context).pop();
 
-      SimpleDialogs.showMessage(
-        context: context,
-        title: 'Uspješno ažuriranje programa',
-        message: 'Ugradbeni program na uređaju je uspješno ažuriran.',
-        barrierDismissible: false,
-      );
+      SimpleDialogs.showMessage(context: context, title: 'Uspješno ažuriranje programa', message: 'Ugradbeni program na uređaju je uspješno ažuriran.', barrierDismissible: false);
     } on FirmwareUpdateException catch (e) {
       if (!mounted) return;
       Navigator.of(context).pop();
 
-      SimpleDialogs.showMessage(
-        context: context,
-        title: 'Greška kod ažuriranja programa',
-        message: e.message,
-        barrierDismissible: false,
-      );
+      SimpleDialogs.showMessage(context: context, title: 'Greška kod ažuriranja programa', message: e.message, barrierDismissible: false);
     }
   }
 
@@ -114,12 +95,7 @@ class _FirmwareUpdateDialogState extends State<FirmwareUpdateDialog> {
         content = const Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Odaberite datoteku ugradbenog programa.',
-              style: MyTheme.bodyMedium,
-            ),
-          ],
+          children: [Text('Odaberite datoteku ugradbenog programa.', style: MyTheme.bodyMedium)],
         );
       } else {
         content = Column(
@@ -142,18 +118,9 @@ class _FirmwareUpdateDialogState extends State<FirmwareUpdateDialog> {
       }
 
       actions = [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Odustani'),
-        ),
-        TextButton(
-          onPressed: () => openFile(),
-          child: const Text('Odaberi datoteku'),
-        ),
-        FilledButton(
-          onPressed: firmware != null ? () => startUpdate() : null,
-          child: const Text('Ažuriraj'),
-        ),
+        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Odustani')),
+        TextButton(onPressed: () => openFile(), child: const Text('Odaberi datoteku')),
+        FilledButton(onPressed: firmware != null ? () => startUpdate() : null, child: const Text('Ažuriraj')),
       ];
     } else {
       content = const SizedBox(
@@ -163,15 +130,9 @@ class _FirmwareUpdateDialogState extends State<FirmwareUpdateDialog> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox.square(
-              dimension: 80,
-              child: CircularProgressIndicator(),
-            ),
+            SizedBox.square(dimension: 80, child: CircularProgressIndicator()),
             SizedBox(height: 40),
-            Text(
-              'Ažuriranje ugradbenog programa je u tijeku',
-              style: MyTheme.bodyLarge,
-            ),
+            Text('Ažuriranje ugradbenog programa je u tijeku', style: MyTheme.bodyLarge),
           ],
         ),
       );
@@ -180,13 +141,7 @@ class _FirmwareUpdateDialogState extends State<FirmwareUpdateDialog> {
     return AlertDialog(
       title: const Text('Ažuriranje programa'),
       actions: actions,
-      content: ConstrainedBox(
-        constraints: const BoxConstraints(
-          minWidth: 600,
-          minHeight: 300,
-        ),
-        child: content,
-      ),
+      content: ConstrainedBox(constraints: const BoxConstraints(minWidth: 600, minHeight: 300), child: content),
     );
   }
 

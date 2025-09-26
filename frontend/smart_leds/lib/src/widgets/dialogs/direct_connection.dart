@@ -4,9 +4,9 @@ import 'dart:io';
 
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_leds_app/logic/device/device.dart';
-import 'package:smart_leds_app/models/exceptions.dart';
-import 'package:smart_leds_app/widgets/misc/error_text.dart';
+import 'package:smart_leds/src/logic/device/device.dart';
+import 'package:smart_leds/src/models/exceptions.dart';
+import 'package:smart_leds/src/widgets/misc/error_text.dart';
 
 class DirectConnectionDialog extends StatefulWidget {
   const DirectConnectionDialog({super.key});
@@ -15,11 +15,7 @@ class DirectConnectionDialog extends StatefulWidget {
   State<DirectConnectionDialog> createState() => _DirectConnectionDialogState();
 
   static Future<Device?> show(BuildContext context) async {
-    var result = await showDialog<Device>(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const DirectConnectionDialog(),
-    );
+    var result = await showDialog<Device>(context: context, barrierDismissible: false, builder: (context) => const DirectConnectionDialog());
 
     return result;
   }
@@ -49,10 +45,7 @@ class _DirectConnectionDialogState extends State<DirectConnectionDialog> {
     setState(() => isConnecting = true);
 
     connectOperation = CancelableOperation.fromFuture(connectFuture(device));
-    connectOperation!.then(
-      (bool result) => onConnectDone(device, result),
-      onCancel: () => onConnectCancel(),
-    );
+    connectOperation!.then((bool result) => onConnectDone(device, result), onCancel: () => onConnectCancel());
   }
 
   void onConnectDone(Device device, bool result) {
@@ -108,20 +101,9 @@ class _DirectConnectionDialogState extends State<DirectConnectionDialog> {
     return AlertDialog(
       title: const Text('Izravno povezivanje'),
       actions: [
-        TextButton(
-          onPressed: () => close(),
-          child: const Text('Odustani'),
-        ),
-        if (isConnecting)
-          FilledButton(
-            onPressed: () => stop(),
-            child: const Text('Zaustavi'),
-          ),
-        if (isConnecting == false)
-          FilledButton(
-            onPressed: () => connect(),
-            child: const Text('Poveži'),
-          ),
+        TextButton(onPressed: () => close(), child: const Text('Odustani')),
+        if (isConnecting) FilledButton(onPressed: () => stop(), child: const Text('Zaustavi')),
+        if (isConnecting == false) FilledButton(onPressed: () => connect(), child: const Text('Poveži')),
       ],
       content: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20),
@@ -137,19 +119,13 @@ class _DirectConnectionDialogState extends State<DirectConnectionDialog> {
                 controller: tcIpAddress,
                 enableSuggestions: false,
                 autocorrect: false,
-                decoration: const InputDecoration(
-                  isDense: true,
-                  border: OutlineInputBorder(),
-                ),
+                decoration: const InputDecoration(isDense: true, border: OutlineInputBorder()),
               ),
               if (isConnecting) const SizedBox(height: 20),
               if (isConnecting)
                 const Row(
                   children: [
-                    SizedBox.square(
-                      dimension: 24,
-                      child: CircularProgressIndicator(),
-                    ),
+                    SizedBox.square(dimension: 24, child: CircularProgressIndicator()),
                     SizedBox(width: 10),
                     Text('Povezivanje'),
                   ],

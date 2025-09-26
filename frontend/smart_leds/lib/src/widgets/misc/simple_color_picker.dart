@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds_app/theme.dart';
+import 'package:smart_leds/src/theme.dart';
 
 class SimpleColorPicker extends StatefulWidget {
   final Color color;
   final List<Color> colors;
   final void Function(Color color) onColor;
 
-  const SimpleColorPicker({
-    super.key,
-    required this.color,
-    required this.colors,
-    required this.onColor,
-  });
+  const SimpleColorPicker({super.key, required this.color, required this.colors, required this.onColor});
 
   @override
   State<SimpleColorPicker> createState() => _SimpleColorPickerState();
@@ -61,13 +56,7 @@ class _SimpleColorPickerState extends State<SimpleColorPicker> {
               child: ClipOval(
                 child: Material(
                   color: e,
-                  child: InkWell(
-                    splashColor: e,
-                    onTap: () => onColor(e),
-                    child: const SizedBox.square(
-                      dimension: 50,
-                    ),
-                  ),
+                  child: InkWell(splashColor: e, onTap: () => onColor(e), child: const SizedBox.square(dimension: 50)),
                 ),
               ),
             );
@@ -76,40 +65,16 @@ class _SimpleColorPickerState extends State<SimpleColorPicker> {
         const SizedBox(height: 20),
 
         //
-
         Text('Crvena: $red', style: MyTheme.bodyMedium),
-        Slider(
-          value: red.toDouble(),
-          min: 0,
-          max: 255,
-          onChanged: (value) => setState(() => red = value.round()),
-          onChangeEnd: (value) =>
-              onColor(Color.fromARGB(255, red, green, blue)),
-        ),
+        Slider(value: red.toDouble(), min: 0, max: 255, onChanged: (value) => setState(() => red = value.round()), onChangeEnd: (value) => onColor(Color.fromARGB(255, red, green, blue))),
 
         //
-
         Text('Zelena: $green', style: MyTheme.bodyMedium),
-        Slider(
-          value: green.toDouble(),
-          min: 0,
-          max: 255,
-          onChanged: (value) => setState(() => green = value.round()),
-          onChangeEnd: (value) =>
-              onColor(Color.fromARGB(255, red, green, blue)),
-        ),
+        Slider(value: green.toDouble(), min: 0, max: 255, onChanged: (value) => setState(() => green = value.round()), onChangeEnd: (value) => onColor(Color.fromARGB(255, red, green, blue))),
 
         //
-
         Text('Plava: $blue', style: MyTheme.bodyMedium),
-        Slider(
-          value: blue.toDouble(),
-          min: 0,
-          max: 255,
-          onChanged: (value) => setState(() => blue = value.round()),
-          onChangeEnd: (value) =>
-              onColor(Color.fromARGB(255, red, green, blue)),
-        ),
+        Slider(value: blue.toDouble(), min: 0, max: 255, onChanged: (value) => setState(() => blue = value.round()), onChangeEnd: (value) => onColor(Color.fromARGB(255, red, green, blue))),
       ],
     );
   }

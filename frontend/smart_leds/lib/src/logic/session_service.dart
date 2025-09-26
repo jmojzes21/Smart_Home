@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:smart_leds_app/logic/device/device.dart';
-import 'package:smart_leds_app/models/misc/session.dart';
+import 'package:smart_leds/src/logic/device/device.dart';
+import 'package:smart_leds/src/models/misc/session.dart';
 
 import 'package:path_provider/path_provider.dart' as pp;
 
@@ -28,12 +28,7 @@ class SessionService {
   }
 
   Future<void> saveSession(Device device, String password) async {
-    var session = Session(
-      deviceType: device.type,
-      ipAddress: device.ipAddress.address,
-      macAddress: device.macAddress,
-      password: password,
-    );
+    var session = Session(deviceType: device.type, ipAddress: device.ipAddress.address, macAddress: device.macAddress, password: password);
 
     var json = jsonEncode(Session.toJson(session));
 

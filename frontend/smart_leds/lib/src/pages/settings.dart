@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds_app/logic/device/device.dart';
-import 'package:smart_leds_app/logic/device_service.dart';
-import 'package:smart_leds_app/models/misc/wifi_network.dart';
-import 'package:smart_leds_app/pages/device_discovery.dart';
-import 'package:smart_leds_app/widgets/dialogs/change_password.dart';
-import 'package:smart_leds_app/theme.dart';
-import 'package:smart_leds_app/widgets/dialogs/simple_dialogs.dart';
-import 'package:smart_leds_app/widgets/dialogs/firmware_update.dart';
-import 'package:smart_leds_app/widgets/dialogs/wifi_network.dart';
-import 'package:smart_leds_app/widgets/misc/navigation_drawer.dart';
+import 'package:smart_leds/src/logic/device/device.dart';
+import 'package:smart_leds/src/logic/device_service.dart';
+import 'package:smart_leds/src/models/misc/wifi_network.dart';
+import 'package:smart_leds/src/pages/device_discovery.dart';
+import 'package:smart_leds/src/widgets/dialogs/change_password.dart';
+import 'package:smart_leds/src/theme.dart';
+import 'package:smart_leds/src/widgets/dialogs/simple_dialogs.dart';
+import 'package:smart_leds/src/widgets/dialogs/firmware_update.dart';
+import 'package:smart_leds/src/widgets/dialogs/wifi_network.dart';
+import 'package:smart_leds/src/widgets/misc/navigation_drawer.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -41,11 +41,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void restartDevice() async {
-    var result = await SimpleDialogs.showConfirm(
-      context: context,
-      title: 'Ponovno pokretanje uređaja',
-      message: 'Jeste li sigurni da želite ponovno pokrenuti uređaj?',
-    );
+    var result = await SimpleDialogs.showConfirm(context: context, title: 'Ponovno pokretanje uređaja', message: 'Jeste li sigurni da želite ponovno pokrenuti uređaj?');
 
     if (result) {
       device.restart();
@@ -56,11 +52,7 @@ class _SettingsPageState extends State<SettingsPage> {
     var result = await ChangePasswordDialog.show(context);
     if (result) {
       if (!mounted) return;
-      SimpleDialogs.showMessage(
-        context: context,
-        title: 'Promjena lozinke',
-        message: 'Uspješno ste promijenili lozinku.',
-      );
+      SimpleDialogs.showMessage(context: context, title: 'Promjena lozinke', message: 'Uspješno ste promijenili lozinku.');
     }
   }
 
@@ -76,21 +68,13 @@ class _SettingsPageState extends State<SettingsPage> {
       await device.wipeData();
 
       if (!mounted) return;
-      await SimpleDialogs.showMessage(
-        context: context,
-        title: 'Brisanje podataka',
-        message: 'Svi podaci su obrisani. Uređaj će se ponovno pokrenuti.',
-      );
+      await SimpleDialogs.showMessage(context: context, title: 'Brisanje podataka', message: 'Svi podaci su obrisani. Uređaj će se ponovno pokrenuti.');
 
       var deviceService = DeviceService();
       await deviceService.deleteSession();
 
       if (!mounted) return;
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => const DeviceDiscoveryPage(),
-        ),
-      );
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const DeviceDiscoveryPage()));
     }
   }
 
@@ -98,11 +82,7 @@ class _SettingsPageState extends State<SettingsPage> {
     await device.leds.startDla();
 
     if (!mounted) return;
-    SimpleDialogs.showMessage(
-      context: context,
-      title: 'DLA',
-      message: 'DLA je pokrenut.',
-    );
+    SimpleDialogs.showMessage(context: context, title: 'DLA', message: 'DLA je pokrenut.');
   }
 
   void updateFirmware() async {
@@ -110,8 +90,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void addWifiNetwork() async {
-    var result =
-        await WifiNetworkInputDialog.showAddNetwork(context, wifiNetworks);
+    var result = await WifiNetworkInputDialog.showAddNetwork(context, wifiNetworks);
 
     if (result) {
       refresh();
@@ -119,8 +98,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void editWifiNetwork(WifiNetwork network) async {
-    var result = await WifiNetworkInputDialog.showEditNetwork(
-        context, wifiNetworks, network);
+    var result = await WifiNetworkInputDialog.showEditNetwork(context, wifiNetworks, network);
 
     if (result) {
       refresh();
@@ -130,9 +108,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Postavke'),
-      ),
+      appBar: AppBar(title: const Text('Postavke')),
       drawer: const AppNavigationDrawer(),
       body: buildBody(context),
     );
@@ -170,10 +146,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
 
     return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(40),
-        child: content,
-      ),
+      child: Padding(padding: const EdgeInsets.all(40), child: content),
     );
   }
 
@@ -203,11 +176,7 @@ class _SettingsPageState extends State<SettingsPage> {
       Text(device.macAddress, style: MyTheme.bodyMedium),
       const SizedBox(height: 20),
       //
-      OutlinedButton.icon(
-        onPressed: () => refresh(),
-        icon: const Icon(Icons.refresh),
-        label: const Text('Osvježi'),
-      ),
+      OutlinedButton.icon(onPressed: () => refresh(), icon: const Icon(Icons.refresh), label: const Text('Osvježi')),
     ];
   }
 
@@ -219,19 +188,11 @@ class _SettingsPageState extends State<SettingsPage> {
         itemCount: wifiNetworks.length,
         shrinkWrap: true,
         itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(wifiNetworks[index].ssid),
-            leading: const Icon(Icons.wifi),
-            onTap: () => editWifiNetwork(wifiNetworks[index]),
-          );
+          return ListTile(title: Text(wifiNetworks[index].ssid), leading: const Icon(Icons.wifi), onTap: () => editWifiNetwork(wifiNetworks[index]));
         },
       ),
       const SizedBox(height: 10),
-      OutlinedButton.icon(
-        onPressed: () => addWifiNetwork(),
-        icon: const Icon(Icons.add),
-        label: const Text('Dodaj mrežu'),
-      ),
+      OutlinedButton.icon(onPressed: () => addWifiNetwork(), icon: const Icon(Icons.add), label: const Text('Dodaj mrežu')),
     ];
   }
 
@@ -239,37 +200,17 @@ class _SettingsPageState extends State<SettingsPage> {
     return [
       const Text('Sigurnost', style: MyTheme.bodyMediumBold),
       const SizedBox(height: 20),
-      OutlinedButton.icon(
-        onPressed: () => changePassword(),
-        icon: const Icon(Icons.lock_outline),
-        label: const Text('Promijeni lozinku'),
-      ),
+      OutlinedButton.icon(onPressed: () => changePassword(), icon: const Icon(Icons.lock_outline), label: const Text('Promijeni lozinku')),
       const SizedBox(height: 20),
-      OutlinedButton.icon(
-        onPressed: () => wipeData(),
-        icon: const Icon(Icons.delete_outline),
-        label: const Text('Obriši sve podatke'),
-      ),
+      OutlinedButton.icon(onPressed: () => wipeData(), icon: const Icon(Icons.delete_outline), label: const Text('Obriši sve podatke')),
       const SizedBox(height: 40),
       const Text('Uređaj', style: MyTheme.bodyMediumBold),
       const SizedBox(height: 20),
-      OutlinedButton.icon(
-        onPressed: () => restartDevice(),
-        icon: const Icon(Icons.restart_alt),
-        label: const Text('Ponovno pokreni uređaj'),
-      ),
+      OutlinedButton.icon(onPressed: () => restartDevice(), icon: const Icon(Icons.restart_alt), label: const Text('Ponovno pokreni uređaj')),
       const SizedBox(height: 20),
-      OutlinedButton.icon(
-        onPressed: () => startDla(),
-        icon: const Icon(Icons.lightbulb_outline),
-        label: const Text('Pokreni DLA'),
-      ),
+      OutlinedButton.icon(onPressed: () => startDla(), icon: const Icon(Icons.lightbulb_outline), label: const Text('Pokreni DLA')),
       const SizedBox(height: 20),
-      OutlinedButton.icon(
-        onPressed: () => updateFirmware(),
-        icon: const Icon(Icons.upgrade),
-        label: const Text('Ažuriraj ugradbeni program'),
-      ),
+      OutlinedButton.icon(onPressed: () => updateFirmware(), icon: const Icon(Icons.upgrade), label: const Text('Ažuriraj ugradbeni program')),
     ];
   }
 

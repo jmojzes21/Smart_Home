@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_leds_app/logic/device/device.dart';
-import 'package:smart_leds_app/logic/device_discovery.dart';
-import 'package:smart_leds_app/logic/device_service.dart';
-import 'package:smart_leds_app/widgets/dialogs/direct_connection.dart';
-import 'package:smart_leds_app/widgets/dialogs/login.dart';
-import 'package:smart_leds_app/pages/home.dart';
-import 'package:smart_leds_app/widgets/dialogs/simple_dialogs.dart';
+import 'package:smart_leds/src/logic/device/device.dart';
+import 'package:smart_leds/src/logic/device_discovery.dart';
+import 'package:smart_leds/src/logic/device_service.dart';
+import 'package:smart_leds/src/widgets/dialogs/direct_connection.dart';
+import 'package:smart_leds/src/widgets/dialogs/login.dart';
+import 'package:smart_leds/src/pages/home.dart';
+import 'package:smart_leds/src/widgets/dialogs/simple_dialogs.dart';
 
 class DeviceDiscoveryPage extends StatefulWidget {
   const DeviceDiscoveryPage({super.key});
@@ -34,11 +34,7 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
     } on Exception catch (_) {
       if (!mounted) return;
 
-      SimpleDialogs.showMessage(
-        context: context,
-        title: 'Pretraživanje uređaja',
-        message: 'Greška prilikom pretraživanja uređaja!',
-      );
+      SimpleDialogs.showMessage(context: context, title: 'Pretraživanje uređaja', message: 'Greška prilikom pretraživanja uređaja!');
     }
   }
 
@@ -48,10 +44,7 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
       discoveredDevices.clear();
 
       if (showTestDevice && kDebugMode) {
-        discoveredDevices.add(Device(
-          name: 'Testni uređaj',
-          ipAddress: InternetAddress('127.0.0.1'),
-        ));
+        discoveredDevices.add(Device(name: 'Testni uređaj', ipAddress: InternetAddress('127.0.0.1')));
       }
     });
 
@@ -100,9 +93,7 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
   void openHomePage(Device device) {
     Device.currentDevice = device;
 
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (context) => const HomePage()),
-    );
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomePage()));
   }
 
   @override
@@ -118,13 +109,8 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
               child: Column(
                 children: [
                   ListTile(
-                    title: Text(
-                      'Pretraživanje uređaja',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    trailing: isDiscovering
-                        ? const CircularProgressIndicator()
-                        : null,
+                    title: Text('Pretraživanje uređaja', style: Theme.of(context).textTheme.titleLarge),
+                    trailing: isDiscovering ? const CircularProgressIndicator() : null,
                   ),
                   Expanded(
                     child: ListView.builder(
@@ -132,12 +118,7 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
                       itemBuilder: (context, index) {
                         var device = discoveredDevices[index];
 
-                        return ListTile(
-                          title: Text(device.name),
-                          subtitle: Text(device.ipAddress.address),
-                          leading: const Icon(Icons.devices),
-                          onTap: () => connectDevice(device),
-                        );
+                        return ListTile(title: Text(device.name), subtitle: Text(device.ipAddress.address), leading: const Icon(Icons.devices), onTap: () => connectDevice(device));
                       },
                     ),
                   ),
@@ -145,21 +126,10 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      TextButton(
-                        onPressed: () => connectDirectly(),
-                        child: const Text('Izravno povezivanje'),
-                      ),
+                      TextButton(onPressed: () => connectDirectly(), child: const Text('Izravno povezivanje')),
                       const SizedBox(width: 20),
-                      if (isDiscovering == false)
-                        FilledButton(
-                          onPressed: () => startScan(),
-                          child: const Text('Pretraži uređaje'),
-                        ),
-                      if (isDiscovering)
-                        FilledButton(
-                          onPressed: () => stopScan(),
-                          child: const Text('Zaustavi pretraživanje'),
-                        ),
+                      if (isDiscovering == false) FilledButton(onPressed: () => startScan(), child: const Text('Pretraži uređaje')),
+                      if (isDiscovering) FilledButton(onPressed: () => stopScan(), child: const Text('Zaustavi pretraživanje')),
                     ],
                   ),
                 ],
