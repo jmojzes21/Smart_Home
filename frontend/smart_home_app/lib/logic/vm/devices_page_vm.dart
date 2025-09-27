@@ -1,23 +1,30 @@
 import 'package:smart_home_app/logic/services/device_discovery.dart';
+import 'package:smart_home_app/logic/services/virtual/device_service.dart';
 import 'package:smart_home_core/models.dart';
 import 'package:smart_home_core/view_model.dart';
 
 class DevicesPageViewModel extends ViewModel {
-  final _deviceDiscovery = DeviceDiscovery();
+  final IDeviceService deviceService;
+  final DeviceDiscovery deviceDiscovery;
 
-  final _discoveredDevices = <Device>[];
+  var _devices = <Device>[];
+
   var _isDiscovering = false;
+  var _isLoading = true;
+
+  DevicesPageViewModel({required this.deviceService, required this.deviceDiscovery}) {
+    _getDevices();
+  }
 
   Future<void> startScan() async {
     if (_isDiscovering) return;
 
     _isDiscovering = true;
-    _discoveredDevices.clear();
     notifyListeners();
 
-    var stream = _deviceDiscovery.start();
+    var stream = deviceDiscovery.start();
     await stream.forEach((device) {
-      _discoveredDevices.add(device);
+      _onDeviceFound(device);
       notifyListeners();
     });
 
@@ -27,9 +34,35 @@ class DevicesPageViewModel extends ViewModel {
 
   void stopScan() {
     if (!isDiscovering) return;
-    _deviceDiscovery.stop();
+    deviceDiscovery.stop();
+  }
+
+  Future<void> _getDevices() async {
+    _isLoading = true;
+    notifyListeners();
+
+    _devices = await deviceService.getDevices();
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  void _onDeviceFound(Device newDevice) {
+    int index = _devices.indexWhere((e) => e.domain == newDevice.domain && e.type == newDevice.type);
+    if (index != -1) {
+      var device = _devices[index];
+      _devices[index] = Device(
+        name: device.name,
+        domain: device.domain,
+        type: device.type,
+        ipAddress: newDevice.ipAddress,
+        macAddress: newDevice.macAddress,
+        isOnline: true,
+      );
+    }
   }
 
   bool get isDiscovering => _isDiscovering;
-  List<Device> get discoveredDevices => _discoveredDevices;
+  bool get isLoading => _isLoading;
+
+  List<Device> get devices => _devices;
 }
