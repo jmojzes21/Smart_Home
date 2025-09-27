@@ -10,6 +10,11 @@ dependencies:
   flutter:
     sdk: flutter
 
+  provider: ^6.1.5+1
+  
+  smart_home_core:
+    path: ../smart_home_core
+
   air_quality:
     path: ../air_quality
 

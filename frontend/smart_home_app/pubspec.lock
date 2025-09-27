@@ -328,7 +328,7 @@ packages:
     source: hosted
     version: "2.1.8"
   provider:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: provider
       sha256: "4e82183fa20e5ca25703ead7e05de9e4cceed1fbd1eadc1ac3cb6f565a09f272"
@@ -340,6 +340,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  smart_home_core:
+    dependency: "direct main"
+    description:
+      path: "../smart_home_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   smart_leds:
     dependency: "direct main"
     description:
