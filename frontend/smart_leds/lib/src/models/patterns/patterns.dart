@@ -7,7 +7,7 @@ abstract class ColorPattern {
 }
 
 extension ColorExtension on Color {
-  int get rgb => value & 0xFFFFFF;
+  int get rgb => toARGB32() & 0xFFFFFF;
 }
 
 class SingleColorPattern extends ColorPattern {
@@ -20,7 +20,12 @@ class SingleColorPattern extends ColorPattern {
 class WavePattern extends ColorPattern {
   @override
   Map<String, dynamic> toJson(PatternProperties properties) {
-    return {'name': 'wave', 'color': properties.color.rgb, 'speed': properties.waveSpeed, 'changeColors': properties.waveChangeColors};
+    return {
+      'name': 'wave',
+      'color': properties.color.rgb,
+      'speed': properties.waveSpeed,
+      'changeColors': properties.waveChangeColors,
+    };
   }
 }
 

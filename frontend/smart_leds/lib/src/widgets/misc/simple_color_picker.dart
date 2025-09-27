@@ -20,20 +20,21 @@ class _SimpleColorPickerState extends State<SimpleColorPicker> {
   @override
   void initState() {
     super.initState();
-
-    red = widget.color.red;
-    green = widget.color.green;
-    blue = widget.color.blue;
+    updateColor(widget.color);
   }
 
   void onColor(Color color) {
     widget.onColor(color);
 
     setState(() {
-      red = color.red;
-      green = color.green;
-      blue = color.blue;
+      updateColor(color);
     });
+  }
+
+  void updateColor(Color color) {
+    red = (color.r * 255.0).round() & 0xff;
+    green = (color.g * 255.0).round() & 0xff;
+    blue = (color.b * 255.0).round() & 0xff;
   }
 
   @override
@@ -66,15 +67,33 @@ class _SimpleColorPickerState extends State<SimpleColorPicker> {
 
         //
         Text('Crvena: $red', style: MyTheme.bodyMedium),
-        Slider(value: red.toDouble(), min: 0, max: 255, onChanged: (value) => setState(() => red = value.round()), onChangeEnd: (value) => onColor(Color.fromARGB(255, red, green, blue))),
+        Slider(
+          value: red.toDouble(),
+          min: 0,
+          max: 255,
+          onChanged: (value) => setState(() => red = value.round()),
+          onChangeEnd: (value) => onColor(Color.fromARGB(255, red, green, blue)),
+        ),
 
         //
         Text('Zelena: $green', style: MyTheme.bodyMedium),
-        Slider(value: green.toDouble(), min: 0, max: 255, onChanged: (value) => setState(() => green = value.round()), onChangeEnd: (value) => onColor(Color.fromARGB(255, red, green, blue))),
+        Slider(
+          value: green.toDouble(),
+          min: 0,
+          max: 255,
+          onChanged: (value) => setState(() => green = value.round()),
+          onChangeEnd: (value) => onColor(Color.fromARGB(255, red, green, blue)),
+        ),
 
         //
         Text('Plava: $blue', style: MyTheme.bodyMedium),
-        Slider(value: blue.toDouble(), min: 0, max: 255, onChanged: (value) => setState(() => blue = value.round()), onChangeEnd: (value) => onColor(Color.fromARGB(255, red, green, blue))),
+        Slider(
+          value: blue.toDouble(),
+          min: 0,
+          max: 255,
+          onChanged: (value) => setState(() => blue = value.round()),
+          onChangeEnd: (value) => onColor(Color.fromARGB(255, red, green, blue)),
+        ),
       ],
     );
   }
