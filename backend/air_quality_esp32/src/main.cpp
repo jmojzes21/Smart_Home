@@ -11,7 +11,12 @@
 #include "dasduino_led.h"
 #include "PMS5003.h"
 
-#define DEVICE_HOSTNAME "air_quality_sensor"
+#define DEVICE_HOSTNAME "air-quality-sensor"
+#define DEVICE_NAME "Kvaliteta zraka"
+#define DEVICE_TYPE "air_quality"
+#define DEVICE_VERSION "v0.1.0"
+
+#define MDNS_SERVICE "smart-home"
 #define HTTP_SERVER_PORT 80
 
 #define WIFI_CONNECT_TIMEOUT 5000
@@ -129,6 +134,27 @@ void handleSensorDataRequest(AsyncWebServerRequest* request) {
 
 }
 
+void handleDeviceStatusRequest(AsyncWebServerRequest* request) {
+
+  JsonDocument doc;
+
+  doc["name"] = DEVICE_NAME;
+  doc["hostname"] = DEVICE_HOSTNAME;
+  doc["type"] = DEVICE_TYPE;
+  doc["version"] = DEVICE_VERSION;
+
+  doc["ip"] = WiFi.localIP().toString();
+  doc["mac"] = WiFi.macAddress();
+  doc["ssid"] = WiFi.SSID();
+  doc["rssi"] = (int)WiFi.RSSI();
+
+  AsyncResponseStream* response = request->beginResponseStream("application/json");
+
+  serializeJson(doc, *response);
+  request->send(response);
+
+}
+
 void connectWifi() {
 
   JsonDocument document;
@@ -175,13 +201,17 @@ void connectWifi() {
 }
 
 void initHttpServer() {
-  httpServer.on("/", HTTP_GET, handleSensorDataRequest);
+
+  httpServer.on("/sensor-data", HTTP_GET, handleSensorDataRequest);
+  httpServer.on("/status", HTTP_GET, handleDeviceStatusRequest);
+
   httpServer.begin();
+
 }
 
 void initMdns() {
   MDNS.begin(DEVICE_HOSTNAME);
-  MDNS.addService("http", "tcp", HTTP_SERVER_PORT);
+  MDNS.addService(MDNS_SERVICE, "tcp", HTTP_SERVER_PORT);
 }
 
 void haltDevice() {
