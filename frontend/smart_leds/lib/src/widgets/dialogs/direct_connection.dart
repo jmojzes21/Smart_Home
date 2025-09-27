@@ -4,9 +4,9 @@ import 'dart:io';
 
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_leds/src/logic/device/device.dart';
-import 'package:smart_leds/src/models/exceptions.dart';
-import 'package:smart_leds/src/widgets/misc/error_text.dart';
+import '../../logic/device/device.dart';
+import '../../models/exceptions.dart';
+import '../misc/error_text.dart';
 
 class DirectConnectionDialog extends StatefulWidget {
   const DirectConnectionDialog({super.key});

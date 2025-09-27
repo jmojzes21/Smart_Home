@@ -5,11 +5,11 @@ import 'dart:io';
 
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:http/http.dart' as http;
-import 'package:smart_leds/src/logic/device/led_controller.dart';
-import 'package:smart_leds/src/logic/device/power_sensor.dart';
-import 'package:smart_leds/src/logic/device/wifi_controller.dart';
-import 'package:smart_leds/src/models/exceptions.dart';
-import 'package:smart_leds/src/models/misc/firmware.dart';
+import 'led_controller.dart';
+import 'power_sensor.dart';
+import 'wifi_controller.dart';
+import '../../models/exceptions.dart';
+import '../../models/misc/firmware.dart';
 
 typedef JsonObject = Map<String, dynamic>;
 

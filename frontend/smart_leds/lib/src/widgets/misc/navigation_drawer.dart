@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds/src/logic/device_service.dart';
-import 'package:smart_leds/src/pages/device_discovery.dart';
-import 'package:smart_leds/src/pages/home.dart';
-import 'package:smart_leds/src/pages/power_sensor.dart';
-import 'package:smart_leds/src/pages/settings.dart';
+import '../../logic/device_service.dart';
+import '../../pages/device_discovery.dart';
+import '../../pages/home.dart';
+import '../../pages/power_sensor.dart';
+import '../../pages/settings.dart';
 
 class AppNavigationDrawer extends StatelessWidget {
   const AppNavigationDrawer({super.key});

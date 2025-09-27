@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:smart_leds/src/models/exceptions.dart';
-import 'package:smart_leds/src/models/misc/firmware.dart';
+import '../models/exceptions.dart';
+import '../models/misc/firmware.dart';
 
 class FirmwareLoader {
   Future<Firmware> loadFirmware(String path) async {

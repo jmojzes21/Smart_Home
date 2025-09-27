@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:air_quality/src/logic/exceptions.dart';
+import '../exceptions.dart';
 import 'package:http/http.dart' as http;
 
 class DeviceClient {

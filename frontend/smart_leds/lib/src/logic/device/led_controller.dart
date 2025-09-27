@@ -1,6 +1,6 @@
-import 'package:smart_leds/src/logic/device/device.dart';
-import 'package:smart_leds/src/models/patterns/patterns.dart';
-import 'package:smart_leds/src/models/patterns/properties.dart';
+import 'device.dart';
+import '../../models/patterns/patterns.dart';
+import '../../models/patterns/properties.dart';
 
 class LedController {
   final Device _device;

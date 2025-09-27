@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds/src/logic/providers/pattern_provider.dart';
-import 'package:smart_leds/src/models/patterns/patterns.dart';
-import 'package:smart_leds/src/theme.dart';
-import 'package:smart_leds/src/widgets/dialogs/brightness.dart';
-import 'package:smart_leds/src/widgets/dialogs/pattern_control.dart';
-import 'package:smart_leds/src/widgets/misc/navigation_drawer.dart';
-import 'package:smart_leds/src/widgets/pattern_controls/rainbow.dart';
-import 'package:smart_leds/src/widgets/pattern_controls/single_color.dart';
-import 'package:smart_leds/src/widgets/pattern_controls/wave.dart';
+import '../logic/providers/pattern_provider.dart';
+import '../models/patterns/patterns.dart';
+import '../theme.dart';
+import '../widgets/dialogs/brightness.dart';
+import '../widgets/dialogs/pattern_control.dart';
+import '../widgets/misc/navigation_drawer.dart';
+import '../widgets/pattern_controls/rainbow.dart';
+import '../widgets/pattern_controls/single_color.dart';
+import '../widgets/pattern_controls/wave.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

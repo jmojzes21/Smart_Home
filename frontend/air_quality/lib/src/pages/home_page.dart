@@ -1,8 +1,8 @@
-import 'package:air_quality/src/logic/services/service_factory.dart';
-import 'package:air_quality/src/logic/vm/home_page_view_model.dart';
-import 'package:air_quality/src/pages/exception_page.dart';
+import '../logic/services/service_factory.dart';
+import '../logic/vm/home_page_view_model.dart';
+import 'exception_page.dart';
 import 'package:flutter/material.dart';
-import 'package:air_quality/src/widgets/navigation_drawer.dart';
+import '../widgets/navigation_drawer.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {

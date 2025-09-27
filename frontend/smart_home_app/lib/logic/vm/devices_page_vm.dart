@@ -1,5 +1,5 @@
-import 'package:smart_home_app/logic/services/device_discovery.dart';
-import 'package:smart_home_app/logic/services/virtual/device_service.dart';
+import '../services/device_discovery.dart';
+import '../services/virtual/device_service.dart';
 import 'package:smart_home_core/models.dart';
 import 'package:smart_home_core/view_model.dart';
 

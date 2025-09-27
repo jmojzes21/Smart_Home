@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_home_app/logic/services/device_discovery.dart';
-import 'package:smart_home_app/logic/services/mock/mock_device_service.dart';
-import 'package:smart_home_app/logic/vm/devices_page_vm.dart';
+import '../logic/services/device_discovery.dart';
+import '../logic/services/mock/mock_device_service.dart';
+import '../logic/vm/devices_page_vm.dart';
 import 'package:smart_home_core/extensions.dart';
 import 'package:smart_home_core/models.dart';
 

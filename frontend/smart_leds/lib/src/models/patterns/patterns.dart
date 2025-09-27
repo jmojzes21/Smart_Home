@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:smart_leds/src/models/patterns/properties.dart';
+import 'properties.dart';
 
 abstract class ColorPattern {
   Map<String, dynamic> toJson(PatternProperties properties);

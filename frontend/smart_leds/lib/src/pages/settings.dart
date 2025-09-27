@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds/src/logic/device/device.dart';
-import 'package:smart_leds/src/logic/device_service.dart';
-import 'package:smart_leds/src/models/misc/wifi_network.dart';
-import 'package:smart_leds/src/pages/device_discovery.dart';
-import 'package:smart_leds/src/widgets/dialogs/change_password.dart';
-import 'package:smart_leds/src/theme.dart';
-import 'package:smart_leds/src/widgets/dialogs/simple_dialogs.dart';
-import 'package:smart_leds/src/widgets/dialogs/firmware_update.dart';
-import 'package:smart_leds/src/widgets/dialogs/wifi_network.dart';
-import 'package:smart_leds/src/widgets/misc/navigation_drawer.dart';
+import '../logic/device/device.dart';
+import '../logic/device_service.dart';
+import '../models/misc/wifi_network.dart';
+import 'device_discovery.dart';
+import '../widgets/dialogs/change_password.dart';
+import '../theme.dart';
+import '../widgets/dialogs/simple_dialogs.dart';
+import '../widgets/dialogs/firmware_update.dart';
+import '../widgets/dialogs/wifi_network.dart';
+import '../widgets/misc/navigation_drawer.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});

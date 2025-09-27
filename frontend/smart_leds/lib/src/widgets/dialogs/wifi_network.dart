@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds/src/logic/device/device.dart';
-import 'package:smart_leds/src/models/exceptions.dart';
-import 'package:smart_leds/src/models/misc/wifi_network.dart';
-import 'package:smart_leds/src/widgets/dialogs/simple_dialogs.dart';
-import 'package:smart_leds/src/widgets/misc/checkbox.dart';
-import 'package:smart_leds/src/widgets/misc/error_text.dart';
+import '../../logic/device/device.dart';
+import '../../models/exceptions.dart';
+import '../../models/misc/wifi_network.dart';
+import 'simple_dialogs.dart';
+import '../misc/checkbox.dart';
+import '../misc/error_text.dart';
 
 class WifiNetworkInputDialog extends StatefulWidget {
   final List<WifiNetwork> networks;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds/src/logic/device/device.dart';
-import 'package:smart_leds/src/theme.dart';
+import '../../logic/device/device.dart';
+import '../../theme.dart';
 
 class BrightnessDialog extends StatelessWidget {
   const BrightnessDialog({super.key});

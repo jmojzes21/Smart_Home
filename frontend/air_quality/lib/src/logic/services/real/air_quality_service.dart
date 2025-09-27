@@ -1,7 +1,7 @@
-import 'package:air_quality/src/logic/services/air_quality_service.dart';
-import 'package:air_quality/src/logic/services/device_client.dart';
-import 'package:air_quality/src/models/air_quality.dart';
-import 'package:air_quality/src/models/sensor_data.dart';
+import '../air_quality_service.dart';
+import '../device_client.dart';
+import '../../../models/air_quality.dart';
+import '../../../models/sensor_data.dart';
 
 class AirQualityService extends IAirQualityService {
   final device = DeviceClient();

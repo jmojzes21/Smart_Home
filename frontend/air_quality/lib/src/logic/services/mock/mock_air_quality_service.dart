@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:air_quality/src/logic/services/air_quality_service.dart';
-import 'package:air_quality/src/models/air_quality.dart';
+import '../air_quality_service.dart';
+import '../../../models/air_quality.dart';
 
 class MockAirQualityService implements IAirQualityService {
   var random = Random();

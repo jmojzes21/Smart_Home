@@ -1,5 +1,5 @@
-import 'package:smart_leds/src/logic/device/device.dart';
-import 'package:smart_leds/src/models/misc/wifi_network.dart';
+import 'device.dart';
+import '../../models/misc/wifi_network.dart';
 
 class WifiController {
   final Device _device;

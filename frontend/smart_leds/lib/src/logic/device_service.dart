@@ -1,7 +1,7 @@
-import 'package:smart_leds/src/logic/session_service.dart';
-import 'package:smart_leds/src/logic/device/device.dart';
-import 'package:smart_leds/src/models/exceptions.dart';
-import 'package:smart_leds/src/models/misc/session.dart';
+import 'session_service.dart';
+import 'device/device.dart';
+import '../models/exceptions.dart';
+import '../models/misc/session.dart';
 
 class DeviceService {
   Future<void> login({required Device device, required String plainPassword, required bool stayLoggedIn}) async {

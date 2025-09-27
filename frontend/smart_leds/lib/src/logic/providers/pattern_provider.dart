@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_leds/src/logic/device/device.dart';
-import 'package:smart_leds/src/models/patterns/patterns.dart';
-import 'package:smart_leds/src/models/patterns/properties.dart';
+import '../device/device.dart';
+import '../../models/patterns/patterns.dart';
+import '../../models/patterns/properties.dart';
 
 class PatternProvider {
   var properties = PatternProperties();

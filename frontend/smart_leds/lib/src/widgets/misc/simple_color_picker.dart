@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds/src/theme.dart';
+import '../../theme.dart';
 
 class SimpleColorPicker extends StatefulWidget {
   final Color color;

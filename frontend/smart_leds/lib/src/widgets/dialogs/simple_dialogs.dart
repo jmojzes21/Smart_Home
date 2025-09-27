@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds/src/widgets/misc/checkbox.dart';
+import '../misc/checkbox.dart';
 
 class SimpleDialogs {
   static Future<void> showMessage({required BuildContext context, required String title, required String message, bool barrierDismissible = true}) {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:smart_home_app/pages/devices_page.dart';
+import 'pages/devices_page.dart';
 
 void main() {
   runApp(const MainApp());

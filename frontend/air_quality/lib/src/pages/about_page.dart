@@ -1,5 +1,5 @@
-import 'package:air_quality/src/widgets/hyperlink.dart';
-import 'package:air_quality/src/widgets/navigation_drawer.dart';
+import '../widgets/hyperlink.dart';
+import '../widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 
 class AboutPage extends StatelessWidget {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds/src/logic/providers/pattern_provider.dart';
-import 'package:smart_leds/src/models/patterns/patterns.dart';
-import 'package:smart_leds/src/models/patterns/property_values.dart';
-import 'package:smart_leds/src/widgets/misc/segmented_button_picker.dart';
-import 'package:smart_leds/src/widgets/misc/simple_color_picker.dart';
+import '../../logic/providers/pattern_provider.dart';
+import '../../models/patterns/patterns.dart';
+import '../../models/patterns/property_values.dart';
+import '../misc/segmented_button_picker.dart';
+import '../misc/simple_color_picker.dart';
 
 class WavePatternControl extends StatefulWidget {
   final ColorPattern pattern;

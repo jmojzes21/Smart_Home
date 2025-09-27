@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds/src/logic/device/device.dart';
-import 'package:smart_leds/src/logic/device_service.dart';
-import 'package:smart_leds/src/models/exceptions.dart';
-import 'package:smart_leds/src/widgets/dialogs/simple_dialogs.dart';
-import 'package:smart_leds/src/widgets/misc/checkbox.dart';
-import 'package:smart_leds/src/widgets/misc/error_text.dart';
+import '../../logic/device/device.dart';
+import '../../logic/device_service.dart';
+import '../../models/exceptions.dart';
+import 'simple_dialogs.dart';
+import '../misc/checkbox.dart';
+import '../misc/error_text.dart';
 
 class LoginDialog extends StatefulWidget {
   final Device device;

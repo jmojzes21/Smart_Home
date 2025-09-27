@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:smart_leds/src/logic/device/device.dart';
+import '../../logic/device/device.dart';
 
 class Session {
   String deviceType = '';

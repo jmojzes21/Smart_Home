@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:smart_leds/src/logic/device/device.dart';
-import 'package:smart_leds/src/logic/device_service.dart';
-import 'package:smart_leds/src/models/exceptions.dart';
-import 'package:smart_leds/src/widgets/misc/checkbox.dart';
-import 'package:smart_leds/src/widgets/misc/error_text.dart';
+import '../../logic/device/device.dart';
+import '../../logic/device_service.dart';
+import '../../models/exceptions.dart';
+import '../misc/checkbox.dart';
+import '../misc/error_text.dart';
 
 class ChangePasswordDialog extends StatefulWidget {
   const ChangePasswordDialog({super.key});

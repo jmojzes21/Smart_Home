@@ -1,4 +1,4 @@
-import 'package:smart_home_app/logic/services/virtual/device_service.dart';
+import '../virtual/device_service.dart';
 import 'package:smart_home_core/models.dart';
 
 class MockDeviceService extends IDeviceService {

@@ -1,5 +1,5 @@
-import 'package:smart_leds/src/logic/device/device.dart';
-import 'package:smart_leds/src/models/misc/power_sensor_data.dart';
+import 'device.dart';
+import '../../models/misc/power_sensor_data.dart';
 
 class PowerSensor {
   final Device _device;

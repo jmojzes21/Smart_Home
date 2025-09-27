@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:multicast_dns/multicast_dns.dart';
-import 'package:smart_leds/src/logic/device/device.dart';
+import 'device/device.dart';
 
 class DeviceDiscovery {
   bool _isDiscovering = false;

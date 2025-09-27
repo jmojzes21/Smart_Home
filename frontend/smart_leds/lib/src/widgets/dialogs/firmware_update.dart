@@ -1,11 +1,11 @@
 import 'package:file_selector/file_selector.dart' as fs;
 import 'package:flutter/material.dart';
-import 'package:smart_leds/src/helpers/firmware_loader.dart';
-import 'package:smart_leds/src/logic/device/device.dart';
-import 'package:smart_leds/src/models/exceptions.dart';
-import 'package:smart_leds/src/models/misc/firmware.dart';
-import 'package:smart_leds/src/theme.dart';
-import 'package:smart_leds/src/widgets/dialogs/simple_dialogs.dart';
+import '../../helpers/firmware_loader.dart';
+import '../../logic/device/device.dart';
+import '../../models/exceptions.dart';
+import '../../models/misc/firmware.dart';
+import '../../theme.dart';
+import 'simple_dialogs.dart';
 
 class FirmwareUpdateDialog extends StatefulWidget {
   const FirmwareUpdateDialog({super.key});

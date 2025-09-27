@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_leds/src/logic/device/device.dart';
-import 'package:smart_leds/src/logic/device_discovery.dart';
-import 'package:smart_leds/src/logic/device_service.dart';
-import 'package:smart_leds/src/widgets/dialogs/direct_connection.dart';
-import 'package:smart_leds/src/widgets/dialogs/login.dart';
-import 'package:smart_leds/src/pages/home.dart';
-import 'package:smart_leds/src/widgets/dialogs/simple_dialogs.dart';
+import '../logic/device/device.dart';
+import '../logic/device_discovery.dart';
+import '../logic/device_service.dart';
+import '../widgets/dialogs/direct_connection.dart';
+import '../widgets/dialogs/login.dart';
+import 'home.dart';
+import '../widgets/dialogs/simple_dialogs.dart';
 
 class DeviceDiscoveryPage extends StatefulWidget {
   const DeviceDiscoveryPage({super.key});
