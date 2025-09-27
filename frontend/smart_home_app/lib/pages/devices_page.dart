@@ -29,10 +29,11 @@ class DevicesPage extends StatelessWidget {
             ),
             SizedBox(height: 20),
             ListView.builder(
-              itemCount: 4,
+              itemCount: model.discoveredDevices.length,
               shrinkWrap: true,
               itemBuilder: (context, index) {
-                return ListTile(onTap: () {}, leading: Icon(Icons.devices), title: Text('Device $index'));
+                var device = model.discoveredDevices[index];
+                return ListTile(onTap: () {}, leading: Icon(Icons.devices), title: Text(device.name), subtitle: Text(device.ipAddress.address));
               },
             ),
             SizedBox(height: 20),
