@@ -12,6 +12,7 @@
 #include "PMS5003.h"
 
 #define DEVICE_HOSTNAME "air-quality-sensor"
+#define DEVICE_DOMAIN "air-quality-sensor._smart-home._tcp.local"
 #define DEVICE_NAME "Kvaliteta zraka"
 #define DEVICE_TYPE "air_quality"
 #define DEVICE_VERSION "v0.1.0"
@@ -139,7 +140,7 @@ void handleDeviceStatusRequest(AsyncWebServerRequest* request) {
   JsonDocument doc;
 
   doc["name"] = DEVICE_NAME;
-  doc["hostname"] = DEVICE_HOSTNAME;
+  doc["domain"] = DEVICE_DOMAIN;
   doc["type"] = DEVICE_TYPE;
   doc["version"] = DEVICE_VERSION;
 
