@@ -168,7 +168,7 @@ packages:
     source: sdk
     version: "0.0.0"
   http:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http
       sha256: bb2ce4590bc2667c96f318d68cac1b5a7987ec819351d32b1c987239a815e007
@@ -240,7 +240,7 @@ packages:
     source: hosted
     version: "1.16.0"
   multicast_dns:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: multicast_dns
       sha256: "316cc47a958d4bd3c67bd238fe8b44fdfb6133bad89cb191c0c3bd3edb14e296"
