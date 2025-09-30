@@ -63,6 +63,9 @@ class _DeviceWidget extends StatelessWidget {
       return;
     }
 
+    var deviceContext = context.read<DeviceContext>();
+    deviceContext.device = device;
+
     switch (device.type) {
       case DeviceType.airQuality:
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => air_quality.MainApp()));

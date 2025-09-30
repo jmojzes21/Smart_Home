@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_home_core/models.dart';
 
 import 'pages/devices_page.dart';
 
@@ -11,10 +13,13 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(colorSchemeSeed: Colors.blue),
-      home: DevicesPage(),
+    return Provider(
+      create: (context) => DeviceContext(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(colorSchemeSeed: Colors.blue),
+        home: DevicesPage(),
+      ),
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'package:smart_home_core/models.dart';
+
 import '../logic/services/service_factory.dart';
 import '../logic/vm/home_page_view_model.dart';
 import 'exception_page.dart';
@@ -14,12 +16,15 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(title: Text('Kvaliteta zraka')),
       drawer: AppNavigationDrawer(),
       body: ChangeNotifierProvider(
-        create: (context) => HomePageViewModel(
-          aqService: ServiceFactory.getAirQualityService(),
-          openExceptionPage: (message) {
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ExceptionPage(message)));
-          },
-        ),
+        create: (context) {
+          var serviceFactory = ServiceFactory(context.read<DeviceContext>().device);
+          return HomePageViewModel(
+            aqService: serviceFactory.getAirQualityService(),
+            openExceptionPage: (message) {
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ExceptionPage(message)));
+            },
+          );
+        },
         //child: buildBody(context),
         child: Consumer<HomePageViewModel>(builder: (context, model, child) => buildBody(context, model)),
       ),
@@ -100,7 +105,13 @@ class _Card extends StatelessWidget {
   final double progress;
   final Color progressColor;
 
-  const _Card({required this.image, required this.title, required this.valueText, required this.progress, required this.progressColor});
+  const _Card({
+    required this.image,
+    required this.title,
+    required this.valueText,
+    required this.progress,
+    required this.progressColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +128,13 @@ class _Card extends StatelessWidget {
               title,
               valueText,
               SizedBox(height: 10),
-              LinearProgressIndicator(color: progressColor, backgroundColor: Color(0xFFEBEBEB), minHeight: 10, borderRadius: BorderRadius.circular(5), value: progress),
+              LinearProgressIndicator(
+                color: progressColor,
+                backgroundColor: Color(0xFFEBEBEB),
+                minHeight: 10,
+                borderRadius: BorderRadius.circular(5),
+                value: progress,
+              ),
             ],
           ),
         ),

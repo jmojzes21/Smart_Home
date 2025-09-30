@@ -15,6 +15,11 @@ class AppNavigationDrawer extends StatelessWidget {
 
   void openSettingsPage(BuildContext context) {}
 
+  void closeDevice(BuildContext context) {
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return NavigationDrawer(
@@ -22,6 +27,7 @@ class AppNavigationDrawer extends StatelessWidget {
         ListTile(onTap: () => openHomePage(context), title: Text('Početna'), leading: Icon(Icons.home)),
         ListTile(onTap: () => openAboutPage(context), title: Text('O aplikaciji'), leading: Icon(Icons.info)),
         ListTile(onTap: () => openSettingsPage(context), title: Text('Postavke'), leading: Icon(Icons.settings)),
+        ListTile(onTap: () => closeDevice(context), title: Text('Zatvori uređaj'), leading: Icon(Icons.exit_to_app)),
       ],
     );
   }
