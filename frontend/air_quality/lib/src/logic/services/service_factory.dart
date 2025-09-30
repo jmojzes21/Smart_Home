@@ -1,11 +1,18 @@
+import 'package:smart_home_core/models.dart';
+
 import 'air_quality_service.dart';
 import 'mock/mock_air_quality_service.dart';
 import 'real/air_quality_service.dart';
 
 class ServiceFactory {
-  static final bool _useRealServices = true;
+  final Device device;
+  late final bool _useRealServices;
 
-  static IAirQualityService getAirQualityService() {
-    return _useRealServices ? AirQualityService() : MockAirQualityService();
+  ServiceFactory(this.device) {
+    _useRealServices = device.ipAddress != null;
+  }
+
+  IAirQualityService getAirQualityService() {
+    return _useRealServices ? AirQualityService(device) : MockAirQualityService();
   }
 }
