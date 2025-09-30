@@ -6,13 +6,10 @@ import 'real/air_quality_service.dart';
 
 class ServiceFactory {
   final Device device;
-  late final bool _useRealServices;
 
-  ServiceFactory(this.device) {
-    _useRealServices = device.ipAddress != null;
-  }
+  ServiceFactory(this.device);
 
   IAirQualityService getAirQualityService() {
-    return _useRealServices ? AirQualityService(device) : MockAirQualityService();
+    return device.isReal ? AirQualityService(device) : MockAirQualityService();
   }
 }

@@ -10,15 +10,21 @@ class Device {
   final InternetAddress? ipAddress;
   final String? macAddress;
   final bool isOnline;
+  final bool isReal;
 
   Device({
     required this.name,
-    required this.domain,
+    this.domain = '',
     required this.type,
     this.ipAddress,
     this.macAddress,
     this.isOnline = false,
+    this.isReal = true,
   });
+
+  factory Device.virtual({required String name, required DeviceType type}) {
+    return Device(name: name, type: type, isOnline: true, isReal: false);
+  }
 
   bool get isOffline => !isOnline;
 

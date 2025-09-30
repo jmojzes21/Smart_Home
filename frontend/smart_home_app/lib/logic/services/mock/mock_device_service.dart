@@ -7,6 +7,14 @@ class MockDeviceService extends IDeviceService {
     return [
       Device(name: 'Kvaliteta zraka', domain: 'air-quality-sensor._smart-home._tcp.local', type: DeviceType.airQuality),
       Device(name: 'Pametne LEDice', domain: 'smart-leds._smart-home._tcp.local', type: DeviceType.smartLeds),
+      ...getVirtualDevices(),
+    ];
+  }
+
+  List<Device> getVirtualDevices() {
+    return [
+      Device.virtual(name: 'Kvaliteta zraka - virtualni', type: DeviceType.airQuality),
+      Device.virtual(name: 'Pametne LEDice - virtualni', type: DeviceType.smartLeds),
     ];
   }
 }
