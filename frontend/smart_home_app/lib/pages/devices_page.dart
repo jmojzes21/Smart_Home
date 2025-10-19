@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_home_core/core.dart';
+import '../device_handlers.dart';
 import '../logic/services/device_discovery.dart';
 import '../logic/services/mock/mock_device_service.dart';
 import '../logic/vm/devices_page_vm.dart';
 import 'package:smart_home_core/extensions.dart';
 import 'package:smart_home_core/models.dart';
 
-import 'package:air_quality/air_quality.dart' as air_quality;
-import 'package:smart_leds/smart_leds.dart' as smart_leds;
-
 class DevicesPage extends StatelessWidget {
-  const DevicesPage({super.key});
+  final DeviceHandlers deviceHandlers;
+
+  const DevicesPage({super.key, required this.deviceHandlers});
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +39,14 @@ class DevicesPage extends StatelessWidget {
             ListView.builder(
               itemCount: model.devices.length,
               shrinkWrap: true,
-              itemBuilder: (context, index) =>
-                  _DeviceWidget(device: model.devices[index], isDiscovering: model.isDiscovering),
+              itemBuilder: (context, index) {
+                var device = model.devices[index];
+                return _DeviceWidget(
+                  device: device,
+                  deviceHandler: deviceHandlers.getDeviceHandler(device.type),
+                  isDiscovering: model.isDiscovering,
+                );
+              },
             ),
             SizedBox(height: 20),
             if (!model.isDiscovering) FilledButton(onPressed: () => model.startScan(), child: Text('Pretraži uređaje')),
@@ -54,27 +61,21 @@ class DevicesPage extends StatelessWidget {
 
 class _DeviceWidget extends StatelessWidget {
   final Device device;
+  final DeviceHandler? deviceHandler;
+
   final bool isDiscovering;
 
-  const _DeviceWidget({required this.device, required this.isDiscovering});
+  const _DeviceWidget({required this.device, required this.deviceHandler, required this.isDiscovering});
 
   void openDevice(BuildContext context, Device device) {
-    if (device.isOffline) {
+    if (device.isOffline || deviceHandler == null) {
       return;
     }
 
     var deviceContext = context.read<DeviceContext>();
     deviceContext.device = device;
 
-    switch (device.type) {
-      case DeviceType.airQuality:
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => air_quality.MainApp()));
-        break;
-      case DeviceType.smartLeds:
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => smart_leds.MainApp()));
-        break;
-      default:
-    }
+    deviceHandler!.openMainPage(context);
   }
 
   @override
