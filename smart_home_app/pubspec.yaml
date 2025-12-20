@@ -1,0 +1,11 @@
+name: _
+publish_to: none
+
+environment:
+  sdk: ^3.6.0
+
+workspace:
+  - smart_home_core
+  - smart_home_app
+  - air_quality
+  - smart_leds
