@@ -3,6 +3,7 @@ import 'package:smart_home_core/device.dart';
 
 import '../logic/services/service_factory.dart';
 import '../logic/vm/home_page_view_model.dart';
+import '../widgets/metrics_card.dart';
 import 'exception_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -53,31 +54,25 @@ class HomePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             spacing: 40,
             children: [
-              _Card(
+              MetricsCard(
                 image: getImage('assets/air_quality/temperature.png'),
                 title: Text('Temperatura', style: textTheme.titleMedium),
-                valueText: Text('${model.airQuality.temperature.toStringAsFixed(1)} °C', style: textTheme.titleLarge),
-                progress: model.temperatureProgress,
-                progressColor: Color(0xFFFF485D),
+                value: Text('${model.airQuality.temperature.toStringAsFixed(1)} °C', style: textTheme.titleLarge),
               ),
-              _Card(
+              MetricsCard(
                 image: getImage('assets/air_quality/humidity.png'),
                 title: Text('Vlaga', style: textTheme.titleMedium),
-                valueText: Text('${model.airQuality.humidity.round()} %', style: textTheme.titleLarge),
-                progress: model.humidityProgress,
-                progressColor: Color(0xFF0A64EA),
+                value: Text('${model.airQuality.humidity.round()} %', style: textTheme.titleLarge),
               ),
-              _Card(
+              MetricsCard(
                 image: getImage('assets/air_quality/cloud.png'),
                 title: Text('Tlak', style: textTheme.titleMedium),
-                valueText: Text('${model.airQuality.pressure.toStringAsFixed(1)} hPa', style: textTheme.titleLarge),
-                progress: model.pressureProgress,
-                progressColor: Color(0xFFFCCA05),
+                value: Text('${model.airQuality.pressure.toStringAsFixed(1)} hPa', style: textTheme.titleLarge),
               ),
-              _Card(
+              MetricsCard(
                 image: getImage('assets/air_quality/wind.png'),
                 title: Text('PM2.5', style: textTheme.titleMedium),
-                valueText: RichText(
+                value: RichText(
                   text: TextSpan(
                     style: textTheme.titleLarge,
                     children: [
@@ -89,8 +84,6 @@ class HomePage extends StatelessWidget {
                     ],
                   ),
                 ),
-                progress: model.pm25Progress,
-                progressColor: Color(0xFF0094FF),
               ),
             ],
           ),
@@ -121,45 +114,5 @@ class HomePage extends StatelessWidget {
 
   Widget getImage(String name) {
     return Image.asset(name, width: 80, height: 80, filterQuality: FilterQuality.medium);
-  }
-}
-
-class _Card extends StatelessWidget {
-  final Widget image;
-  final Widget title;
-  final Widget valueText;
-
-  final double progress;
-  final Color progressColor;
-
-  const _Card({required this.image, required this.title, required this.valueText, required this.progress, required this.progressColor});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        image,
-        SizedBox(width: 20),
-        Expanded(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              title,
-              valueText,
-              SizedBox(height: 10),
-              LinearProgressIndicator(
-                color: progressColor,
-                backgroundColor: Color(0xFFEBEBEB),
-                minHeight: 10,
-                borderRadius: BorderRadius.circular(5),
-                value: progress,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
   }
 }
