@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:smart_home_core/models.dart';
+import 'package:smart_home_core/device.dart';
 
 import '../exceptions.dart';
 import 'package:http/http.dart' as http;

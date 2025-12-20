@@ -5,7 +5,7 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:multicast_dns/multicast_dns.dart';
-import 'package:smart_home_core/models.dart';
+import 'package:smart_home_core/device.dart';
 
 class DeviceDiscovery {
   static const String _serviceName = '_smart-home._tcp.local';
@@ -45,7 +45,9 @@ class DeviceDiscovery {
 
     await for (final PtrResourceRecord ptr in _client!.lookup<PtrResourceRecord>(ResourceRecordQuery.serverPointer(_serviceName))) {
       await for (final SrvResourceRecord srv in _client!.lookup<SrvResourceRecord>(ResourceRecordQuery.service(ptr.domainName))) {
-        await for (final IPAddressResourceRecord ip in _client!.lookup<IPAddressResourceRecord>(ResourceRecordQuery.addressIPv4(srv.target))) {
+        await for (final IPAddressResourceRecord ip in _client!.lookup<IPAddressResourceRecord>(
+          ResourceRecordQuery.addressIPv4(srv.target),
+        )) {
           log('Pronađen uređaj ${srv.name}, IP: ${ip.address.address}');
           _getDeviceInfo(ip.address);
         }
@@ -88,7 +90,13 @@ class DeviceDiscovery {
     }
   }
 
-  Future<RawDatagramSocket> _rawDatagramSocketFactory(dynamic host, int port, {bool reuseAddress = true, bool reusePort = false, int ttl = 1}) {
+  Future<RawDatagramSocket> _rawDatagramSocketFactory(
+    dynamic host,
+    int port, {
+    bool reuseAddress = true,
+    bool reusePort = false,
+    int ttl = 1,
+  }) {
     return RawDatagramSocket.bind(host, port, reuseAddress: true, reusePort: false, ttl: ttl);
   }
 }

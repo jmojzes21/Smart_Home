@@ -1,10 +1,10 @@
-import 'package:smart_home_core/models.dart';
+import 'package:go_router/go_router.dart';
+import 'package:smart_home_core/device.dart';
 
 import '../logic/services/service_factory.dart';
 import '../logic/vm/home_page_view_model.dart';
 import 'exception_page.dart';
 import 'package:flutter/material.dart';
-import '../widgets/navigation_drawer.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -13,11 +13,11 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Kvaliteta zraka')),
-      drawer: AppNavigationDrawer(),
+      appBar: AppBar(title: Text('Kvaliteta zraka'), actions: [buildAppBarMenu(context)]),
+
       body: ChangeNotifierProvider(
         create: (context) {
-          var serviceFactory = ServiceFactory(context.read<DeviceContext>().device);
+          var serviceFactory = ServiceFactory(context.read<DeviceManager>().device);
           return HomePageViewModel(
             aqService: serviceFactory.getAirQualityService(),
             openExceptionPage: (message) {
@@ -27,6 +27,13 @@ class HomePage extends StatelessWidget {
         },
         //child: buildBody(context),
         child: Consumer<HomePageViewModel>(builder: (context, model, child) => buildBody(context, model)),
+      ),
+
+      bottomNavigationBar: NavigationBar(
+        destinations: [
+          NavigationDestination(icon: Icon(Icons.home), label: 'Početna'),
+          NavigationDestination(icon: Icon(Icons.settings), label: 'Postavke'),
+        ],
       ),
     );
   }
@@ -92,6 +99,26 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  Widget buildAppBarMenu(BuildContext context) {
+    return MenuAnchor(
+      menuChildren: [
+        MenuItemButton(onPressed: () => context.replace('/devices'), leadingIcon: Icon(Icons.exit_to_app), child: Text('Zatvori uređaj')),
+      ],
+      builder: (context, controller, child) {
+        return IconButton(
+          onPressed: () {
+            if (controller.isOpen) {
+              controller.close();
+            } else {
+              controller.open();
+            }
+          },
+          icon: Icon(Icons.more_vert),
+        );
+      },
+    );
+  }
+
   Widget getImage(String name) {
     return Image.asset(name, width: 80, height: 80, filterQuality: FilterQuality.medium);
   }
@@ -105,13 +132,7 @@ class _Card extends StatelessWidget {
   final double progress;
   final Color progressColor;
 
-  const _Card({
-    required this.image,
-    required this.title,
-    required this.valueText,
-    required this.progress,
-    required this.progressColor,
-  });
+  const _Card({required this.image, required this.title, required this.valueText, required this.progress, required this.progressColor});
 
   @override
   Widget build(BuildContext context) {

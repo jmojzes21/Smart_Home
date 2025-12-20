@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:smart_home_core/core.dart';
-import 'package:smart_home_core/models.dart';
+import 'package:smart_home_core/device.dart';
+import 'package:smart_home_core/handler.dart';
 
 import 'pages/home.dart';
 
@@ -14,7 +14,7 @@ class SmartLedsDeviceHandler extends DeviceHandler {
   }
 
   @override
-  void openMainPage(BuildContext context) {
+  void openHomePage(BuildContext context) {
     context.push('/leds/home');
   }
 }

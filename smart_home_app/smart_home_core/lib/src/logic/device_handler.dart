@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../models.dart';
+import '../models/device.dart';
 
 abstract class DeviceHandler {
   final DeviceType type;
@@ -9,5 +9,5 @@ abstract class DeviceHandler {
   DeviceHandler(this.type);
 
   List<GoRoute> getRoutes();
-  void openMainPage(BuildContext context);
+  void openHomePage(BuildContext context);
 }

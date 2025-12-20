@@ -1,6 +1,7 @@
+import 'package:smart_home_core/device.dart';
+
 import '../services/device_discovery.dart';
-import '../services/virtual/device_service.dart';
-import 'package:smart_home_core/models.dart';
+import '../services/interfaces/device_service.dart';
 import 'package:smart_home_core/view_model.dart';
 
 class DevicesPageViewModel extends ViewModel {

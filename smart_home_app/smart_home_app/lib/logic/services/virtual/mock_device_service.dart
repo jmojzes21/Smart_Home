@@ -1,7 +1,8 @@
-import '../virtual/device_service.dart';
-import 'package:smart_home_core/models.dart';
+import 'package:smart_home_core/device.dart';
 
-class MockDeviceService extends IDeviceService {
+import '../interfaces/device_service.dart';
+
+class VirtualDeviceService extends IDeviceService {
   @override
   Future<List<Device>> getDevices() async {
     return [

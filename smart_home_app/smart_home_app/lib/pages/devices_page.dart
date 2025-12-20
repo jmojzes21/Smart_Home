@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_home_core/core.dart';
+import 'package:smart_home_core/device.dart';
+import 'package:smart_home_core/handler.dart';
 import '../device_handlers.dart';
 import '../logic/services/device_discovery.dart';
-import '../logic/services/mock/mock_device_service.dart';
+import '../logic/services/virtual/mock_device_service.dart';
 import '../logic/vm/devices_page_vm.dart';
 import 'package:smart_home_core/extensions.dart';
-import 'package:smart_home_core/models.dart';
 
 class DevicesPage extends StatelessWidget {
   final DeviceHandlers deviceHandlers;
@@ -17,8 +17,7 @@ class DevicesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ChangeNotifierProvider(
-        create: (context) =>
-            DevicesPageViewModel(deviceService: MockDeviceService(), deviceDiscovery: DeviceDiscovery()),
+        create: (context) => DevicesPageViewModel(deviceService: VirtualDeviceService(), deviceDiscovery: DeviceDiscovery()),
         child: Consumer<DevicesPageViewModel>(builder: (context, model, child) => buildBody(context, model)),
       ),
     );
@@ -50,8 +49,7 @@ class DevicesPage extends StatelessWidget {
             ),
             SizedBox(height: 20),
             if (!model.isDiscovering) FilledButton(onPressed: () => model.startScan(), child: Text('Pretraži uređaje')),
-            if (model.isDiscovering)
-              FilledButton(onPressed: () => model.stopScan(), child: Text('Zaustavi pretraživanje')),
+            if (model.isDiscovering) FilledButton(onPressed: () => model.stopScan(), child: Text('Zaustavi pretraživanje')),
           ],
         ),
       ),
@@ -72,10 +70,10 @@ class _DeviceWidget extends StatelessWidget {
       return;
     }
 
-    var deviceContext = context.read<DeviceContext>();
-    deviceContext.device = device;
+    var deviceContext = context.read<DeviceManager>();
+    deviceContext.setDevice(device);
 
-    deviceHandler!.openMainPage(context);
+    deviceHandler!.openHomePage(context);
   }
 
   @override
@@ -88,11 +86,6 @@ class _DeviceWidget extends StatelessWidget {
       subtitle = isDiscovering ? Text('Pretraživanje...') : Text('Nedostupan');
     }
 
-    return ListTile(
-      onTap: () => openDevice(context, device),
-      leading: Icon(Icons.devices),
-      title: Text(device.name),
-      subtitle: subtitle,
-    );
+    return ListTile(onTap: () => openDevice(context, device), leading: Icon(Icons.devices), title: Text(device.name), subtitle: subtitle);
   }
 }

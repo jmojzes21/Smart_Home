@@ -1,4 +1,4 @@
-import 'package:smart_home_core/models.dart';
+import 'package:smart_home_core/device.dart';
 
 import 'air_quality_service.dart';
 import 'mock/mock_air_quality_service.dart';

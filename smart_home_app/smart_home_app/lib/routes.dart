@@ -1,5 +1,4 @@
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 import 'device_handlers.dart';
 import 'pages/devices_page.dart';
@@ -11,8 +10,7 @@ class AppRoutes {
       GoRoute(
         path: '/devices',
         builder: (context, state) {
-          var deviceHandlers = context.read<DeviceHandlers>();
-          return DevicesPage(deviceHandlers: deviceHandlers);
+          return DevicesPage(deviceHandlers: DeviceHandlers.instance);
         },
       ),
     ],
