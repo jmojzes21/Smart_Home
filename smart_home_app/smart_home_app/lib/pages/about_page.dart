@@ -1,6 +1,6 @@
-import '../widgets/hyperlink.dart';
-import '../widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
+
+import '../widgets/hyperlink.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -10,7 +10,6 @@ class AboutPage extends StatelessWidget {
     var textTheme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(title: Text('O aplikaciji')),
-      drawer: AppNavigationDrawer(),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(40),
