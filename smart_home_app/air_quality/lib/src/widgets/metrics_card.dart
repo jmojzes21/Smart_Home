@@ -18,9 +18,7 @@ class MetricsCard extends StatelessWidget {
           children: [
             image,
             SizedBox(width: 20),
-            Expanded(
-              child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [title, value]),
-            ),
+            Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [title, value]),
           ],
         ),
       ),

@@ -15,7 +15,6 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Kvaliteta zraka'), actions: [buildAppBarMenu(context)]),
-
       body: ChangeNotifierProvider(
         create: (context) {
           var serviceFactory = ServiceFactory(context.read<DeviceManager>().device);
@@ -29,7 +28,6 @@ class HomePage extends StatelessWidget {
         //child: buildBody(context),
         child: Consumer<HomePageViewModel>(builder: (context, model, child) => buildBody(context, model)),
       ),
-
       bottomNavigationBar: NavigationBar(
         destinations: [
           NavigationDestination(icon: Icon(Icons.home), label: 'Početna'),
@@ -44,32 +42,54 @@ class HomePage extends StatelessWidget {
       return Center(child: CircularProgressIndicator());
     }
 
-    var textTheme = Theme.of(context).textTheme;
     return SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.all(40),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            spacing: 40,
+        padding: EdgeInsets.all(80),
+        child: Center(child: buildMetrics(context, model)),
+      ),
+    );
+  }
+
+  Widget buildMetrics(BuildContext context, HomePageViewModel model) {
+    var textTheme = Theme.of(context).textTheme;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          child: Row(
             children: [
-              MetricsCard(
-                image: getImage('assets/air_quality/temperature.png'),
-                title: Text('Temperatura', style: textTheme.titleMedium),
-                value: Text('${model.airQuality.temperature.toStringAsFixed(1)} °C', style: textTheme.titleLarge),
+              Expanded(
+                child: MetricsCard(
+                  image: getImage('assets/air_quality/temperature.png'),
+                  title: Text('Temperatura', style: textTheme.titleMedium),
+                  value: Text('${model.airQuality.temperature.toStringAsFixed(1)} °C', style: textTheme.titleLarge),
+                ),
               ),
-              MetricsCard(
-                image: getImage('assets/air_quality/humidity.png'),
-                title: Text('Vlaga', style: textTheme.titleMedium),
-                value: Text('${model.airQuality.humidity.round()} %', style: textTheme.titleLarge),
+              SizedBox(width: 40),
+              Expanded(
+                child: MetricsCard(
+                  image: getImage('assets/air_quality/humidity.png'),
+                  title: Text('Vlaga', style: textTheme.titleMedium),
+                  value: Text('${model.airQuality.humidity.round()} %', style: textTheme.titleLarge),
+                ),
               ),
-              MetricsCard(
+            ],
+          ),
+        ),
+        SizedBox(height: 40),
+        Row(
+          children: [
+            Expanded(
+              child: MetricsCard(
                 image: getImage('assets/air_quality/cloud.png'),
                 title: Text('Tlak', style: textTheme.titleMedium),
                 value: Text('${model.airQuality.pressure.toStringAsFixed(1)} hPa', style: textTheme.titleLarge),
               ),
-              MetricsCard(
+            ),
+            SizedBox(width: 40),
+            Expanded(
+              child: MetricsCard(
                 image: getImage('assets/air_quality/wind.png'),
                 title: Text('PM2.5', style: textTheme.titleMedium),
                 value: RichText(
@@ -85,10 +105,10 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ),
+      ],
     );
   }
 
