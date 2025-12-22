@@ -16,6 +16,9 @@ dependencies:
   go_router: ^16.2.5
   multicast_dns: 0.3.2+6
 
+  path: ^1.9.1
+  path_provider: ^2.1.5
+
   smart_home_core:
     path: ../smart_home_core
 
