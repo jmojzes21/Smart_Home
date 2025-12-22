@@ -1,6 +1,6 @@
 import 'dart:io';
 
-enum DeviceType { airQuality, smartLeds, unknown }
+import 'device_type.dart';
 
 abstract class Device {
   final DeviceType type;
@@ -19,15 +19,4 @@ abstract class Device {
     this.macAddress,
     this.isReal = true,
   });
-
-  static DeviceType parseDeviceType(String type) {
-    switch (type) {
-      case 'air_quality':
-        return DeviceType.airQuality;
-      case 'smart_leds':
-        return DeviceType.smartLeds;
-      default:
-        return DeviceType.unknown;
-    }
-  }
 }

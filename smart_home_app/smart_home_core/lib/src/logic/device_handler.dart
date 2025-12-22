@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 import '../models/device.dart';
+import '../models/device_type.dart';
 
 abstract class DeviceHandler {
   final DeviceType type;
