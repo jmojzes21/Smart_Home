@@ -14,6 +14,7 @@ class Device {
 
     const char* version = nullptr;
     const char* deviceType = nullptr;
+    const char* domain = nullptr;
 
     private:
 

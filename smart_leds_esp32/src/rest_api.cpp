@@ -22,8 +22,7 @@ void DeviceRestApi::setup() {
 }
 
 bool DeviceRestApi::checkAuthentication(AsyncWebServerRequest* request) {
-    std::string auth = request->header("Authorization").c_str();
-    return auth == device.password;
+  return true;
 }
 
 bool DeviceRestApi::authenticate(AsyncWebServerRequest* request) {
@@ -97,9 +96,11 @@ void DeviceRestApi::_initDeviceApi() {
     httpServer.on("/device", HTTP_GET, [&](AsyncWebServerRequest* request) {
 
         JsonDocument doc;
+
         doc["name"] = device.name;
-        doc["version"] = device.version;
+        doc["domain"] = device.domain;
         doc["type"] = device.deviceType;
+        doc["version"] = device.version;
 
         doc["ip"] = WiFi.localIP().toString();
         doc["mac"] = WiFi.macAddress();

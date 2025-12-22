@@ -17,9 +17,12 @@
 
 #include "settings.h"
 
-const char* firmwareVersion = "v1.0.0";
+#define MDNS_SERVICE "smart-home"
+
+const char* firmwareVersion = "v2.0.0";
 const char* deviceHostname = "smart_leds";
-const char* deviceType = "Smart LEDs L7";
+const char* deviceDomain = "smart-leds._smart-home._tcp.local";
+const char* deviceType = "smart_leds";
 const int httpPort = 80;
 
 Device device;
@@ -49,6 +52,7 @@ void setup() {
 
     device.version = firmwareVersion;
     device.deviceType = deviceType;
+    device.domain = deviceDomain;
 
     Serial.printf("Uređaj\n");
     Serial.printf("  Naziv: %s\n", device.name.c_str());
@@ -73,8 +77,7 @@ void setup() {
     // postavi mdns
     Serial.printf("Postavi mdns\n");
     MDNS.begin(deviceHostname);
-    MDNS.setInstanceName(device.name.c_str());
-    MDNS.addService("http", "tcp", httpPort);
+    MDNS.addService(MDNS_SERVICE, "tcp", httpPort);
 
     // pokreni http server
     Serial.printf("Pokreni http server\n");
