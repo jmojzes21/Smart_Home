@@ -17,4 +17,9 @@ class SmartLedsDeviceHandler extends DeviceHandler {
   void openHomePage(BuildContext context) {
     context.push('/leds/home');
   }
+
+  @override
+  Device createDevice(Device genericDevice) {
+    throw UnimplementedError();
+  }
 }

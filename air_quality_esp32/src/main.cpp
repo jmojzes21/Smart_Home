@@ -204,7 +204,7 @@ void connectWifi() {
 void initHttpServer() {
 
   httpServer.on("/sensor-data", HTTP_GET, handleSensorDataRequest);
-  httpServer.on("/status", HTTP_GET, handleDeviceStatusRequest);
+  httpServer.on("/device", HTTP_GET, handleDeviceStatusRequest);
 
   httpServer.begin();
 

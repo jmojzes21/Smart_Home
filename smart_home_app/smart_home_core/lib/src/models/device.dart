@@ -3,9 +3,9 @@ import 'dart:io';
 enum DeviceType { airQuality, smartLeds, unknown }
 
 class Device {
+  final DeviceType type;
   final String name;
   final String domain;
-  final DeviceType type;
 
   final InternetAddress? ipAddress;
   final String? macAddress;
@@ -13,9 +13,9 @@ class Device {
   final bool isReal;
 
   Device({
+    required this.type,
     required this.name,
     this.domain = '',
-    required this.type,
     this.ipAddress,
     this.macAddress,
     this.isOnline = false,
@@ -27,16 +27,6 @@ class Device {
   }
 
   bool get isOffline => !isOnline;
-
-  factory Device.fromJson(Map<String, dynamic> json) {
-    return Device(
-      name: json['name'],
-      domain: json['domain'],
-      type: parseDeviceType(json['type']),
-      ipAddress: InternetAddress(json['ip']),
-      macAddress: json['mac'],
-    );
-  }
 
   static DeviceType parseDeviceType(String type) {
     switch (type) {

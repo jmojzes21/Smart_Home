@@ -43,8 +43,12 @@ class DeviceDiscovery {
       return;
     }
 
-    await for (final PtrResourceRecord ptr in _client!.lookup<PtrResourceRecord>(ResourceRecordQuery.serverPointer(_serviceName))) {
-      await for (final SrvResourceRecord srv in _client!.lookup<SrvResourceRecord>(ResourceRecordQuery.service(ptr.domainName))) {
+    await for (final PtrResourceRecord ptr in _client!.lookup<PtrResourceRecord>(
+      ResourceRecordQuery.serverPointer(_serviceName),
+    )) {
+      await for (final SrvResourceRecord srv in _client!.lookup<SrvResourceRecord>(
+        ResourceRecordQuery.service(ptr.domainName),
+      )) {
         await for (final IPAddressResourceRecord ip in _client!.lookup<IPAddressResourceRecord>(
           ResourceRecordQuery.addressIPv4(srv.target),
         )) {
@@ -72,7 +76,7 @@ class DeviceDiscovery {
 
   Future<void> _getDeviceInfo(InternetAddress ipAddress) async {
     try {
-      var url = Uri.http(ipAddress.address, '/status');
+      var url = Uri.http(ipAddress.address, '/device');
       var response = await http.get(url).timeout(_connectTimeout);
 
       if (response.statusCode != 200) {
@@ -80,7 +84,7 @@ class DeviceDiscovery {
       }
 
       var json = jsonDecode(response.body);
-      var device = Device.fromJson(json);
+      var device = _parseGenericDevice(json);
 
       if (_isDiscovering) {
         _streamController?.sink.add(device);
@@ -88,6 +92,16 @@ class DeviceDiscovery {
     } on Exception catch (e) {
       log(e.toString());
     }
+  }
+
+  Device _parseGenericDevice(Map<String, dynamic> json) {
+    return Device(
+      type: Device.parseDeviceType(json['type']),
+      name: json['name'],
+      domain: json['domain'],
+      ipAddress: InternetAddress(json['ip']),
+      macAddress: json['mac'],
+    );
   }
 
   Future<RawDatagramSocket> _rawDatagramSocketFactory(

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:smart_home_core/device.dart';
 import 'package:smart_home_core/handler.dart';
 
+import 'models/aq_device.dart';
 import 'pages/home_page.dart';
 
 class AirQualityDeviceHandler extends DeviceHandler {
@@ -16,5 +17,10 @@ class AirQualityDeviceHandler extends DeviceHandler {
   @override
   void openHomePage(BuildContext context) {
     context.replace('/aq/home');
+  }
+
+  @override
+  Device createDevice(Device genericDevice) {
+    return AirQualityDevice.fromDevice(genericDevice);
   }
 }

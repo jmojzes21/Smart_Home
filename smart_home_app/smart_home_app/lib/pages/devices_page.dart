@@ -17,7 +17,8 @@ class DevicesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ChangeNotifierProvider(
-        create: (context) => DevicesPageViewModel(deviceService: VirtualDeviceService(), deviceDiscovery: DeviceDiscovery()),
+        create: (context) =>
+            DevicesPageViewModel(deviceService: VirtualDeviceService(), deviceDiscovery: DeviceDiscovery()),
         child: Consumer<DevicesPageViewModel>(builder: (context, model, child) => buildBody(context, model)),
       ),
     );
@@ -49,7 +50,8 @@ class DevicesPage extends StatelessWidget {
             ),
             SizedBox(height: 20),
             if (!model.isDiscovering) FilledButton(onPressed: () => model.startScan(), child: Text('Pretraži uređaje')),
-            if (model.isDiscovering) FilledButton(onPressed: () => model.stopScan(), child: Text('Zaustavi pretraživanje')),
+            if (model.isDiscovering)
+              FilledButton(onPressed: () => model.stopScan(), child: Text('Zaustavi pretraživanje')),
           ],
         ),
       ),
@@ -65,14 +67,15 @@ class _DeviceWidget extends StatelessWidget {
 
   const _DeviceWidget({required this.device, required this.deviceHandler, required this.isDiscovering});
 
-  void openDevice(BuildContext context, Device device) {
+  void openDevice(BuildContext context) {
     if (device.isOffline || deviceHandler == null) {
       return;
     }
 
-    var deviceContext = context.read<DeviceManager>();
-    deviceContext.setDevice(device);
+    var deviceManager = context.read<DeviceManager>();
+    var specificDevice = deviceHandler!.createDevice(device);
 
+    deviceManager.setDevice(specificDevice);
     deviceHandler!.openHomePage(context);
   }
 
@@ -86,6 +89,11 @@ class _DeviceWidget extends StatelessWidget {
       subtitle = isDiscovering ? Text('Pretraživanje...') : Text('Nedostupan');
     }
 
-    return ListTile(onTap: () => openDevice(context, device), leading: Icon(Icons.devices), title: Text(device.name), subtitle: subtitle);
+    return ListTile(
+      onTap: () => openDevice(context),
+      leading: Icon(Icons.devices),
+      title: Text(device.name),
+      subtitle: subtitle,
+    );
   }
 }
