@@ -17,7 +17,7 @@ class WavePatternControl extends StatefulWidget {
 class _WavePatternControlState extends State<WavePatternControl> {
   @override
   Widget build(BuildContext context) {
-    var patternProvider = PatternProvider.of(context);
+    var patternProvider = PatternProvider.instance!;
     var properties = patternProvider.properties;
 
     return Column(

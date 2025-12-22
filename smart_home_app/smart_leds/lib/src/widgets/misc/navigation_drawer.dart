@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../logic/device_service.dart';
-import '../../pages/device_discovery.dart';
+import 'package:go_router/go_router.dart';
 import '../../pages/home.dart';
 import '../../pages/power_sensor.dart';
 import '../../pages/settings.dart';
@@ -39,17 +38,8 @@ class AppNavigationDrawer extends StatelessWidget {
   }
 
   void closeDevice(BuildContext context) async {
-    var deviceService = DeviceService();
-    await deviceService.deleteSession();
-
     if (!context.mounted) return;
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) {
-          return const DeviceDiscoveryPage();
-        },
-      ),
-    );
+    context.replace('/devices');
   }
 
   @override
@@ -61,10 +51,22 @@ class AppNavigationDrawer extends StatelessWidget {
         child: Column(
           children: [
             ListTile(title: const Text('Početna'), leading: const Icon(Icons.home), onTap: () => openHomePage(context)),
-            ListTile(title: const Text('Potrošnja energije'), leading: const Icon(Icons.battery_charging_full), onTap: () => openPowerSensorPage(context)),
-            ListTile(title: const Text('Postavke'), leading: const Icon(Icons.settings), onTap: () => openSettings(context)),
+            ListTile(
+              title: const Text('Potrošnja energije'),
+              leading: const Icon(Icons.battery_charging_full),
+              onTap: () => openPowerSensorPage(context),
+            ),
+            ListTile(
+              title: const Text('Postavke'),
+              leading: const Icon(Icons.settings),
+              onTap: () => openSettings(context),
+            ),
             const Spacer(),
-            ListTile(title: const Text('Zatvori uređaj'), leading: const Icon(Icons.logout), onTap: () => closeDevice(context)),
+            ListTile(
+              title: const Text('Zatvori uređaj'),
+              leading: const Icon(Icons.logout),
+              onTap: () => closeDevice(context),
+            ),
           ],
         ),
       ),

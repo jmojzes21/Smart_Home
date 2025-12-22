@@ -17,7 +17,11 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Početna')),
       drawer: const AppNavigationDrawer(),
-      floatingActionButton: IconButton.filled(padding: const EdgeInsets.all(20), onPressed: () => BrightnessDialog.show(context), icon: const Icon(Icons.light_mode, size: 26)),
+      floatingActionButton: IconButton.filled(
+        padding: const EdgeInsets.all(20),
+        onPressed: () => BrightnessDialog.show(context),
+        icon: const Icon(Icons.light_mode, size: 26),
+      ),
       body: Padding(padding: const EdgeInsets.all(40), child: _Patterns()),
     );
   }
@@ -30,17 +34,42 @@ class _Patterns extends StatelessWidget {
       spacing: 20,
       runSpacing: 20,
       children: [
-        _PatternCard(name: 'Jedna boja', icon: 'single.png', pattern: SingleColorPattern(), controlDialog: (p) => SingleColorPatternControl(p)),
-        _PatternCard(name: 'Valovi', icon: 'waves.png', pattern: WavePattern(), controlDialog: (p) => WavePatternControl(p)),
-        _PatternCard(name: 'Duga', icon: 'rainbow.png', pattern: RainbowPattern(), controlDialog: (p) => RainbowPatternControl(p)),
-        _PatternCard(name: 'Dugine boje', icon: 'rainbow_balls.png', pattern: RainbowBallsPattern(), controlDialog: (p) => RainbowPatternControl(p)),
-        _PatternCard(name: 'Kiša', icon: 'rain_single.png', pattern: RainPattern(), controlDialog: (p) => SingleColorPatternControl(p)),
+        _PatternCard(
+          name: 'Jedna boja',
+          icon: 'single.png',
+          pattern: SingleColorPattern(),
+          controlDialog: (p) => SingleColorPatternControl(p),
+        ),
+        _PatternCard(
+          name: 'Valovi',
+          icon: 'waves.png',
+          pattern: WavePattern(),
+          controlDialog: (p) => WavePatternControl(p),
+        ),
+        _PatternCard(
+          name: 'Duga',
+          icon: 'rainbow.png',
+          pattern: RainbowPattern(),
+          controlDialog: (p) => RainbowPatternControl(p),
+        ),
+        _PatternCard(
+          name: 'Dugine boje',
+          icon: 'rainbow_balls.png',
+          pattern: RainbowBallsPattern(),
+          controlDialog: (p) => RainbowPatternControl(p),
+        ),
+        _PatternCard(
+          name: 'Kiša',
+          icon: 'rain_single.png',
+          pattern: RainPattern(),
+          controlDialog: (p) => SingleColorPatternControl(p),
+        ),
         _PatternCard(name: 'Šarena kiša', icon: 'rain.png', pattern: ColorfulRainPattern()),
         _RawPatternCard(
           name: 'Ugasi lampice',
           icon: 'clear.png',
           onPrimaryTap: () {
-            var patterns = PatternProvider.of(context);
+            var patterns = PatternProvider.instance!;
             patterns.clearPattern();
           },
           onSecondaryTap: () {},
@@ -59,7 +88,7 @@ class _PatternCard extends StatelessWidget {
   const _PatternCard({required this.name, required this.icon, required this.pattern, this.controlDialog});
 
   void showPattern(BuildContext context) {
-    var patterns = PatternProvider.of(context);
+    var patterns = PatternProvider.instance!;
     patterns.showPattern(pattern);
   }
 
@@ -92,7 +121,12 @@ class _RawPatternCard extends StatelessWidget {
   final void Function() onPrimaryTap;
   final void Function() onSecondaryTap;
 
-  const _RawPatternCard({required this.name, required this.icon, required this.onPrimaryTap, required this.onSecondaryTap});
+  const _RawPatternCard({
+    required this.name,
+    required this.icon,
+    required this.onPrimaryTap,
+    required this.onSecondaryTap,
+  });
 
   @override
   Widget build(BuildContext context) {

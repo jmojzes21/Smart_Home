@@ -31,6 +31,8 @@ class Device {
     leds = LedController(this);
     wifi = WifiController(this);
     powerSensor = PowerSensor(this);
+
+    getDeviceInfo();
   }
 
   Future<void> getDeviceInfo() async {

@@ -16,7 +16,7 @@ class RainbowPatternControl extends StatefulWidget {
 class _RainbowPatternControlState extends State<RainbowPatternControl> {
   @override
   Widget build(BuildContext context) {
-    var patternProvider = PatternProvider.of(context);
+    var patternProvider = PatternProvider.instance!;
     var properties = patternProvider.properties;
 
     return Column(

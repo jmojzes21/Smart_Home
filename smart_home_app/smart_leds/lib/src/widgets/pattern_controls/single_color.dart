@@ -16,7 +16,7 @@ class SingleColorPatternControl extends StatefulWidget {
 class _SingleColorPatternControlState extends State<SingleColorPatternControl> {
   @override
   Widget build(BuildContext context) {
-    var patternProvider = PatternProvider.of(context);
+    var patternProvider = PatternProvider.instance!;
     var properties = patternProvider.properties;
 
     return Column(

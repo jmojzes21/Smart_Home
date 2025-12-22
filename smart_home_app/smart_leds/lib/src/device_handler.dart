@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:smart_home_core/device.dart';
 import 'package:smart_home_core/handler.dart';
 
+import 'models/smart_leds_device.dart';
 import 'pages/home.dart';
 
 class SmartLedsDeviceHandler extends DeviceHandler {
@@ -20,6 +21,6 @@ class SmartLedsDeviceHandler extends DeviceHandler {
 
   @override
   Device createDevice(Device genericDevice) {
-    throw UnimplementedError();
+    return SmartLedsDevice.fromDevice(genericDevice);
   }
 }
