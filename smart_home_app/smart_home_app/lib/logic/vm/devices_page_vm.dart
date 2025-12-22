@@ -1,5 +1,6 @@
 import 'package:smart_home_core/device.dart';
 
+import '../../models/generic_device.dart';
 import '../services/device_discovery.dart';
 import '../services/interfaces/device_service.dart';
 import 'package:smart_home_core/view_model.dart';
@@ -8,7 +9,7 @@ class DevicesPageViewModel extends ViewModel {
   final IDeviceService deviceService;
   final DeviceDiscovery deviceDiscovery;
 
-  var _devices = <Device>[];
+  var _devices = <GenericDevice>[];
 
   var _isDiscovering = false;
   var _isLoading = true;
@@ -51,7 +52,7 @@ class DevicesPageViewModel extends ViewModel {
     int index = _devices.indexWhere((e) => e.domain == newDevice.domain && e.type == newDevice.type);
     if (index != -1) {
       var device = _devices[index];
-      _devices[index] = Device(
+      _devices[index] = GenericDevice(
         name: device.name,
         domain: device.domain,
         type: device.type,
@@ -65,5 +66,5 @@ class DevicesPageViewModel extends ViewModel {
   bool get isDiscovering => _isDiscovering;
   bool get isLoading => _isLoading;
 
-  List<Device> get devices => _devices;
+  List<GenericDevice> get devices => _devices;
 }

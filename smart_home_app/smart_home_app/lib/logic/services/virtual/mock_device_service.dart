@@ -1,21 +1,26 @@
 import 'package:smart_home_core/device.dart';
 
+import '../../../models/generic_device.dart';
 import '../interfaces/device_service.dart';
 
 class VirtualDeviceService extends IDeviceService {
   @override
-  Future<List<Device>> getDevices() async {
+  Future<List<GenericDevice>> getDevices() async {
     return [
-      Device(name: 'Kvaliteta zraka', domain: 'air-quality-sensor._smart-home._tcp.local', type: DeviceType.airQuality),
-      Device(name: 'Pametne LEDice', domain: 'smart-leds._smart-home._tcp.local', type: DeviceType.smartLeds),
+      GenericDevice(
+        name: 'Kvaliteta zraka',
+        domain: 'air-quality-sensor._smart-home._tcp.local',
+        type: DeviceType.airQuality,
+      ),
+      GenericDevice(name: 'Pametne LEDice', domain: 'smart-leds._smart-home._tcp.local', type: DeviceType.smartLeds),
       ...getVirtualDevices(),
     ];
   }
 
-  List<Device> getVirtualDevices() {
+  List<GenericDevice> getVirtualDevices() {
     return [
-      Device.virtual(name: 'Kvaliteta zraka - virtualni', type: DeviceType.airQuality),
-      Device.virtual(name: 'Pametne LEDice - virtualni', type: DeviceType.smartLeds),
+      GenericDevice.virtual(name: 'Kvaliteta zraka - virtualni', type: DeviceType.airQuality),
+      GenericDevice.virtual(name: 'Pametne LEDice - virtualni', type: DeviceType.smartLeds),
     ];
   }
 }

@@ -8,6 +8,8 @@ import '../logic/services/virtual/mock_device_service.dart';
 import '../logic/vm/devices_page_vm.dart';
 import 'package:smart_home_core/extensions.dart';
 
+import '../models/generic_device.dart';
+
 class DevicesPage extends StatelessWidget {
   final DeviceHandlers deviceHandlers;
 
@@ -60,7 +62,7 @@ class DevicesPage extends StatelessWidget {
 }
 
 class _DeviceWidget extends StatelessWidget {
-  final Device device;
+  final GenericDevice device;
   final DeviceHandler? deviceHandler;
 
   final bool isDiscovering;

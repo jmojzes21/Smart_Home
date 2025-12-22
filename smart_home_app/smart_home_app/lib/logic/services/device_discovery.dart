@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 import 'package:multicast_dns/multicast_dns.dart';
 import 'package:smart_home_core/device.dart';
 
+import '../../models/generic_device.dart';
+
 class DeviceDiscovery {
   static const String _serviceName = '_smart-home._tcp.local';
   static const Duration _connectTimeout = Duration(seconds: 4);
@@ -94,8 +96,8 @@ class DeviceDiscovery {
     }
   }
 
-  Device _parseGenericDevice(Map<String, dynamic> json) {
-    return Device(
+  GenericDevice _parseGenericDevice(Map<String, dynamic> json) {
+    return GenericDevice(
       type: Device.parseDeviceType(json['type']),
       name: json['name'],
       domain: json['domain'],

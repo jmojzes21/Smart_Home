@@ -1,5 +1,5 @@
-import 'package:smart_home_core/device.dart';
+import '../../../models/generic_device.dart';
 
 abstract class IDeviceService {
-  Future<List<Device>> getDevices();
+  Future<List<GenericDevice>> getDevices();
 }
