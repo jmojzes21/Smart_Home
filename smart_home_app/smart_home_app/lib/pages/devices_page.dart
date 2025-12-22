@@ -4,7 +4,7 @@ import 'package:smart_home_core/device.dart';
 import 'package:smart_home_core/handler.dart';
 import '../device_handlers.dart';
 import '../logic/services/device_discovery.dart';
-import '../logic/services/virtual/mock_device_service.dart';
+import '../logic/services/device_service.dart';
 import '../logic/vm/devices_page_vm.dart';
 import 'package:smart_home_core/extensions.dart';
 
@@ -19,8 +19,7 @@ class DevicesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ChangeNotifierProvider(
-        create: (context) =>
-            DevicesPageViewModel(deviceService: VirtualDeviceService(), deviceDiscovery: DeviceDiscovery()),
+        create: (context) => DevicesPageViewModel(deviceService: DeviceService(), deviceDiscovery: DeviceDiscovery()),
         child: Consumer<DevicesPageViewModel>(builder: (context, model, child) => buildBody(context, model)),
       ),
     );

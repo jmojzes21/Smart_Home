@@ -98,7 +98,7 @@ class DeviceDiscovery {
 
   GenericDevice _parseGenericDevice(Map<String, dynamic> json) {
     return GenericDevice(
-      type: Device.parseDeviceType(json['type']),
+      type: DeviceType.parse(json['type']),
       name: json['name'],
       domain: json['domain'],
       ipAddress: InternetAddress(json['ip']),
