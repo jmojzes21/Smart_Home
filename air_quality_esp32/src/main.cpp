@@ -8,7 +8,7 @@
 #include <ArduinoJson.h>
 #include <LittleFS.h>
 
-#include "dasduino_led.h"
+#include "DasduinoLed.h"
 #include "PMS5003.h"
 
 #define DEVICE_HOSTNAME "air-quality-sensor"
@@ -30,7 +30,6 @@ SHTC3 shtc3Sensor;
 SemaphoreHandle_t sensorMutex;
 
 AsyncWebServer httpServer(HTTP_SERVER_PORT);
-DasduinoLed dasduinoLed;
 
 PMS5003_Sensor pms5003Sensor;
 PMS5003_Data pmsData;
@@ -47,18 +46,18 @@ void setup() {
 
   Serial.begin(115200);
 
-  dasduinoLed.begin();
-  dasduinoLed.setBrightness(20);
+  DasduinoLed::init();
+  DasduinoLed::setBrightness(20);
 
   Wire.begin();
 
   if(!bme280Sensor.begin(BME280_ADDRESS_ALTERNATE)) {
-    dasduinoLed.showColor(CRGB::Orange);
+    DasduinoLed::showColor(DasduinoLed::Orange);
     haltDevice();
   }
 
   if(!shtc3Sensor.begin()) {
-    dasduinoLed.showColor(CRGB::Orange);
+    DasduinoLed::showColor(DasduinoLed::Orange);
     haltDevice();
   }
 
@@ -165,7 +164,7 @@ void connectWifi() {
   File file = LittleFS.open("/wifi.json", FILE_READ);
 
   if(!file) {
-    dasduinoLed.showColor(CRGB::Orange);
+    DasduinoLed::showColor(DasduinoLed::Orange);
     haltDevice();
   }
 
@@ -177,7 +176,7 @@ void connectWifi() {
   String ssid = document["ssid"];
   String password = document["password"];
 
-  dasduinoLed.showColor(CRGB::Blue);
+  DasduinoLed::showColor(DasduinoLed::Blue);
 
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
@@ -193,11 +192,11 @@ void connectWifi() {
   }
 
   if(!WiFi.isConnected()) {
-    dasduinoLed.showColor(CRGB::Orange);
+    DasduinoLed::showColor(DasduinoLed::Orange);
     haltDevice();
   }
 
-  dasduinoLed.turnOff();
+  DasduinoLed::clear();
 
 }
 
