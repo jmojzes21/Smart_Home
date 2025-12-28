@@ -184,7 +184,7 @@ void connectWifi() {
 
 }
 
-void readSensorData(JsonDocument& document) {
+void readSensorData(JsonDocument& document, bool showDetails) {
   
   JsonObject bme280 = document["bme280"].to<JsonObject>();
   JsonObject shtc3 = document["shtc3"].to<JsonObject>();
@@ -207,14 +207,29 @@ void readSensorData(JsonDocument& document) {
 
   pms["pm2.5"] = pmsData.pm_25_env;
 
+  if(showDetails) {
+    pms["pm1.0"] = pmsData.pm_10_env;
+    pms["pm10"] = pmsData.pm_100_env;
+
+    pms["p0.3"] = pmsData.particles_03;
+    pms["p0.5"] = pmsData.particles_05;
+    pms["p1.0"] = pmsData.particles_10;
+    pms["p2.5"] = pmsData.particles_25;
+    pms["p5.0"] = pmsData.particles_50;
+    pms["p10"] = pmsData.particles_100;
+  }
+
   xSemaphoreGive(pmsMutex);
 
 }
 
 void handleSensorDataRequest(AsyncWebServerRequest* request) {
 
+  auto *detailsParam = request->getParam("details");
+  bool showDetails = detailsParam != nullptr && detailsParam->value() == "true"; 
+
   JsonDocument document;
-  readSensorData(document);
+  readSensorData(document, showDetails);
 
   AsyncResponseStream* response = request->beginResponseStream("application/json");
 
