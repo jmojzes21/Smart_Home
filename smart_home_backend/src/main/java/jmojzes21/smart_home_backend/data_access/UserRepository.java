@@ -24,7 +24,7 @@ public class UserRepository implements IUserRepository {
         .createQuery(cq)
         .getResultList()
         .stream()
-        .map(User::toDto)
+        .map(UserDTO::new)
         .toList();
   }
 

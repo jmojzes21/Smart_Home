@@ -1,6 +1,7 @@
 package jmojzes21.smart_home_backend.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jmojzes21.smart_home_backend.models.User;
 
 public class UserDTO {
 
@@ -13,14 +14,12 @@ public class UserDTO {
   @JsonProperty("last_name")
   private String lastName;
 
-  public UserDTO() {}
-
-  public UserDTO(String username, String firstName, String lastName) {
-    this.username = username;
-    this.firstName = firstName;
-    this.lastName = lastName;
+  public UserDTO(User user) {
+    this.username = user.getUsername();
+    this.firstName = user.getFirstName();
+    this.lastName = user.getLastName();
   }
-
+   
   public String getUsername() {
     return username;
   }

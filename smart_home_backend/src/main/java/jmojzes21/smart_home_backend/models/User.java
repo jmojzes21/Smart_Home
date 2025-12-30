@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jmojzes21.smart_home_backend.dto.UserDTO;
 
 @Entity
 @Table(name = "user", schema = "public")
@@ -32,10 +31,6 @@ public class User {
   private String salt;
 
   public User() {}
-
-  public UserDTO toDto() {
-    return new UserDTO(username, firstName, lastName);
-  }
 
   public Integer getId() {
     return id;
