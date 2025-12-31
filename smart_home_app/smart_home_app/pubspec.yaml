@@ -35,8 +35,15 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^5.0.0
 
+  flutter_launcher_icons: ^0.14.4
+
 flutter:
   uses-material-design: true
   assets:
     - assets/air_quality/
     - assets/smart_leds/
+
+flutter_launcher_icons:
+  android: "ic_launcher"
+  image_path: "assets/app_icon.png"
+  min_sdk_android: 21
