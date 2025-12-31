@@ -100,9 +100,8 @@ class DeviceDiscovery {
     return GenericDevice(
       type: DeviceType.parse(json['type']),
       name: json['name'],
-      domain: json['domain'],
+      hostname: json['domain'],
       ipAddress: InternetAddress(json['ip']),
-      macAddress: json['mac'],
     );
   }
 

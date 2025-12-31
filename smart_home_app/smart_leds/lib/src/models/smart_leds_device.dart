@@ -4,19 +4,13 @@ import '../logic/device/device.dart';
 import '../logic/providers/pattern_provider.dart';
 
 class SmartLedsDevice extends core.Device {
-  SmartLedsDevice({required super.name, super.domain, super.ipAddress, super.macAddress, super.isReal})
+  SmartLedsDevice({required super.name, required super.hostname, super.ipAddress})
     : super(type: core.DeviceType.smartLeds) {
     Device.currentDevice = Device(name: name, ipAddress: ipAddress!);
     PatternProvider.instance = PatternProvider();
   }
 
   factory SmartLedsDevice.fromDevice(core.Device device) {
-    return SmartLedsDevice(
-      name: device.name,
-      domain: device.domain,
-      ipAddress: device.ipAddress,
-      macAddress: device.macAddress,
-      isReal: device.isReal,
-    );
+    return SmartLedsDevice(name: device.name, hostname: device.hostname, ipAddress: device.ipAddress);
   }
 }

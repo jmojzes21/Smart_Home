@@ -1,16 +1,10 @@
 import 'package:smart_home_core/device.dart';
 
 class AirQualityDevice extends Device {
-  AirQualityDevice({required super.name, super.domain, super.ipAddress, super.macAddress, super.isReal})
+  AirQualityDevice({required super.name, required super.hostname, super.ipAddress})
     : super(type: DeviceType.airQuality);
 
   factory AirQualityDevice.fromDevice(Device device) {
-    return AirQualityDevice(
-      name: device.name,
-      domain: device.domain,
-      ipAddress: device.ipAddress,
-      macAddress: device.macAddress,
-      isReal: device.isReal,
-    );
+    return AirQualityDevice(name: device.name, hostname: device.hostname, ipAddress: device.ipAddress);
   }
 }

@@ -68,6 +68,11 @@ class DevicesPageViewModel extends ViewModel {
     notifyListeners();
 
     List<GenericDevice> devices = await deviceService.getDevicesFromCache();
+    if (devices.isEmpty) {
+      getDevices();
+      return;
+    }
+
     devices.addAll(_getVirtualDevices());
 
     _devices = devices;
@@ -76,24 +81,15 @@ class DevicesPageViewModel extends ViewModel {
   }
 
   List<GenericDevice> _getVirtualDevices() {
-    //  var virtualService = VirtualDeviceService();
-    //    devices.addAll(await virtualService.getDevicesFromCache());
-    return [];
+    return [GenericDevice.virtual(name: 'Kvaliteta zraka - virtualni', type: DeviceType.airQuality)];
   }
 
   void _onDeviceFound(Device newDevice) {
-    int index = _devices.indexWhere((e) => e.domain == newDevice.domain && e.type == newDevice.type);
-    if (index != -1) {
-      var device = _devices[index];
-      _devices[index] = GenericDevice(
-        name: device.name,
-        domain: device.domain,
-        type: device.type,
-        ipAddress: newDevice.ipAddress,
-        macAddress: newDevice.macAddress,
-        isOnline: true,
-      );
-    }
+    int index = _devices.indexWhere((e) => e.hostname == newDevice.hostname && e.type == newDevice.type);
+    if (index == -1) return;
+
+    var device = _devices[index];
+    device.isOnline = true;
   }
 
   bool get isDiscovering => _isDiscovering;

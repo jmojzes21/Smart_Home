@@ -110,7 +110,7 @@ class _DeviceWidget extends StatelessWidget {
     Widget subtitle;
 
     if (device.isOnline) {
-      subtitle = Text(device.ipAddress?.address ?? '');
+      subtitle = Text(device.ipAddress?.address ?? 'Dostupan');
     } else {
       subtitle = isDiscovering ? Text('Pretraživanje...') : Text('Nedostupan');
     }
