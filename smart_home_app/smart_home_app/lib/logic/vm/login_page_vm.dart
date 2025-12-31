@@ -18,7 +18,7 @@ class LoginPageViewModel extends ViewModel {
 
   LoginPageViewModel({required this.authService, required this.openHomePage}) {
     tecHostname.text = AppContext.instance.backendHostname;
-    _loadSession();
+    _init();
   }
 
   Future<void> login() async {
@@ -28,6 +28,11 @@ class LoginPageViewModel extends ViewModel {
 
     await authService.login(hostname, username, password, stayLoggedIn);
     openHomePage();
+  }
+
+  Future<void> _init() async {
+    await AppContext.instance.init();
+    await _loadSession();
   }
 
   Future<void> _loadSession() async {

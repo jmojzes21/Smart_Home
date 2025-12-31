@@ -13,11 +13,11 @@ class AppContext {
 
   AppContext._();
 
-  Future<String> getAppDirectory() async {
+  Future<void> init() async {
     _appDirectory ??= (await getApplicationSupportDirectory()).path;
-    return _appDirectory!;
   }
 
+  String get appDirectory => _appDirectory!;
   String get backendHostname => _backendHostname;
   set backendHostname(String value) => _backendHostname = value;
 

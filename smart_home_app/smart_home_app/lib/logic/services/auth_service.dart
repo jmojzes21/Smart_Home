@@ -44,7 +44,7 @@ class AuthService implements IAuthService {
   @override
   Future<bool> loadSession() async {
     try {
-      File file = await _getSessionFie();
+      File file = _getSessionFie();
       if ((await file.exists()) == false) return false;
 
       dynamic sessionJson = jsonDecode(await file.readAsString());
@@ -69,7 +69,7 @@ class AuthService implements IAuthService {
     AppContext.instance.currentUser = null;
 
     try {
-      File file = await _getSessionFie();
+      File file = _getSessionFie();
       if ((await file.exists())) {
         await file.delete();
       }
@@ -79,12 +79,12 @@ class AuthService implements IAuthService {
   Future<void> _saveSession(String hostname, User user) async {
     var session = {'hostname': hostname, 'user': user.toJson()};
 
-    File file = await _getSessionFie();
+    File file = _getSessionFie();
     await file.writeAsString(jsonEncode(session));
   }
 
-  Future<File> _getSessionFie() async {
-    var appDir = await AppContext.instance.getAppDirectory();
+  File _getSessionFie() {
+    var appDir = AppContext.instance.appDirectory;
     return File(join(appDir, 'session.json'));
   }
 }

@@ -28,6 +28,10 @@ class MainApp extends StatelessWidget {
         theme: ThemeData(
           colorSchemeSeed: Colors.blue,
           appBarTheme: AppBarTheme(backgroundColor: Colors.blue.shade900, foregroundColor: Colors.white),
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+            backgroundColor: Colors.blue.shade900,
+            foregroundColor: Colors.white,
+          ),
         ),
         routerConfig: appRoutes.goRouter,
       ),
