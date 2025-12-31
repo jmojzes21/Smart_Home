@@ -39,6 +39,7 @@ class DevicesPage extends StatelessWidget {
     var enableButtons = !model.isLoading;
 
     return Stack(
+      fit: StackFit.expand,
       children: [
         SingleChildScrollView(
           child: Padding(
@@ -62,10 +63,16 @@ class DevicesPage extends StatelessWidget {
                   ),
                 SizedBox(height: 20),
 
-                if (!model.isDiscovering)
-                  TextButton(onPressed: () => model.startScan(), child: Text('Provjeri dostupnost')),
-                if (model.isDiscovering)
-                  TextButton(onPressed: () => model.stopScan(), child: Text('Zaustavi provjeru')),
+                Row(
+                  children: [
+                    if (!model.isDiscovering)
+                      TextButton(onPressed: () => model.startScan(), child: Text('Provjeri dostupnost')),
+                    if (model.isDiscovering)
+                      Padding(padding: EdgeInsets.only(right: 20), child: CircularProgressIndicator()),
+                    if (model.isDiscovering)
+                      TextButton(onPressed: () => model.stopScan(), child: Text('Zaustavi provjeru')),
+                  ],
+                ),
               ],
             ),
           ),

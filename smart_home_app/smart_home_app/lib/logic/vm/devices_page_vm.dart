@@ -17,7 +17,12 @@ class DevicesPageViewModel extends ViewModel {
   var _isLoading = true;
 
   DevicesPageViewModel({required this.deviceService, required this.deviceDiscovery, required this.onShowMessage}) {
-    _getDevicesFromCache();
+    init();
+  }
+
+  Future<void> init() async {
+    await _getDevicesFromCache();
+    startScan();
   }
 
   Future<void> startScan() async {
@@ -29,6 +34,10 @@ class DevicesPageViewModel extends ViewModel {
     var stream = deviceDiscovery.start();
     await stream.forEach((device) {
       _onDeviceFound(device);
+
+      if (devices.every((e) => e.isOnline)) {
+        deviceDiscovery.stop();
+      }
       notifyListeners();
     });
 
@@ -89,6 +98,7 @@ class DevicesPageViewModel extends ViewModel {
     if (index == -1) return;
 
     var device = _devices[index];
+    device.ipAddress = newDevice.ipAddress;
     device.isOnline = true;
   }
 
