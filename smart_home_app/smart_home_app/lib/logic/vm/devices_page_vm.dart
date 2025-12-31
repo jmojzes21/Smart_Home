@@ -1,4 +1,5 @@
 import 'package:smart_home_core/device.dart';
+import 'package:smart_home_core/exceptions.dart';
 
 import '../../models/generic_device.dart';
 import '../services/device_discovery.dart';
@@ -8,14 +9,15 @@ import 'package:smart_home_core/view_model.dart';
 class DevicesPageViewModel extends ViewModel {
   final IDeviceService deviceService;
   final DeviceDiscovery deviceDiscovery;
+  final Function(String message) onShowMessage;
 
   var _devices = <GenericDevice>[];
 
   var _isDiscovering = false;
   var _isLoading = true;
 
-  DevicesPageViewModel({required this.deviceService, required this.deviceDiscovery}) {
-    _getDevices();
+  DevicesPageViewModel({required this.deviceService, required this.deviceDiscovery, required this.onShowMessage}) {
+    _getDevicesFromCache();
   }
 
   Future<void> startScan() async {
@@ -39,13 +41,44 @@ class DevicesPageViewModel extends ViewModel {
     deviceDiscovery.stop();
   }
 
-  Future<void> _getDevices() async {
+  Future<void> getDevices() async {
     _isLoading = true;
     notifyListeners();
 
-    _devices = await deviceService.getDevices();
+    try {
+      List<GenericDevice> devices = await deviceService.getDevices();
+      await deviceService.saveDevicesToCache(devices);
+
+      devices.addAll(_getVirtualDevices());
+
+      _devices = devices;
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      _isLoading = false;
+      notifyListeners();
+
+      String msg = 'Dohvaćanje uređaji nije uspjelo. ${Exceptions.getMessage(e)}';
+      onShowMessage(msg);
+    }
+  }
+
+  Future<void> _getDevicesFromCache() async {
+    _isLoading = true;
+    notifyListeners();
+
+    List<GenericDevice> devices = await deviceService.getDevicesFromCache();
+    devices.addAll(_getVirtualDevices());
+
+    _devices = devices;
     _isLoading = false;
     notifyListeners();
+  }
+
+  List<GenericDevice> _getVirtualDevices() {
+    //  var virtualService = VirtualDeviceService();
+    //    devices.addAll(await virtualService.getDevicesFromCache());
+    return [];
   }
 
   void _onDeviceFound(Device newDevice) {

@@ -13,4 +13,16 @@ enum DeviceType {
         return DeviceType.unknown;
     }
   }
+
+  @override
+  String toString() {
+    switch (this) {
+      case airQuality:
+        return 'air_quality';
+      case smartLeds:
+        return 'smart_leds';
+      default:
+        return 'unknown';
+    }
+  }
 }

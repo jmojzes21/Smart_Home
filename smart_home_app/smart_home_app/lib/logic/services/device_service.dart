@@ -1,20 +1,28 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:path/path.dart';
 import 'package:smart_home_core/models.dart';
+import 'package:smart_home_core/services.dart';
 
 import '../../models/generic_device.dart';
 import 'interfaces/device_service.dart';
-import 'virtual/virtual_device_service.dart';
 
 class DeviceService implements IDeviceService {
   @override
   Future<List<GenericDevice>> getDevices() async {
-    var appDir = await AppContext.instance.getAppDirectory();
-    var path = join(appDir, 'devices.json');
-    var file = File(path);
+    var username = AppContext.instance.currentUser.username;
 
+    var client = BackendClient();
+    var response = await client.httpGet('/api/users/$username/devices');
+
+    return _parseDevices(response);
+  }
+
+  @override
+  Future<List<GenericDevice>> getDevicesFromCache() async {
+    var file = _getDevicesFile();
     if ((await file.exists()) == false) {
       return [];
     }
@@ -23,17 +31,33 @@ class DeviceService implements IDeviceService {
     var json = jsonDecode(data);
     var devices = _parseDevices(json);
 
-    var virtualService = VirtualDeviceService();
-    devices.addAll(await virtualService.getDevices());
-
     return devices;
   }
 
-  List<GenericDevice> _parseDevices(dynamic json) {
-    return (json as List<dynamic>).map((e) => _parseDevice(e)).toList();
+  @override
+  Future<void> saveDevicesToCache(List<GenericDevice> devices) async {
+    var file = _getDevicesFile();
+    var data = devices.map((e) => e.toJson()).toList();
+    var json = jsonEncode(data);
+
+    await file.writeAsString(json);
   }
 
-  GenericDevice _parseDevice(dynamic json) {
-    return GenericDevice(type: DeviceType.parse(json['type']), name: json['name'], domain: json['domain']);
+  File _getDevicesFile() {
+    var appDir = AppContext.instance.appDirectory;
+    return File(join(appDir, 'devices.json'));
+  }
+
+  List<GenericDevice> _parseDevices(List<dynamic> json) {
+    var devices = <GenericDevice>[];
+    for (var data in json) {
+      try {
+        var device = GenericDevice.fromJson(data);
+        devices.add(device);
+      } catch (e) {
+        log(data.toString() + e.toString());
+      }
+    }
+    return devices;
   }
 }
