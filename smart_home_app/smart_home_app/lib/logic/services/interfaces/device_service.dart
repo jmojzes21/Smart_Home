@@ -5,4 +5,5 @@ abstract class IDeviceService {
   Future<List<GenericDevice>> getDevicesFromCache();
 
   Future<void> saveDevicesToCache(List<GenericDevice> devices);
+  Future<void> deleteDevicesFromCache();
 }

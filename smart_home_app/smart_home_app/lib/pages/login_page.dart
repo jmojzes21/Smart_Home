@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_home_core/exceptions.dart';
 import 'package:smart_home_core/widgets.dart';
 
 import '../logic/services/auth_service.dart';
@@ -18,7 +17,10 @@ class LoginPage extends StatelessWidget {
       body: ChangeNotifierProvider(
         create: (context) => LoginPageViewModel(
           authService: AuthService(),
-          openHomePage: () {
+          onShowMessage: (message) {
+            if (context.mounted) Dialogs.showSnackBar(context, message);
+          },
+          onOpenHomePage: () {
             if (context.mounted) context.replace('/');
           },
         ),
@@ -27,19 +29,12 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Future<void> login(BuildContext context, LoginPageViewModel model) async {
-    try {
-      await model.login();
-    } on AppException catch (e) {
-      if (!context.mounted) return;
-      Dialogs.showSnackBar(context, e.message);
-    }
-  }
-
   Widget buildBody(BuildContext context, LoginPageViewModel model) {
-    if (model.isLoading) {
+    if (model.isLoading && model.showFullLoading) {
       return Center(child: CircularProgressIndicator());
     }
+
+    var enableButtons = !model.isLoading;
 
     return Center(
       child: Padding(
@@ -89,7 +84,7 @@ class LoginPage extends StatelessWidget {
                 title: Text('Ostanite prijavljeni'),
               ),
               SizedBox(height: 40),
-              FilledButton(onPressed: () => login(context, model), child: Text('Prijavi se')),
+              FilledButton(onPressed: enableButtons ? () => model.login() : null, child: Text('Prijavi se')),
             ],
           ),
         ),

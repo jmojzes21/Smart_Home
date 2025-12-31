@@ -43,6 +43,14 @@ class DeviceService implements IDeviceService {
     await file.writeAsString(json);
   }
 
+  @override
+  Future<void> deleteDevicesFromCache() async {
+    var file = _getDevicesFile();
+    if ((await file.exists())) {
+      await file.delete();
+    }
+  }
+
   File _getDevicesFile() {
     var appDir = AppContext.instance.appDirectory;
     return File(join(appDir, 'devices.json'));

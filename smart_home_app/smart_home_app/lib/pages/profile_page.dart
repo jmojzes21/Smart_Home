@@ -5,6 +5,7 @@ import 'package:smart_home_core/extensions.dart';
 import 'package:smart_home_core/widgets.dart';
 
 import '../logic/services/auth_service.dart';
+import '../logic/services/device_service.dart';
 import '../logic/vm/profile_page_vm.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -13,7 +14,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => ProfilePageViewModel(AuthService()),
+      create: (context) => ProfilePageViewModel(authService: AuthService(), deviceService: DeviceService()),
       child: Consumer<ProfilePageViewModel>(builder: (context, model, child) => buildBody(context, model)),
     );
   }

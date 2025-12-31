@@ -50,16 +50,16 @@ class DevicesPageViewModel extends ViewModel {
       await deviceService.saveDevicesToCache(devices);
 
       devices.addAll(_getVirtualDevices());
-
       _devices = devices;
-      _isLoading = false;
-      notifyListeners();
-    } catch (e) {
-      _isLoading = false;
-      notifyListeners();
 
+      String msg = 'Uređaji su uspješno dohvaćeni.';
+      onShowMessage(msg);
+    } catch (e) {
       String msg = 'Dohvaćanje uređaji nije uspjelo. ${Exceptions.getMessage(e)}';
       onShowMessage(msg);
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 
