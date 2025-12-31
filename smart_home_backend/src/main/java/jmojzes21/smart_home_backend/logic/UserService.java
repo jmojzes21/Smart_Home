@@ -18,7 +18,7 @@ public class UserService {
   }
 
   public List<UserDTO> getUsers() {
-    return userRepository.getUsers();
+    return userRepository.getUsers().stream().map(UserDTO::new).toList();
   }
 
   public void addUser(UserCreateDTO userCreate) {
