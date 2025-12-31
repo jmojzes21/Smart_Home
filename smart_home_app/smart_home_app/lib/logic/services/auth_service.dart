@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:path/path.dart';
@@ -36,7 +37,8 @@ class AuthService implements IAuthService {
       }
 
       appContext.currentUser = user;
-    } on Exception catch (_) {
+    } catch (e) {
+      log(Exceptions.getMessage(e));
       throw AppException('Prijava nije uspjela! Provjerite korisničko ime i lozinku.');
     }
   }

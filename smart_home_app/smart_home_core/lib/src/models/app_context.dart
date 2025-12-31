@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:path_provider/path_provider.dart';
 
 import '../../models.dart';
@@ -10,14 +12,18 @@ class AppContext {
   User? _currentUser;
 
   String? _appDirectory;
+  bool _isMobile = false;
 
   AppContext._();
 
   Future<void> init() async {
     _appDirectory ??= (await getApplicationSupportDirectory()).path;
+    _isMobile = Platform.isAndroid;
   }
 
   String get appDirectory => _appDirectory!;
+  bool get isMobile => _isMobile;
+
   String get backendHostname => _backendHostname;
   set backendHostname(String value) => _backendHostname = value;
 

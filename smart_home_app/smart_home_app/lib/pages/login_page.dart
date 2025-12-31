@@ -37,55 +37,63 @@ class LoginPage extends StatelessWidget {
     var enableButtons = !model.isLoading;
 
     return Center(
-      child: Padding(
-        padding: EdgeInsets.all(40),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 400),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextField(
-                controller: model.tecHostname,
-                textInputAction: TextInputAction.next,
-                decoration: InputDecoration(
-                  label: Text('Naziv poslužitelja'),
-                  isDense: true,
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 20),
-              TextField(
-                controller: model.tecUsername,
-                textInputAction: TextInputAction.next,
-                decoration: InputDecoration(label: Text('Korisničko ime'), isDense: true, border: OutlineInputBorder()),
-              ),
-              SizedBox(height: 20),
-              TextField(
-                controller: model.tecPassword,
-                obscureText: !model.showPassword,
-                textInputAction: TextInputAction.done,
-                decoration: InputDecoration(
-                  label: Text('Lozinka'),
-                  isDense: true,
-                  border: OutlineInputBorder(),
-                  suffixIcon: IconButton(
-                    onPressed: () => model.showPassword = !model.showPassword,
-                    icon: !model.showPassword
-                        ? FaIcon(FontAwesomeIcons.solidEye)
-                        : FaIcon(FontAwesomeIcons.solidEyeSlash),
+      child: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(40),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 400),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextField(
+                    controller: model.tecHostname,
+                    textInputAction: TextInputAction.next,
+                    decoration: InputDecoration(
+                      label: Text('Naziv poslužitelja'),
+                      isDense: true,
+                      border: OutlineInputBorder(),
+                    ),
                   ),
-                ),
+                  SizedBox(height: 20),
+                  TextField(
+                    controller: model.tecUsername,
+                    textInputAction: TextInputAction.next,
+                    decoration: InputDecoration(
+                      label: Text('Korisničko ime'),
+                      isDense: true,
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  TextField(
+                    controller: model.tecPassword,
+                    obscureText: !model.showPassword,
+                    textInputAction: TextInputAction.done,
+                    decoration: InputDecoration(
+                      label: Text('Lozinka'),
+                      isDense: true,
+                      border: OutlineInputBorder(),
+                      suffixIcon: IconButton(
+                        onPressed: () => model.showPassword = !model.showPassword,
+                        icon: !model.showPassword
+                            ? FaIcon(FontAwesomeIcons.solidEye)
+                            : FaIcon(FontAwesomeIcons.solidEyeSlash),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  CheckboxListTile(
+                    value: model.stayLoggedIn,
+                    controlAffinity: ListTileControlAffinity.leading,
+                    onChanged: (value) => model.stayLoggedIn = value ?? false,
+                    title: Text('Ostanite prijavljeni'),
+                  ),
+                  SizedBox(height: 40),
+                  FilledButton(onPressed: enableButtons ? () => model.login() : null, child: Text('Prijavi se')),
+                ],
               ),
-              SizedBox(height: 10),
-              CheckboxListTile(
-                value: model.stayLoggedIn,
-                controlAffinity: ListTileControlAffinity.leading,
-                onChanged: (value) => model.stayLoggedIn = value ?? false,
-                title: Text('Ostanite prijavljeni'),
-              ),
-              SizedBox(height: 40),
-              FilledButton(onPressed: enableButtons ? () => model.login() : null, child: Text('Prijavi se')),
-            ],
+            ),
           ),
         ),
       ),
