@@ -22,5 +22,5 @@ class AppContext {
   set backendHostname(String value) => _backendHostname = value;
 
   User get currentUser => _currentUser!;
-  set currentUser(User user) => _currentUser = user;
+  set currentUser(User? user) => _currentUser = user;
 }

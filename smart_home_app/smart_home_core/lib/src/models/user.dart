@@ -5,6 +5,8 @@ class User {
 
   User({required this.username, required this.firstName, required this.lastName});
 
+  String get fullName => '$firstName $lastName';
+
   Map<String, dynamic> toJson() {
     return {'username': username, 'first_name': firstName, 'last_name': lastName};
   }

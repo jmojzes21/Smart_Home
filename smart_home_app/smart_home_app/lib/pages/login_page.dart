@@ -89,7 +89,7 @@ class LoginPage extends StatelessWidget {
                 title: Text('Ostanite prijavljeni'),
               ),
               SizedBox(height: 40),
-              FilledButton(onPressed: () => login(context, model), child: Text('Prijava')),
+              FilledButton(onPressed: () => login(context, model), child: Text('Prijavi se')),
             ],
           ),
         ),

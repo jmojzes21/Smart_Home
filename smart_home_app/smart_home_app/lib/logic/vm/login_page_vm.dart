@@ -13,12 +13,11 @@ class LoginPageViewModel extends ViewModel {
   bool _showPassword = false;
   bool _stayLoggedIn = false;
 
-  final IAuthService _authService;
-
+  final IAuthService authService;
   final VoidCallback openHomePage;
 
-  LoginPageViewModel({required IAuthService authService, required this.openHomePage}) : _authService = authService {
-    tecUsername.text = AppContext.instance.backendHostname;
+  LoginPageViewModel({required this.authService, required this.openHomePage}) {
+    tecHostname.text = AppContext.instance.backendHostname;
     _loadSession();
   }
 
@@ -27,12 +26,12 @@ class LoginPageViewModel extends ViewModel {
     String username = tecUsername.text.trim();
     String password = tecPassword.text.trim();
 
-    await _authService.login(hostname, username, password, stayLoggedIn);
+    await authService.login(hostname, username, password, stayLoggedIn);
     openHomePage();
   }
 
   Future<void> _loadSession() async {
-    bool success = await _authService.loadSession();
+    bool success = await authService.loadSession();
     if (success) {
       openHomePage();
     } else {
