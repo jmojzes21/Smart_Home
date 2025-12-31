@@ -2,17 +2,16 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:path/path.dart';
-import 'package:smart_home_core/device.dart';
+import 'package:smart_home_core/models.dart';
 
 import '../../models/generic_device.dart';
-import '../misc/app_context.dart';
 import 'interfaces/device_service.dart';
 import 'virtual/virtual_device_service.dart';
 
 class DeviceService implements IDeviceService {
   @override
   Future<List<GenericDevice>> getDevices() async {
-    var appDir = await AppContext.getAppDirectory();
+    var appDir = await AppContext.instance.getAppDirectory();
     var path = join(appDir, 'devices.json');
     var file = File(path);
 
