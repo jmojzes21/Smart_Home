@@ -6,7 +6,7 @@ class AppContext {
   static final AppContext _instance = AppContext._();
   static AppContext get instance => _instance;
 
-  String _backendHostname = 'localhost:8080';
+  String _backendHostname = '';
   User? _currentUser;
 
   String? _appDirectory;

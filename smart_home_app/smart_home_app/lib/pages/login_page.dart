@@ -16,7 +16,12 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Prijava')),
       body: ChangeNotifierProvider(
-        create: (context) => LoginPageViewModel(authService: AuthService()),
+        create: (context) => LoginPageViewModel(
+          authService: AuthService(),
+          openHomePage: () {
+            if (context.mounted) context.replace('/');
+          },
+        ),
         child: Consumer<LoginPageViewModel>(builder: (context, model, child) => buildBody(context, model)),
       ),
     );
@@ -25,8 +30,6 @@ class LoginPage extends StatelessWidget {
   Future<void> login(BuildContext context, LoginPageViewModel model) async {
     try {
       await model.login();
-      if (!context.mounted) return;
-      context.replace('/');
     } on AppException catch (e) {
       if (!context.mounted) return;
       Dialogs.showSnackBar(context, e.message);
@@ -34,6 +37,10 @@ class LoginPage extends StatelessWidget {
   }
 
   Widget buildBody(BuildContext context, LoginPageViewModel model) {
+    if (model.isLoading) {
+      return Center(child: CircularProgressIndicator());
+    }
+
     return Center(
       child: Padding(
         padding: EdgeInsets.all(40),
@@ -42,6 +49,16 @@ class LoginPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              TextField(
+                controller: model.tecHostname,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                  label: Text('Naziv poslužitelja'),
+                  isDense: true,
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 20),
               TextField(
                 controller: model.tecUsername,
                 textInputAction: TextInputAction.next,
@@ -63,6 +80,13 @@ class LoginPage extends StatelessWidget {
                         : FaIcon(FontAwesomeIcons.solidEyeSlash),
                   ),
                 ),
+              ),
+              SizedBox(height: 10),
+              CheckboxListTile(
+                value: model.stayLoggedIn,
+                controlAffinity: ListTileControlAffinity.leading,
+                onChanged: (value) => model.stayLoggedIn = value ?? false,
+                title: Text('Ostanite prijavljeni'),
               ),
               SizedBox(height: 40),
               FilledButton(onPressed: () => login(context, model), child: Text('Prijava')),

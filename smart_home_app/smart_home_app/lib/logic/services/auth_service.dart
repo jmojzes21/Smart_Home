@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:path/path.dart';
 import 'package:smart_home_core/models.dart';
 import 'package:smart_home_core/services.dart';
 
@@ -5,7 +9,11 @@ import 'interfaces/auth_service.dart';
 
 class AuthService implements IAuthService {
   @override
-  Future<void> login(String username, String password) async {
+  Future<void> login(String hostname, String username, String password, bool stayLoggedIn) async {
+    if (hostname.isEmpty) {
+      throw AppException('Potrebno je unijeti naziv poslužitelja.');
+    }
+
     if (username.isEmpty) {
       throw AppException('Potrebno je unijeti korisničko ime.');
     }
@@ -14,15 +22,57 @@ class AuthService implements IAuthService {
       throw AppException('Potrebno je unijeti lozinku.');
     }
 
+    var appContext = AppContext.instance;
+    appContext.backendHostname = hostname;
+
     var client = BackendClient();
 
     try {
       var response = await client.httpPost('/api/auth/user/login', {'username': username, 'password': password});
-
       User user = User.fromJson(response);
-      AppContext.instance.currentUser = user;
+
+      if (stayLoggedIn) {
+        await _saveSession(hostname, user);
+      }
+
+      appContext.currentUser = user;
     } on Exception catch (_) {
       throw AppException('Prijava nije uspjela! Provjerite korisničko ime i lozinku.');
     }
+  }
+
+  @override
+  Future<bool> loadSession() async {
+    File file = await _getSessionFie();
+    if ((await file.exists()) == false) return false;
+
+    try {
+      dynamic sessionJson = jsonDecode(await file.readAsString());
+
+      String hostname = sessionJson['hostname'];
+      User user = User.fromJson(sessionJson['user']);
+
+      var appContext = AppContext.instance;
+      appContext.backendHostname = hostname.trim();
+      appContext.currentUser = user;
+    } on Exception catch (_) {
+      return false;
+    } on Error catch (_) {
+      return false;
+    }
+
+    return true;
+  }
+
+  Future<void> _saveSession(String hostname, User user) async {
+    var session = {'hostname': hostname, 'user': user.toJson()};
+
+    File file = await _getSessionFie();
+    await file.writeAsString(jsonEncode(session));
+  }
+
+  Future<File> _getSessionFie() async {
+    var appDir = await AppContext.instance.getAppDirectory();
+    return File(join(appDir, 'session.json'));
   }
 }

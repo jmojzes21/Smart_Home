@@ -6,9 +6,9 @@ import '../device_handlers.dart';
 import '../logic/services/device_discovery.dart';
 import '../logic/services/device_service.dart';
 import '../logic/vm/devices_page_vm.dart';
-import 'package:smart_home_core/extensions.dart';
 
 import '../models/generic_device.dart';
+import '../widgets/navigation.dart';
 
 class DevicesPage extends StatelessWidget {
   final DeviceHandlers deviceHandlers;
@@ -18,10 +18,12 @@ class DevicesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Moji uređaji')),
       body: ChangeNotifierProvider(
         create: (context) => DevicesPageViewModel(deviceService: DeviceService(), deviceDiscovery: DeviceDiscovery()),
         child: Consumer<DevicesPageViewModel>(builder: (context, model, child) => buildBody(context, model)),
       ),
+      bottomNavigationBar: AppNavigation(selectedIndex: 0),
     );
   }
 
@@ -32,11 +34,6 @@ class DevicesPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ListTile(
-              leading: model.isDiscovering ? CircularProgressIndicator() : null,
-              title: Text('Moji uređaji', style: context.textTheme.titleLarge),
-            ),
-            SizedBox(height: 20),
             ListView.builder(
               itemCount: model.devices.length,
               shrinkWrap: true,
