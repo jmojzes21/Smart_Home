@@ -9,7 +9,7 @@ import '../../models/aq_device.dart';
 class DeviceClient {
   static const Duration _timeout = Duration(seconds: 10);
 
-  final AirQualityDevice device;
+  final AqDevice device;
 
   DeviceClient(this.device);
 

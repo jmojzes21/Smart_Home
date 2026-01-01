@@ -4,6 +4,7 @@ import 'package:smart_home_core/device.dart';
 import 'package:smart_home_core/handler.dart';
 
 import 'models/aq_device.dart';
+import 'models/aq_device_context.dart';
 import 'pages/home_page.dart';
 
 class AirQualityDeviceHandler extends DeviceHandler {
@@ -20,7 +21,8 @@ class AirQualityDeviceHandler extends DeviceHandler {
   }
 
   @override
-  Device createDevice(Device genericDevice) {
-    return AirQualityDevice.fromDevice(genericDevice);
+  DeviceContext createDeviceContext(Device genericDevice) {
+    var device = AqDevice.fromDevice(genericDevice);
+    return AqDeviceContext(device);
   }
 }

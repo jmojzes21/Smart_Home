@@ -4,6 +4,7 @@ import 'package:smart_home_core/device.dart';
 import 'package:smart_home_core/handler.dart';
 
 import 'models/smart_leds_device.dart';
+import 'models/smart_leds_device_context.dart';
 import 'pages/home.dart';
 
 class SmartLedsDeviceHandler extends DeviceHandler {
@@ -20,7 +21,8 @@ class SmartLedsDeviceHandler extends DeviceHandler {
   }
 
   @override
-  Device createDevice(Device genericDevice) {
-    return SmartLedsDevice.fromDevice(genericDevice);
+  DeviceContext createDeviceContext(Device genericDevice) {
+    var device = SmartLedsDevice.fromDevice(genericDevice);
+    return SmartLedsDeviceContext(device);
   }
 }

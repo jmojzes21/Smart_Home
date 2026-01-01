@@ -1,17 +1,17 @@
-import '../../models/aq_device.dart';
+import 'device_client.dart';
 import 'interfaces/air_quality_service.dart';
 import 'virtual/virtual_air_quality_service.dart';
 import 'air_quality_service.dart';
 
 class ServiceFactory {
-  final AirQualityDevice device;
+  final DeviceClient client;
   late bool _isReal;
 
-  ServiceFactory(this.device) {
-    _isReal = device.hostname != '#virtual';
+  ServiceFactory(this.client) {
+    _isReal = client.device.hostname != '#virtual';
   }
 
   IAirQualityService getAirQualityService() {
-    return _isReal ? AirQualityService(device) : VirtualAirQualityService();
+    return _isReal ? AirQualityService(client) : VirtualAirQualityService();
   }
 }

@@ -1,4 +1,3 @@
-import '../../models/aq_device.dart';
 import 'interfaces/air_quality_service.dart';
 import 'device_client.dart';
 import '../../models/air_quality.dart';
@@ -7,7 +6,7 @@ import '../../models/sensor_data.dart';
 class AirQualityService extends IAirQualityService {
   final DeviceClient client;
 
-  AirQualityService(AirQualityDevice device) : client = DeviceClient(device);
+  AirQualityService(this.client);
 
   @override
   Future<AirQuality> getAirQuality() async {

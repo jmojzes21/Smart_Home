@@ -106,9 +106,9 @@ class _DeviceWidget extends StatelessWidget {
     }
 
     var deviceManager = context.read<DeviceManager>();
-    var specificDevice = deviceHandler!.createDevice(device);
+    var deviceContext = deviceHandler!.createDeviceContext(device);
 
-    deviceManager.setDevice(specificDevice);
+    deviceManager.setDeviceContext(deviceContext);
     deviceHandler!.openHomePage(context);
   }
 

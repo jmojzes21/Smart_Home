@@ -1,8 +1,8 @@
 import '../../device.dart';
 
 class DeviceManager {
-  Device? _currentDevice;
+  DeviceContext? _deviceContext;
 
-  Device get device => _currentDevice!;
-  void setDevice(Device device) => _currentDevice = device;
+  DeviceContext get deviceContext => _deviceContext!;
+  void setDeviceContext(DeviceContext deviceContext) => _deviceContext = deviceContext;
 }
