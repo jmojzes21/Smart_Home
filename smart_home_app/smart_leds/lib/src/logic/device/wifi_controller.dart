@@ -2,7 +2,7 @@ import 'device.dart';
 import '../../models/misc/wifi_network.dart';
 
 class WifiController {
-  final Device _device;
+  final DeviceClient _device;
 
   String ssid = '';
   int rssi = 0;
@@ -19,6 +19,9 @@ class WifiController {
   }
 
   Future<void> updateNetworks(List<WifiNetwork> networks) async {
-    await _device.postHttp(path: '/wifi_networks', body: {'networks': networks.map((e) => WifiNetwork.toJson(e)).toList()});
+    await _device.postHttp(
+      path: '/wifi_networks',
+      body: {'networks': networks.map((e) => WifiNetwork.toJson(e)).toList()},
+    );
   }
 }

@@ -3,7 +3,7 @@ import '../../models/patterns/patterns.dart';
 import '../../models/patterns/properties.dart';
 
 class LedController {
-  final Device _device;
+  final DeviceClient _device;
 
   int brightness = 51;
 

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_home_core/device.dart';
 import '../logic/device/device.dart';
 import '../models/misc/wifi_network.dart';
+import '../models/smart_leds_device_context.dart';
 import '../widgets/dialogs/change_password.dart';
 import '../theme.dart';
 import '../widgets/dialogs/simple_dialogs.dart';
@@ -8,21 +11,35 @@ import '../widgets/dialogs/firmware_update.dart';
 import '../widgets/dialogs/wifi_network.dart';
 import '../widgets/misc/navigation_drawer.dart';
 
-class SettingsPage extends StatefulWidget {
+class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
+
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
+  Widget build(BuildContext context) {
+    return Consumer<DeviceManager>(
+      builder: (context, model, child) {
+        var deviceContext = model.deviceContext as SmartLedsDeviceContext;
+        return _SettingsPageBody(deviceContext);
+      },
+    );
+  }
 }
 
-class _SettingsPageState extends State<SettingsPage> {
-  late Device device;
+class _SettingsPageBody extends StatefulWidget {
+  final SmartLedsDeviceContext deviceContext;
+  const _SettingsPageBody(this.deviceContext);
+  @override
+  State<_SettingsPageBody> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<_SettingsPageBody> {
+  late DeviceClient device;
   List<WifiNetwork> wifiNetworks = [];
 
   @override
   void initState() {
     super.initState();
-
-    device = Device.currentDevice;
+    device = widget.deviceContext.deviceClient;
     refresh();
   }
 

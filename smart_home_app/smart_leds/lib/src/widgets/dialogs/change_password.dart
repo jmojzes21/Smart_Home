@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../logic/device/device.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_home_core/device.dart';
 import '../../logic/device_service.dart';
 import '../../models/exceptions.dart';
+import '../../models/smart_leds_device_context.dart';
 import '../misc/checkbox.dart';
 import '../misc/error_text.dart';
 
@@ -25,7 +27,10 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
   var showPassword = false;
   var errorMessage = '';
 
-  void changePassword() async {
+  void changePassword(BuildContext context) async {
+    var deviceContext = context.read<DeviceManager>().deviceContext as SmartLedsDeviceContext;
+    var device = deviceContext.deviceClient;
+
     setState(() => errorMessage = '');
 
     var oldPassword = tcOldPassword.text.trim();
@@ -48,7 +53,6 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
     }
 
     var deviceService = DeviceService();
-    var device = Device.currentDevice;
 
     try {
       await deviceService.changePassword(device: device, plainOldPassword: oldPassword, plainNewPassword: newPassword);
@@ -58,7 +62,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
       return;
     }
 
-    if (!mounted) return;
+    if (!context.mounted) return;
     Navigator.of(context).pop(true);
   }
 
@@ -73,7 +77,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
           },
           child: const Text('Odustani'),
         ),
-        FilledButton(onPressed: () => changePassword(), child: const Text('Promijeni')),
+        FilledButton(onPressed: () => changePassword(context), child: const Text('Promijeni')),
       ],
       content: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20),
@@ -113,7 +117,11 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                 decoration: const InputDecoration(isDense: true, border: OutlineInputBorder()),
               ),
               const SizedBox(height: 20),
-              CheckboxText(value: showPassword, text: 'Prikaži lozinke', onChanged: (value) => setState(() => showPassword = value)),
+              CheckboxText(
+                value: showPassword,
+                text: 'Prikaži lozinke',
+                onChanged: (value) => setState(() => showPassword = value),
+              ),
               if (errorMessage.isNotEmpty) ErrorText(errorMessage),
             ],
           ),

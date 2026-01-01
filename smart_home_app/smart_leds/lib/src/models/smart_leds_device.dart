@@ -1,16 +1,9 @@
-import 'package:smart_home_core/device.dart' as core;
+import 'package:smart_home_core/device.dart';
 
-import '../logic/device/device.dart';
-import '../logic/providers/pattern_provider.dart';
+class SmartLedsDevice extends Device {
+  SmartLedsDevice({required super.name, required super.hostname, super.ipAddress}) : super(type: DeviceType.smartLeds);
 
-class SmartLedsDevice extends core.Device {
-  SmartLedsDevice({required super.name, required super.hostname, super.ipAddress})
-    : super(type: core.DeviceType.smartLeds) {
-    Device.currentDevice = Device(name: name, ipAddress: ipAddress!);
-    PatternProvider.instance = PatternProvider();
-  }
-
-  factory SmartLedsDevice.fromDevice(core.Device device) {
+  factory SmartLedsDevice.fromDevice(Device device) {
     return SmartLedsDevice(name: device.name, hostname: device.hostname, ipAddress: device.ipAddress);
   }
 }

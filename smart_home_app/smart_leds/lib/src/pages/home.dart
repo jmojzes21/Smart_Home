@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import '../logic/providers/pattern_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_home_core/device.dart';
 import '../models/patterns/patterns.dart';
+import '../models/smart_leds_device_context.dart';
 import '../theme.dart';
 import '../widgets/dialogs/brightness.dart';
 import '../widgets/dialogs/pattern_control.dart';
@@ -69,8 +71,8 @@ class _Patterns extends StatelessWidget {
           name: 'Ugasi lampice',
           icon: 'clear.png',
           onPrimaryTap: () {
-            var patterns = PatternProvider.instance!;
-            patterns.clearPattern();
+            var deviceContext = context.read<DeviceManager>().deviceContext as SmartLedsDeviceContext;
+            deviceContext.deviceClient.leds.clearPattern();
           },
           onSecondaryTap: () {},
         ),
@@ -88,8 +90,8 @@ class _PatternCard extends StatelessWidget {
   const _PatternCard({required this.name, required this.icon, required this.pattern, this.controlDialog});
 
   void showPattern(BuildContext context) {
-    var patterns = PatternProvider.instance!;
-    patterns.showPattern(pattern);
+    var deviceContext = context.read<DeviceManager>().deviceContext as SmartLedsDeviceContext;
+    deviceContext.deviceClient.leds.showPattern(pattern, deviceContext.patternProperties);
   }
 
   void showControlDialog({required BuildContext context, required String title, required Widget child}) {

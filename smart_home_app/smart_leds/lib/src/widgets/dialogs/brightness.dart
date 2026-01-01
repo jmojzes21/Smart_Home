@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_home_core/device.dart';
 import '../../logic/device/device.dart';
+import '../../models/smart_leds_device_context.dart';
 import '../../theme.dart';
 
 class BrightnessDialog extends StatelessWidget {
@@ -7,7 +10,17 @@ class BrightnessDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const AlertDialog(content: SizedBox(width: 500, child: _BrightnessControl()));
+    return AlertDialog(
+      content: SizedBox(
+        width: 500,
+        child: Consumer<DeviceManager>(
+          builder: (context, model, child) {
+            var deviceContext = model.deviceContext as SmartLedsDeviceContext;
+            return _BrightnessControl(deviceContext);
+          },
+        ),
+      ),
+    );
   }
 
   static void show(BuildContext context) {
@@ -16,19 +29,20 @@ class BrightnessDialog extends StatelessWidget {
 }
 
 class _BrightnessControl extends StatefulWidget {
-  const _BrightnessControl();
+  final SmartLedsDeviceContext deviceContext;
+  const _BrightnessControl(this.deviceContext);
   @override
   State<_BrightnessControl> createState() => _BrightnessControlState();
 }
 
 class _BrightnessControlState extends State<_BrightnessControl> {
-  late Device device;
+  late DeviceClient device;
   double brightnessPercent = 0;
 
   @override
   void initState() {
     super.initState();
-    device = Device.currentDevice;
+    device = widget.deviceContext.deviceClient;
 
     brightnessPercent = device.leds.brightness / 255;
   }
@@ -46,7 +60,13 @@ class _BrightnessControlState extends State<_BrightnessControl> {
       children: [
         const Text('Jačina svjetla', style: MyTheme.titleLarge),
         const SizedBox(height: 10),
-        Slider(value: brightnessPercent, min: 0, max: 1, onChanged: (value) => setState(() => brightnessPercent = value), onChangeEnd: (value) => setBrightness(value)),
+        Slider(
+          value: brightnessPercent,
+          min: 0,
+          max: 1,
+          onChanged: (value) => setState(() => brightnessPercent = value),
+          onChangeEnd: (value) => setBrightness(value),
+        ),
         Center(child: Text('${(brightnessPercent * 100).round()} %', style: const TextStyle(fontSize: 20))),
       ],
     );

@@ -21,7 +21,7 @@
 
 const char* firmwareVersion = "v2.0.0";
 const char* deviceHostname = "smart_leds";
-const char* deviceDomain = "smart-leds._smart-home._tcp.local";
+const char* deviceDomain = "smart-leds.local";
 const char* deviceType = "smart_leds";
 const int httpPort = 80;
 

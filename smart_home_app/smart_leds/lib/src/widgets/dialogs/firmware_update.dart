@@ -1,25 +1,38 @@
 import 'package:file_selector/file_selector.dart' as fs;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_home_core/device.dart';
 import '../../helpers/firmware_loader.dart';
 import '../../logic/device/device.dart';
 import '../../models/exceptions.dart';
 import '../../models/misc/firmware.dart';
+import '../../models/smart_leds_device_context.dart';
 import '../../theme.dart';
 import 'simple_dialogs.dart';
 
 class FirmwareUpdateDialog extends StatefulWidget {
-  const FirmwareUpdateDialog({super.key});
+  final SmartLedsDeviceContext deviceContext;
+  const FirmwareUpdateDialog(this.deviceContext, {super.key});
   @override
   State<FirmwareUpdateDialog> createState() => _FirmwareUpdateDialogState();
 
   static Future<void> show(BuildContext context) async {
-    var result = await showDialog(context: context, barrierDismissible: false, builder: (context) => const FirmwareUpdateDialog());
+    var result = await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Consumer<DeviceManager>(
+        builder: (context, model, child) {
+          var deviceContext = model.deviceContext as SmartLedsDeviceContext;
+          return FirmwareUpdateDialog(deviceContext);
+        },
+      ),
+    );
     return result;
   }
 }
 
 class _FirmwareUpdateDialogState extends State<FirmwareUpdateDialog> {
-  late Device device;
+  late DeviceClient device;
 
   String firmwareFile = '';
   Firmware? firmware;
@@ -29,7 +42,7 @@ class _FirmwareUpdateDialogState extends State<FirmwareUpdateDialog> {
   @override
   void initState() {
     super.initState();
-    device = Device.currentDevice;
+    device = widget.deviceContext.deviceClient;
   }
 
   void openFile() async {
@@ -76,12 +89,22 @@ class _FirmwareUpdateDialogState extends State<FirmwareUpdateDialog> {
       if (!mounted) return;
       Navigator.of(context).pop();
 
-      SimpleDialogs.showMessage(context: context, title: 'Uspješno ažuriranje programa', message: 'Ugradbeni program na uređaju je uspješno ažuriran.', barrierDismissible: false);
+      SimpleDialogs.showMessage(
+        context: context,
+        title: 'Uspješno ažuriranje programa',
+        message: 'Ugradbeni program na uređaju je uspješno ažuriran.',
+        barrierDismissible: false,
+      );
     } on FirmwareUpdateException catch (e) {
       if (!mounted) return;
       Navigator.of(context).pop();
 
-      SimpleDialogs.showMessage(context: context, title: 'Greška kod ažuriranja programa', message: e.message, barrierDismissible: false);
+      SimpleDialogs.showMessage(
+        context: context,
+        title: 'Greška kod ažuriranja programa',
+        message: e.message,
+        barrierDismissible: false,
+      );
     }
   }
 

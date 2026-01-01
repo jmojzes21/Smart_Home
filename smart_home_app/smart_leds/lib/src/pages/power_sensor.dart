@@ -1,18 +1,39 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_home_core/device.dart';
 import '../logic/device/device.dart';
 import '../models/misc/power_sensor_data.dart';
+import '../models/smart_leds_device_context.dart';
 import '../theme.dart';
 import '../widgets/misc/navigation_drawer.dart';
 
-class PowerSensorPage extends StatefulWidget {
+class PowerSensorPage extends StatelessWidget {
   const PowerSensorPage({super.key});
+
   @override
-  State<PowerSensorPage> createState() => _PowerSensorPageState();
+  Widget build(BuildContext context) {
+    return Consumer<DeviceManager>(
+      builder: (context, model, child) {
+        var deviceContext = model.deviceContext as SmartLedsDeviceContext;
+        return _PowerSensorPageBody(deviceContext);
+      },
+    );
+  }
 }
 
-class _PowerSensorPageState extends State<PowerSensorPage> {
+class _PowerSensorPageBody extends StatefulWidget {
+  final SmartLedsDeviceContext deviceContext;
+
+  const _PowerSensorPageBody(this.deviceContext);
+  @override
+  State<_PowerSensorPageBody> createState() => _PowerSensorPageState();
+}
+
+class _PowerSensorPageState extends State<_PowerSensorPageBody> {
+  late DeviceClient deviceClient;
+
   var powerSensorData = PowerSensorData();
   Timer? refreshTimer;
 
@@ -23,8 +44,8 @@ class _PowerSensorPageState extends State<PowerSensorPage> {
   }
 
   void refresh() async {
-    var device = Device.currentDevice;
-    var data = await device.powerSensor.getData();
+    deviceClient = widget.deviceContext.deviceClient;
+    var data = await deviceClient.powerSensor.getData();
 
     if (data.isActive) {
       refreshTimer ??= Timer.periodic(const Duration(seconds: 2), (timer) => refresh());
@@ -39,8 +60,7 @@ class _PowerSensorPageState extends State<PowerSensorPage> {
   }
 
   void changePowerSensorState(bool active) async {
-    var device = Device.currentDevice;
-    await device.powerSensor.setState(active);
+    await deviceClient.powerSensor.setState(active);
     refresh();
   }
 
@@ -90,7 +110,11 @@ class _PowerSensorPageState extends State<PowerSensorPage> {
           width: 300,
           height: 200,
           child: Center(
-            child: Text('Senzor potrošnje energije je isključen.', textAlign: TextAlign.center, style: MyTheme.titleLarge),
+            child: Text(
+              'Senzor potrošnje energije je isključen.',
+              textAlign: TextAlign.center,
+              style: MyTheme.titleLarge,
+            ),
           ),
         ),
         const SizedBox(height: 40),

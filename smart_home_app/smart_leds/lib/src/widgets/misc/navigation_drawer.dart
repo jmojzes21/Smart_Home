@@ -39,7 +39,7 @@ class AppNavigationDrawer extends StatelessWidget {
 
   void closeDevice(BuildContext context) async {
     if (!context.mounted) return;
-    context.replace('/devices');
+    context.replace('/');
   }
 
   @override

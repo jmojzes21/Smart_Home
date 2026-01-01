@@ -2,7 +2,7 @@ import 'device.dart';
 import '../../models/misc/power_sensor_data.dart';
 
 class PowerSensor {
-  final Device _device;
+  final DeviceClient _device;
 
   PowerSensor(this._device);
 

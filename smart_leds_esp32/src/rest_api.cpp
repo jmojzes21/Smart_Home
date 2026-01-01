@@ -98,7 +98,7 @@ void DeviceRestApi::_initDeviceApi() {
         JsonDocument doc;
 
         doc["name"] = device.name;
-        doc["domain"] = device.domain;
+        doc["hostname"] = device.domain;
         doc["type"] = device.deviceType;
         doc["version"] = device.version;
 

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../logic/providers/pattern_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_home_core/device.dart';
 import '../../models/patterns/patterns.dart';
 import '../../models/patterns/property_values.dart';
+import '../../models/smart_leds_device_context.dart';
 import '../misc/segmented_button_picker.dart';
 
 class RainbowPatternControl extends StatefulWidget {
@@ -16,23 +18,27 @@ class RainbowPatternControl extends StatefulWidget {
 class _RainbowPatternControlState extends State<RainbowPatternControl> {
   @override
   Widget build(BuildContext context) {
-    var patternProvider = PatternProvider.instance!;
-    var properties = patternProvider.properties;
+    return Consumer<DeviceManager>(
+      builder: (context, model, child) {
+        var deviceContext = model.deviceContext as SmartLedsDeviceContext;
+        var properties = deviceContext.patternProperties;
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SegmentedButtonPicker(
-          label: 'Brzina promjene',
-          value: properties.rainbowSpeed,
-          values: PatternPropertyValues.rainbowSpeedValues,
-          onChange: (value) => setState(() {
-            properties.rainbowSpeed = value;
-            patternProvider.showPattern(widget.pattern);
-          }),
-        ),
-      ],
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SegmentedButtonPicker(
+              label: 'Brzina promjene',
+              value: properties.rainbowSpeed,
+              values: PatternPropertyValues.rainbowSpeedValues,
+              onChange: (value) => setState(() {
+                properties.rainbowSpeed = value;
+                deviceContext.deviceClient.leds.showPattern(widget.pattern, properties);
+              }),
+            ),
+          ],
+        );
+      },
     );
   }
 }

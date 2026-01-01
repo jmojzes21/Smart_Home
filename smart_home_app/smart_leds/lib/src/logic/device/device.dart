@@ -13,7 +13,7 @@ import '../../models/misc/firmware.dart';
 
 typedef JsonObject = Map<String, dynamic>;
 
-class Device {
+class DeviceClient {
   String name = '';
   String type = '';
   String firmwareVersion = '';
@@ -27,7 +27,7 @@ class Device {
 
   String _authentication = '';
 
-  Device({this.name = '', required this.ipAddress}) {
+  DeviceClient({this.name = '', required this.ipAddress}) {
     leds = LedController(this);
     wifi = WifiController(this);
     powerSensor = PowerSensor(this);
@@ -171,11 +171,6 @@ class Device {
 
     return data;
   }
-
-  static Device? _currentDevice;
-
-  static set currentDevice(Device? device) => _currentDevice = device;
-  static Device get currentDevice => _currentDevice!;
 }
 
 extension on http.Response {

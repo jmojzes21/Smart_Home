@@ -8,18 +8,18 @@ class DeviceDiscovery {
   bool _isDiscovering = false;
   MDnsClient? _client;
 
-  Stream<Device> start() {
+  Stream<DeviceClient> start() {
     if (_isDiscovering) throw Exception('Otkrivanje uređaja u tijeku!');
 
     _isDiscovering = true;
 
-    var streamController = StreamController<Device>();
+    var streamController = StreamController<DeviceClient>();
     _start(streamController);
 
     return streamController.stream;
   }
 
-  void _start(StreamController<Device> streamController) async {
+  void _start(StreamController<DeviceClient> streamController) async {
     const String serviceName = '_http._tcp.local';
     const String targetName = 'smart_leds.local';
 
@@ -36,15 +36,21 @@ class DeviceDiscovery {
       return;
     }
 
-    await for (final PtrResourceRecord ptr in _client!.lookup<PtrResourceRecord>(ResourceRecordQuery.serverPointer(serviceName))) {
-      await for (final SrvResourceRecord srv in _client!.lookup<SrvResourceRecord>(ResourceRecordQuery.service(ptr.domainName))) {
-        await for (final IPAddressResourceRecord ip in _client!.lookup<IPAddressResourceRecord>(ResourceRecordQuery.addressIPv4(srv.target))) {
+    await for (final PtrResourceRecord ptr in _client!.lookup<PtrResourceRecord>(
+      ResourceRecordQuery.serverPointer(serviceName),
+    )) {
+      await for (final SrvResourceRecord srv in _client!.lookup<SrvResourceRecord>(
+        ResourceRecordQuery.service(ptr.domainName),
+      )) {
+        await for (final IPAddressResourceRecord ip in _client!.lookup<IPAddressResourceRecord>(
+          ResourceRecordQuery.addressIPv4(srv.target),
+        )) {
           if (srv.target == targetName) {
             var deviceName = srv.name.substring(0, srv.name.length - serviceName.length - 1);
 
             log('Pronađen uređaj $deviceName, IP: ${ip.address.address}');
 
-            streamController.sink.add(Device(name: deviceName, ipAddress: ip.address));
+            streamController.sink.add(DeviceClient(name: deviceName, ipAddress: ip.address));
           }
         }
       }
