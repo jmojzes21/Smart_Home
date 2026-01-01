@@ -1,11 +1,12 @@
 import 'package:go_router/go_router.dart';
 import 'package:smart_home_core/device.dart';
 import 'package:smart_home_core/models.dart';
+import 'package:smart_home_core/widgets.dart';
 
 import '../logic/services/service_factory.dart';
-import '../logic/vm/home_page_view_model.dart';
+import '../logic/vm/home_page_vm.dart';
+import '../models/aq_device.dart';
 import '../widgets/metrics_card.dart';
-import 'exception_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,11 +19,13 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(title: Text('Kvaliteta zraka'), actions: [buildAppBarMenu(context)]),
       body: ChangeNotifierProvider(
         create: (context) {
-          var serviceFactory = ServiceFactory(context.read<DeviceManager>().device);
+          var serviceFactory = ServiceFactory(context.read<DeviceManager>().device as AirQualityDevice);
           return HomePageViewModel(
             aqService: serviceFactory.getAirQualityService(),
-            openExceptionPage: (message) {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ExceptionPage(message)));
+            onException: (message) {
+              if (!context.mounted) return;
+              Dialogs.showSnackBar(context, message);
+              context.replace('/');
             },
           );
         },
@@ -123,7 +126,7 @@ class HomePage extends StatelessWidget {
     return MenuAnchor(
       menuChildren: [
         MenuItemButton(
-          onPressed: () => context.replace('/devices'),
+          onPressed: () => context.replace('/'),
           leadingIcon: Icon(Icons.exit_to_app),
           child: Text('Zatvori uređaj'),
         ),
