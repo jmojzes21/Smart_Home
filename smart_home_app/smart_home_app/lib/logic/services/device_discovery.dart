@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:multicast_dns/multicast_dns.dart';
 import 'package:smart_home_core/device.dart';
+import 'package:smart_home_core/exceptions.dart';
 
 import '../../models/generic_device.dart';
 
@@ -91,16 +92,16 @@ class DeviceDiscovery {
       if (_isDiscovering) {
         _streamController?.sink.add(device);
       }
-    } on Exception catch (e) {
-      log(e.toString());
+    } catch (e) {
+      log(Exceptions.getMessage(e));
     }
   }
 
   GenericDevice _parseGenericDevice(Map<String, dynamic> json) {
     return GenericDevice(
       type: DeviceType.parse(json['type']),
-      name: json['name'],
-      hostname: json['domain'],
+      hostname: json['hostname'],
+      name: '',
       ipAddress: InternetAddress(json['ip']),
     );
   }

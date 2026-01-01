@@ -4,10 +4,10 @@ import 'device_type.dart';
 
 abstract class Device {
   DeviceType type;
-  String name;
   String hostname;
+  String name;
 
   InternetAddress? ipAddress;
 
-  Device({required this.type, required this.name, required this.hostname, this.ipAddress});
+  Device({required this.type, required this.hostname, required this.name, this.ipAddress});
 }
