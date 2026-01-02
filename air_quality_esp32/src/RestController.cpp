@@ -32,6 +32,12 @@ void RestController::init() {
 
 void RestController::handleDeviceStatusRequest(AsyncWebServerRequest* request) {
 
+  auto *ramUsageParam = request->getParam("ram_usage");
+  bool showRamUsage = ramUsageParam != nullptr && ramUsageParam->value() == "true";
+
+  auto *vinParam = request->getParam("input_voltage");
+  bool showInputVoltage = vinParam != nullptr && vinParam->value() == "true"; 
+
   JsonDocument doc;
 
   doc["type"] = DEVICE_TYPE;
@@ -42,11 +48,18 @@ void RestController::handleDeviceStatusRequest(AsyncWebServerRequest* request) {
   doc["ssid"] = wifiController->getSSID();
   doc["rssi"] = wifiController->getRSSI();
 
-  JsonObject ram = doc["ram"].to<JsonObject>();
+  if(showRamUsage) {
+    JsonObject ram = doc["ram"].to<JsonObject>();
 
-  ram["heap_size"] = ESP.getHeapSize();
-  ram["free_heap"] = ESP.getFreeHeap();
-  ram["min_free_heap"] = ESP.getMinFreeHeap();
+    ram["heap_size"] = ESP.getHeapSize();
+    ram["free_heap"] = ESP.getFreeHeap();
+    ram["min_free_heap"] = ESP.getMinFreeHeap();
+  }
+
+  if(showInputVoltage) {
+    uint32_t inputVoltage = sensorController->readInputVoltage();
+    doc["input_voltage"] = inputVoltage;
+  }
 
   respondJson(request, doc);
 

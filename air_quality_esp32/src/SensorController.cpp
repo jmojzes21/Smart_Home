@@ -5,6 +5,7 @@
 
 #define PMS_RX_PIN 14
 #define PMS_TX_PIN 15
+#define VIN_ADC_PIN 35
 
 #define SAVE_AQ_HISTORY_PERIOD 60000
 
@@ -14,9 +15,12 @@ SensorController::SensorController(DeviceController* deviceController) {
 
 void SensorController::init() {
 
+  memset(&pms5003Data, 0, sizeof(pms5003Data));
+
   i2cSensorMutex = xSemaphoreCreateMutex();
   pmsMutex = xSemaphoreCreateMutex();
   aqHistoryMutex = xSemaphoreCreateMutex();
+  vinAdcMutex = xSemaphoreCreateMutex();
 
   Wire.begin();
 
@@ -31,6 +35,8 @@ void SensorController::init() {
   }
 
   pms5003Sensor.init(&Serial2, PMS_RX_PIN, PMS_TX_PIN);
+
+  pinMode(VIN_ADC_PIN, INPUT);
 
   xTaskCreateUniversal(pmsTask, "pmsTask", 8192, this, 1, &pmsTaskHandle, ARDUINO_RUNNING_CORE);
   xTaskCreateUniversal(aqHistoryTask, "aqHistory", 8192, this, 1, &aqHistoryTaskHandle, ARDUINO_RUNNING_CORE);
@@ -58,6 +64,23 @@ void SensorController::readSensorData(AirQualityData& aqData) {
   aqData.pms = pms5003Data;
   xSemaphoreGive(pmsMutex);
   
+}
+
+uint32_t SensorController::readInputVoltage() {
+
+  xSemaphoreTake(vinAdcMutex, portMAX_DELAY);
+
+  uint32_t adcVoltage = 0;
+  for(int i = 0; i < 8; i++) {
+    adcVoltage += analogReadMilliVolts(VIN_ADC_PIN);
+  }
+
+  xSemaphoreGive(vinAdcMutex);
+  
+  adcVoltage /= 8;
+  uint32_t voltage = 2.0f * adcVoltage;
+
+  return voltage;
 }
 
 void SensorController::saveAirQualityHistory() {

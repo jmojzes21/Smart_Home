@@ -55,6 +55,8 @@ class SensorController {
   SemaphoreHandle_t i2cSensorMutex;
   SemaphoreHandle_t pmsMutex;
   SemaphoreHandle_t aqHistoryMutex;
+  SemaphoreHandle_t vinAdcMutex;
+
   TaskHandle_t pmsTaskHandle;
   TaskHandle_t aqHistoryTaskHandle;
 
@@ -68,6 +70,8 @@ class SensorController {
   void init();
 
   void readSensorData(AirQualityData& aqData);
+  uint32_t readInputVoltage();
+  
   void saveAirQualityHistory();
 
   void takeAqHistoryMutex();
