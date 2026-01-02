@@ -11,7 +11,7 @@ class SmartLedsDeviceHandler extends DeviceHandler {
   SmartLedsDeviceHandler() : super(DeviceType.smartLeds);
 
   @override
-  List<GoRoute> getRoutes() {
+  List<RouteBase> getRoutes() {
     return [GoRoute(path: '/leds/home', builder: (context, state) => HomePage())];
   }
 

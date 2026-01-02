@@ -46,7 +46,7 @@ class AppRoutes {
     ],
   );
 
-  void addRoutes(List<GoRoute> routes) {
+  void addRoutes(List<RouteBase> routes) {
     goRouter.configuration.routes.addAll(routes);
   }
 }

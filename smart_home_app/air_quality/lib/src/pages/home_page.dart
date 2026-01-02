@@ -13,29 +13,20 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Kvaliteta zraka'), actions: [buildAppBarMenu(context)]),
-      body: ChangeNotifierProvider(
-        create: (context) {
-          var deviceContext = AqDeviceContext.of(context);
-          return HomePageViewModel(
-            aqService: deviceContext.serviceFactory.getAirQualityService(),
-            onException: (message) {
-              if (!context.mounted) return;
-              Dialogs.showSnackBar(context, message);
-              context.replace('/');
-            },
-          );
-        },
-        //child: buildBody(context),
-        child: Consumer<HomePageViewModel>(builder: (context, model, child) => buildBody(context, model)),
-      ),
-      bottomNavigationBar: NavigationBar(
-        destinations: [
-          NavigationDestination(icon: Icon(Icons.home), label: 'Početna'),
-          NavigationDestination(icon: Icon(Icons.settings), label: 'Postavke'),
-        ],
-      ),
+    return ChangeNotifierProvider(
+      create: (context) {
+        var deviceContext = AqDeviceContext.of(context);
+        return HomePageViewModel(
+          aqService: deviceContext.serviceFactory.getAirQualityService(),
+          onException: (message) {
+            if (!context.mounted) return;
+            Dialogs.showSnackBar(context, message);
+            context.replace('/');
+          },
+        );
+      },
+      //child: buildBody(context),
+      child: Consumer<HomePageViewModel>(builder: (context, model, child) => buildBody(context, model)),
     );
   }
 
@@ -117,30 +108,6 @@ class HomePage extends StatelessWidget {
           SizedBox(width: mcWidth, child: mcPm25),
         ],
       ),
-    );
-  }
-
-  Widget buildAppBarMenu(BuildContext context) {
-    return MenuAnchor(
-      menuChildren: [
-        MenuItemButton(
-          onPressed: () => context.replace('/'),
-          leadingIcon: Icon(Icons.exit_to_app),
-          child: Text('Zatvori uređaj'),
-        ),
-      ],
-      builder: (context, controller, child) {
-        return IconButton(
-          onPressed: () {
-            if (controller.isOpen) {
-              controller.close();
-            } else {
-              controller.open();
-            }
-          },
-          icon: Icon(Icons.more_vert),
-        );
-      },
     );
   }
 

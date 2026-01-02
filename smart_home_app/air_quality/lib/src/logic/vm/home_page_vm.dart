@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:smart_home_core/models.dart';
 import 'package:smart_home_core/view_model.dart';
 

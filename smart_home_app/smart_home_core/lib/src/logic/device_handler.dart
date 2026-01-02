@@ -10,7 +10,7 @@ abstract class DeviceHandler {
 
   DeviceHandler(this.type);
 
-  List<GoRoute> getRoutes();
+  List<RouteBase> getRoutes();
   void openHomePage(BuildContext context);
 
   DeviceContext createDeviceContext(Device genericDevice);
