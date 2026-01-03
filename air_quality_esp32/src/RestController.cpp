@@ -42,6 +42,7 @@ void RestController::handleDeviceStatusRequest(AsyncWebServerRequest* request) {
 
   doc["type"] = DEVICE_TYPE;
   doc["hostname"] = DEVICE_DOMAIN;
+  doc["name"] = DEVICE_NAME;
   doc["version"] = DEVICE_VERSION;
 
   doc["ip"] = wifiController->getLocalIP();

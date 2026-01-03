@@ -5,6 +5,7 @@
 
 #define DEVICE_HOSTNAME "air-quality-sensor"
 #define DEVICE_DOMAIN "air-quality-sensor.local"
+#define DEVICE_NAME "Kvaliteta zraka"
 #define DEVICE_TYPE "air_quality"
 #define DEVICE_VERSION "v0.2.0"
 
