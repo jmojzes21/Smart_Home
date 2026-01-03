@@ -22,8 +22,6 @@ void SensorController::init() {
   aqHistoryMutex = xSemaphoreCreateMutex();
   vinAdcMutex = xSemaphoreCreateMutex();
 
-  Wire.begin();
-
   if(!bme280Sensor.begin(BME280_ADDRESS_ALTERNATE)) {
     deviceController->showColor(LedColors::Orange);
     deviceController->haltDevice();

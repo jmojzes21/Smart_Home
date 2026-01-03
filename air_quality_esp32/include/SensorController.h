@@ -2,7 +2,6 @@
 #pragma once
 
 #include <Arduino.h>
-#include <Wire.h>
 #include <Adafruit_BME280.h>
 #include <SHTC3-SOLDERED.h>
 #include <PMS5003.h>

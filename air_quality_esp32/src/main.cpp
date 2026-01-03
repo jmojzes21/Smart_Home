@@ -1,5 +1,6 @@
 
 #include <Arduino.h>
+#include <Wire.h>
 
 #include "DeviceController.h"
 #include "SensorController.h"
@@ -16,6 +17,8 @@ RestController* restController;
 void setup() {
 
   Serial.begin(115200);
+
+  Wire.begin();
 
   deviceController = new DeviceController();
   sensorController = new SensorController(deviceController);

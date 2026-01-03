@@ -13,10 +13,43 @@ DeviceController::DeviceController() {
 
 void DeviceController::init() {
 
+  rtcMutex = xSemaphoreCreateMutex();
+
   DasduinoLed::init();
   DasduinoLed::setBrightness(20);
 
   LittleFS.begin(true);
+  rtc.begin();
+
+}
+
+struct tm DeviceController::getDateTime() {
+
+  xSemaphoreTake(rtcMutex, portMAX_DELAY);
+
+  rtc.readTime();
+
+  tm t;
+  t.tm_mday = rtc.getDay();
+  t.tm_mon = rtc.getMonth();
+  t.tm_year = rtc.getYear();
+  t.tm_hour = rtc.getHour();
+  t.tm_min = rtc.getMinute();
+  t.tm_sec = rtc.getSecond();
+
+  xSemaphoreGive(rtcMutex);
+
+  return t;
+}
+
+void DeviceController::setDateTime(struct tm t) {
+
+  xSemaphoreTake(rtcMutex, portMAX_DELAY);
+
+  rtc.setDate(t.tm_wday, t.tm_mday, t.tm_mon, t.tm_year);
+  rtc.setTime(t.tm_hour, t.tm_min, t.tm_sec);
+
+  xSemaphoreGive(rtcMutex);
 
 }
 
