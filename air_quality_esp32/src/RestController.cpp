@@ -2,6 +2,7 @@
 #include "RestController.h"
 
 #include <ArduinoJson.h>
+#include "DateFormats.h"
 
 RestController::RestController(DeviceController* deviceController, SensorController* sensorController,
   WifiController* wifiController) {
@@ -24,6 +25,14 @@ void RestController::init() {
 
   httpServer->on("/aq-history", HTTP_GET, [&](AsyncWebServerRequest* request) {
     handleAqHistoryRequest(request);
+  });
+
+  httpServer->on("/rtc", HTTP_GET, [&](AsyncWebServerRequest* request) {
+    handleGetRtcRequest(request);
+  });
+
+  httpServer->on("/rtc", HTTP_PATCH, [&](AsyncWebServerRequest* request, JsonVariant &jsonv) {
+    handlePatchRtcRequest(request, jsonv);
   });
   
   httpServer->begin();
@@ -126,6 +135,44 @@ void RestController::handleAqHistoryRequest(AsyncWebServerRequest* request) {
   sensorController->giveAqHistoryMutex();
 
   doc.shrinkToFit();
+  respondJson(request, doc);
+
+}
+
+void RestController::handleGetRtcRequest(AsyncWebServerRequest *request) {
+
+  tm t = deviceController->getDateTime();
+
+  JsonDocument doc;
+
+  std::string dateTime = DateFormats::formatDateTime(t);
+  doc["date_time"] = dateTime;
+
+  respondJson(request, doc);
+
+}
+
+void RestController::handlePatchRtcRequest(AsyncWebServerRequest *request, JsonVariant &jsonv) {
+
+  JsonObject json = jsonv.as<JsonObject>();
+
+  tm t = {0};
+  t.tm_wday = json["week_day"];
+  t.tm_mday = json["month_day"];
+  t.tm_mon = json["month"];
+  t.tm_year = json["year"];
+  t.tm_hour = json["hour"];
+  t.tm_min = json["minute"];
+  t.tm_sec = json["second"];
+
+  deviceController->setDateTime(t);
+  t = deviceController->getDateTime();
+
+  JsonDocument doc;
+
+  std::string dateTime = DateFormats::formatDateTime(t);
+  doc["date_time"] = dateTime;
+
   respondJson(request, doc);
 
 }
