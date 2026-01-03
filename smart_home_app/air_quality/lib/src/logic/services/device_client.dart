@@ -40,4 +40,20 @@ class DeviceClient {
 
     return jsonDecode(response.body);
   }
+
+  Future<dynamic> httpPatch(String path, Object body) async {
+    var headers = {'Content-Type': 'application/json'};
+    String bodyJson = jsonEncode(body);
+
+    var hostname = device.ipAddress!.address;
+    var url = Uri.http(hostname, path);
+
+    var response = await http.patch(url, headers: headers, body: bodyJson, encoding: utf8).timeout(_timeout);
+
+    if (response.statusCode != 200) {
+      throw AppException(response.body);
+    }
+
+    return jsonDecode(response.body);
+  }
 }

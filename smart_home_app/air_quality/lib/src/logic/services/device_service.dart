@@ -12,4 +12,28 @@ class DeviceService extends IDeviceService {
     var json = await client.httpGet('/device', {'ram_usage': 'true', 'input_voltage': 'true'});
     return DeviceStatus.fromJson(json);
   }
+
+  @override
+  Future<DateTime> getRtcTime() async {
+    var json = await client.httpGet('/rtc');
+    String dtText = json['date_time'];
+
+    return DateTime.parse(dtText);
+  }
+
+  @override
+  Future<DateTime> setRtcTime(DateTime time) async {
+    var json = await client.httpPatch('/rtc', {
+      'week_day': time.weekday,
+      'month_day': time.day,
+      'month': time.month,
+      'year': time.year,
+      'hour': time.hour,
+      'minute': time.minute,
+      'second': time.second,
+    });
+    String dtText = json['date_time'];
+
+    return DateTime.parse(dtText);
+  }
 }

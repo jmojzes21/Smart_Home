@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_home_core/extensions.dart';
+import 'package:smart_home_core/formats.dart';
 import 'package:smart_home_core/widgets.dart';
 
 import '../logic/vm/settings_page_vm.dart';
@@ -17,7 +18,7 @@ class SettingsPage extends StatelessWidget {
         var deviceContext = AqDeviceContext.of(context);
         return SettingsPageViewModel(
           deviceService: deviceContext.serviceFactory.getDeviceService(),
-          onException: (message) {
+          onShowMessage: (message) {
             if (!context.mounted) return;
             Dialogs.showSnackBar(context, message);
           },
@@ -119,6 +120,14 @@ class SettingsPage extends StatelessWidget {
           rowDivider,
           TableRow(
             children: [
+              Text('Vrijeme', style: titleStyle),
+              columnSpacing,
+              Text(Formats.formatDateTime(model.rtcTime), style: valueStyle),
+            ],
+          ),
+          rowDivider,
+          TableRow(
+            children: [
               Text('Napon', style: titleStyle),
               columnSpacing,
               Text('${model.voltage.toStringAsFixed(1)} V', style: valueStyle),
@@ -155,9 +164,15 @@ class SettingsPage extends StatelessWidget {
 
       SizedBox(height: 40),
       OutlinedButton.icon(
-        onPressed: enableButons ? () => model.getDeviceStatus() : null,
+        onPressed: enableButons ? () => model.refresh() : null,
         icon: FaIcon(FontAwesomeIcons.arrowsRotate),
         label: Text('Osvježi'),
+      ),
+      SizedBox(height: 20),
+      OutlinedButton.icon(
+        onPressed: enableButons ? () => model.syncRtcTime() : null,
+        icon: FaIcon(FontAwesomeIcons.clock),
+        label: Text('Sinkroniziraj vrijeme'),
       ),
     ];
   }

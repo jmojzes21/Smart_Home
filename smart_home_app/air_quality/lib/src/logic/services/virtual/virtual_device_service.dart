@@ -22,4 +22,14 @@ class VirtualDeviceService extends IDeviceService {
       inputVoltage: 5000,
     );
   }
+
+  @override
+  Future<DateTime> getRtcTime() async {
+    return DateTime.now();
+  }
+
+  @override
+  Future<DateTime> setRtcTime(DateTime time) async {
+    return DateTime.now();
+  }
 }
