@@ -15,12 +15,14 @@ void DeviceController::init() {
 
   rtcMutex = xSemaphoreCreateMutex();
 
+  rtc.begin();
+  bootTime = getDateTime();
+
   DasduinoLed::init();
   DasduinoLed::setBrightness(20);
 
   LittleFS.begin(true);
-  rtc.begin();
-
+  
 }
 
 struct tm DeviceController::getDateTime() {
@@ -51,6 +53,10 @@ void DeviceController::setDateTime(struct tm t) {
 
   xSemaphoreGive(rtcMutex);
 
+}
+
+tm DeviceController::getBootTime() {
+  return bootTime;
 }
 
 void DeviceController::getWifiNetworks(std::vector<WifiNetwork> &networks) {

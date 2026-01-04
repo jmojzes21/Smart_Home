@@ -15,6 +15,8 @@ class DeviceController {
   PCF85063A rtc;
   SemaphoreHandle_t rtcMutex;
 
+  struct tm bootTime;
+
   public:
 
   DeviceController();
@@ -23,6 +25,8 @@ class DeviceController {
 
   struct tm getDateTime();
   void setDateTime(struct tm t);
+
+  struct tm getBootTime();
 
   void getWifiNetworks(std::vector<WifiNetwork>& networks);
 

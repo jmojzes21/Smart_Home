@@ -27,7 +27,7 @@ struct AirQualityData {
 };
 
 struct AirQualityHistory {
-  uint64_t time;
+  uint32_t timeSeconds;
   float temperature;
   float humidity;
   float pressure;

@@ -7,7 +7,7 @@
 #define PMS_TX_PIN 15
 #define VIN_ADC_PIN 35
 
-#define SAVE_AQ_HISTORY_PERIOD 60000
+#define SAVE_AQ_HISTORY_PERIOD 30000
 
 SensorController::SensorController(DeviceController* deviceController) {
   this->deviceController = deviceController;
@@ -86,8 +86,10 @@ void SensorController::saveAirQualityHistory() {
   AirQualityData aqData;
   readSensorData(aqData);
 
+  uint32_t timeSeconds = (uint32_t)millis() / 1000;
+
   AirQualityHistory aqHistory;
-  aqHistory.time = millis() / 1000;
+  aqHistory.timeSeconds = timeSeconds;
 
   aqHistory.temperature = (aqData.bme280.temperature + aqData.shtc3.temperature) / 2;
   aqHistory.humidity = (aqData.bme280.humidity + aqData.shtc3.humidity) / 2;

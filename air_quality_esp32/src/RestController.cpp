@@ -3,6 +3,7 @@
 
 #include <ArduinoJson.h>
 #include "DateFormats.h"
+#include "PSRAMAllocator.h"
 
 RestController::RestController(DeviceController* deviceController, SensorController* sensorController,
   WifiController* wifiController) {
@@ -64,6 +65,10 @@ void RestController::handleDeviceStatusRequest(AsyncWebServerRequest* request) {
     ram["heap_size"] = ESP.getHeapSize();
     ram["free_heap"] = ESP.getFreeHeap();
     ram["min_free_heap"] = ESP.getMinFreeHeap();
+
+    ram["psram_size"] = ESP.getPsramSize();
+    ram["free_psram"] = ESP.getFreePsram();
+    ram["min_free_psram"] = ESP.getMinFreePsram();
   }
 
   if(showInputVoltage) {
@@ -116,7 +121,12 @@ void RestController::handleSensorDataRequest(AsyncWebServerRequest* request) {
 
 void RestController::handleAqHistoryRequest(AsyncWebServerRequest* request) {
 
-  JsonDocument doc;
+  SpiRamAllocator allocator;
+  JsonDocument doc(&allocator);
+
+  tm bootTime = deviceController->getBootTime();
+  std::string bootTimeText = DateFormats::formatDateTime(bootTime);
+  doc["boot_time"] = bootTimeText;
 
   JsonArray aqHistoryJson = doc["aq_history"].to<JsonArray>();
 
@@ -125,7 +135,7 @@ void RestController::handleAqHistoryRequest(AsyncWebServerRequest* request) {
   
   for(auto &e : aqHistoryList) {
     JsonObject jsonObj = aqHistoryJson.add<JsonObject>();
-    jsonObj["time"] = e.time;
+    jsonObj["time"] = e.timeSeconds;
     jsonObj["temperature"] = e.temperature;
     jsonObj["humidity"] = e.humidity;
     jsonObj["pressure"] = e.pressure;
