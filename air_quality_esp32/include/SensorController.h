@@ -75,6 +75,7 @@ class SensorController {
 
   void takeAqHistoryMutex();
   void giveAqHistoryMutex();
+  void clearAirQualityHistory();
   std::list<AirQualityHistory>& getAirQualityHistory();
 
 };

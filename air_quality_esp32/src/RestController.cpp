@@ -25,7 +25,11 @@ void RestController::init() {
   });
 
   httpServer->on("/aq-history", HTTP_GET, [&](AsyncWebServerRequest* request) {
-    handleAqHistoryRequest(request);
+    handleGetAqHistoryRequest(request);
+  });
+
+  httpServer->on("/aq-history", HTTP_DELETE, [&](AsyncWebServerRequest* request) {
+    handleDeleteAqHistoryRequest(request);
   });
 
   httpServer->on("/rtc", HTTP_GET, [&](AsyncWebServerRequest* request) {
@@ -119,7 +123,7 @@ void RestController::handleSensorDataRequest(AsyncWebServerRequest* request) {
 
 }
 
-void RestController::handleAqHistoryRequest(AsyncWebServerRequest* request) {
+void RestController::handleGetAqHistoryRequest(AsyncWebServerRequest* request) {
 
   SpiRamAllocator allocator;
   JsonDocument doc(&allocator);
@@ -147,6 +151,13 @@ void RestController::handleAqHistoryRequest(AsyncWebServerRequest* request) {
   doc.shrinkToFit();
   respondJson(request, doc);
 
+}
+
+void RestController::handleDeleteAqHistoryRequest(AsyncWebServerRequest *request) {
+
+  sensorController->clearAirQualityHistory();
+
+  request->send(200);
 }
 
 void RestController::handleGetRtcRequest(AsyncWebServerRequest *request) {

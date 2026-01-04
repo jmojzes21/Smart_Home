@@ -29,7 +29,8 @@ class RestController {
 
   void handleDeviceStatusRequest(AsyncWebServerRequest* request);
   void handleSensorDataRequest(AsyncWebServerRequest* request);
-  void handleAqHistoryRequest(AsyncWebServerRequest* request);
+  void handleGetAqHistoryRequest(AsyncWebServerRequest* request);
+  void handleDeleteAqHistoryRequest(AsyncWebServerRequest* request);
   void handleGetRtcRequest(AsyncWebServerRequest* request);
   void handlePatchRtcRequest(AsyncWebServerRequest* request, JsonVariant &jsonv);
 

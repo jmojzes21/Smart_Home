@@ -116,6 +116,12 @@ void SensorController::giveAqHistoryMutex() {
   xSemaphoreGive(aqHistoryMutex);
 }
 
+void SensorController::clearAirQualityHistory() {
+  takeAqHistoryMutex();
+  aqHistoryList.clear();
+  giveAqHistoryMutex();
+}
+
 std::list<AirQualityHistory>& SensorController::getAirQualityHistory() {
   return aqHistoryList;
 }
