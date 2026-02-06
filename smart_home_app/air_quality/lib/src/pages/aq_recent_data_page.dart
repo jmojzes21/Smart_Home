@@ -6,6 +6,7 @@ import 'package:smart_home_core/widgets.dart';
 import '../logic/vm/local_data_page_vm.dart';
 import '../models/aq_device_context.dart';
 import '../models/aq_history_data.dart';
+import '../widgets/custom_app_bar.dart';
 import '../widgets/metrics_charts.dart';
 
 class AqRecentDataPage extends StatelessWidget {
@@ -13,27 +14,21 @@ class AqRecentDataPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LocalDataPage();
-  }
-}
-
-class LocalDataPage extends StatelessWidget {
-  const LocalDataPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) {
-        var deviceContext = AqDeviceContext.of(context);
-        return LocalDataPageVm(
-          aqService: deviceContext.serviceFactory.getAirQualityService(),
-          onShowMessage: (message) {
-            if (!context.mounted) return;
-            Dialogs.showSnackBar(context, message);
-          },
-        );
-      },
-      child: Consumer<LocalDataPageVm>(builder: (context, model, child) => buildBody(context, model)),
+    return Scaffold(
+      appBar: CustomAppBar(title: Text('Nedavni podaci')),
+      body: ChangeNotifierProvider(
+        create: (context) {
+          var deviceContext = AqDeviceContext.of(context);
+          return LocalDataPageVm(
+            aqService: deviceContext.serviceFactory.getAirQualityService(),
+            onShowMessage: (message) {
+              if (!context.mounted) return;
+              Dialogs.showSnackBar(context, message);
+            },
+          );
+        },
+        child: Consumer<LocalDataPageVm>(builder: (context, model, child) => buildBody(context, model)),
+      ),
     );
   }
 

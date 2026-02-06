@@ -6,9 +6,11 @@ import 'package:smart_home_core/handler.dart';
 import 'models/aq_device.dart';
 import 'models/aq_device_context.dart';
 import 'pages/aq_data_page.dart';
+import 'pages/aq_history_data_page.dart';
+import 'pages/aq_live_data_page.dart';
+import 'pages/aq_recent_data_page.dart';
 import 'pages/home_page.dart';
 import 'pages/settings_page.dart';
-import 'widgets/aq_appbar.dart';
 import 'widgets/navigation.dart';
 
 class AirQualityDeviceHandler extends DeviceHandler {
@@ -20,10 +22,7 @@ class AirQualityDeviceHandler extends DeviceHandler {
       ShellRoute(
         builder: (context, state, child) {
           var index = AppNavigation.getPageIndex(state.fullPath ?? '');
-          var title = AppNavigation.getPageTitle(index);
-
           return Scaffold(
-            appBar: AqAppBar(title: Text(title)),
             body: child,
             bottomNavigationBar: AppNavigation(selectedIndex: index),
           );
@@ -31,22 +30,14 @@ class AirQualityDeviceHandler extends DeviceHandler {
         routes: [
           GoRoute(path: '/aq/home', builder: (context, state) => HomePage()),
           GoRoute(path: '/aq/settings', builder: (context, state) => SettingsPage()),
+
           GoRoute(
             path: '/aq/data',
             builder: (context, state) => AqDataPage(),
             routes: [
-              GoRoute(
-                path: 'live',
-                builder: (context, state) => Center(child: Text('Live data')),
-              ),
-              GoRoute(
-                path: 'recent',
-                builder: (context, state) => Center(child: Text('Recent data')),
-              ),
-              GoRoute(
-                path: 'history',
-                builder: (context, state) => Center(child: Text('History data')),
-              ),
+              GoRoute(path: 'live', builder: (context, state) => AqLiveDataPage()),
+              GoRoute(path: 'recent', builder: (context, state) => AqRecentDataPage()),
+              GoRoute(path: 'history', builder: (context, state) => AqHistoryDataPage()),
             ],
           ),
         ],
@@ -56,7 +47,7 @@ class AirQualityDeviceHandler extends DeviceHandler {
 
   @override
   void openHomePage(BuildContext context) {
-    context.replace('/aq/home');
+    context.go('/aq/home');
   }
 
   @override

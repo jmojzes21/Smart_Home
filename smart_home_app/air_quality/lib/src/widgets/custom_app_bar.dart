@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class AqAppBar extends AppBar {
-  AqAppBar({super.key, super.title}) : super(actions: [_AppBarMenu()]);
+class CustomAppBar extends AppBar {
+  CustomAppBar({super.key, super.title}) : super(actions: [_AppBarMenu()]);
 }
 
 class _AppBarMenu extends StatelessWidget {

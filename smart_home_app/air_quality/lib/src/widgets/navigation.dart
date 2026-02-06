@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 class AppNavigation extends StatelessWidget {
   static final List<String> _pages = ['/aq/home', '/aq/data', '/aq/settings'];
-  static final List<String> _pageTitles = ['Kvaliteta zraka', 'Mjerenja', 'Postavke'];
 
   static int getPageIndex(String path) {
     for (int i = 0; i < _pages.length; i++) {
@@ -13,10 +12,6 @@ class AppNavigation extends StatelessWidget {
       }
     }
     return 0;
-  }
-
-  static String getPageTitle(int index) {
-    return _pageTitles[index];
   }
 
   final int selectedIndex;
@@ -28,9 +23,7 @@ class AppNavigation extends StatelessWidget {
     return NavigationBar(
       selectedIndex: selectedIndex,
       onDestinationSelected: (value) {
-        if (selectedIndex != value) {
-          context.go(_pages[value]);
-        }
+        context.go(_pages[value]);
       },
       destinations: [
         NavigationDestination(icon: FaIcon(FontAwesomeIcons.wind), label: 'Kvaliteta zraka'),

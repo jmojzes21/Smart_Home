@@ -7,24 +7,28 @@ import 'package:smart_home_core/widgets.dart';
 
 import '../logic/vm/settings_page_vm.dart';
 import '../models/aq_device_context.dart';
+import '../widgets/custom_app_bar.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) {
-        var deviceContext = AqDeviceContext.of(context);
-        return SettingsPageViewModel(
-          deviceService: deviceContext.serviceFactory.getDeviceService(),
-          onShowMessage: (message) {
-            if (!context.mounted) return;
-            Dialogs.showSnackBar(context, message);
-          },
-        );
-      },
-      child: Consumer<SettingsPageViewModel>(builder: (context, model, child) => buildBody(context, model)),
+    return Scaffold(
+      appBar: CustomAppBar(title: Text('Postavke')),
+      body: ChangeNotifierProvider(
+        create: (context) {
+          var deviceContext = AqDeviceContext.of(context);
+          return SettingsPageViewModel(
+            deviceService: deviceContext.serviceFactory.getDeviceService(),
+            onShowMessage: (message) {
+              if (!context.mounted) return;
+              Dialogs.showSnackBar(context, message);
+            },
+          );
+        },
+        child: Consumer<SettingsPageViewModel>(builder: (context, model, child) => buildBody(context, model)),
+      ),
     );
   }
 

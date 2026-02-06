@@ -4,6 +4,7 @@ import 'package:smart_home_core/widgets.dart';
 
 import '../logic/vm/home_page_vm.dart';
 import '../models/aq_device_context.dart';
+import '../widgets/custom_app_bar.dart';
 import '../widgets/metrics_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,20 +14,23 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) {
-        var deviceContext = AqDeviceContext.of(context);
-        return HomePageViewModel(
-          aqService: deviceContext.serviceFactory.getAirQualityService(),
-          onException: (message) {
-            if (!context.mounted) return;
-            Dialogs.showSnackBar(context, message);
-            context.replace('/');
-          },
-        );
-      },
-      //child: buildBody(context),
-      child: Consumer<HomePageViewModel>(builder: (context, model, child) => buildBody(context, model)),
+    return Scaffold(
+      appBar: CustomAppBar(title: Text('Kvaliteta zraka')),
+      body: ChangeNotifierProvider(
+        create: (context) {
+          var deviceContext = AqDeviceContext.of(context);
+          return HomePageViewModel(
+            aqService: deviceContext.serviceFactory.getAirQualityService(),
+            onException: (message) {
+              if (!context.mounted) return;
+              Dialogs.showSnackBar(context, message);
+              context.replace('/');
+            },
+          );
+        },
+        //child: buildBody(context),
+        child: Consumer<HomePageViewModel>(builder: (context, model, child) => buildBody(context, model)),
+      ),
     );
   }
 
