@@ -29,7 +29,7 @@ class AppNavigation extends StatelessWidget {
       selectedIndex: selectedIndex,
       onDestinationSelected: (value) {
         if (selectedIndex != value) {
-          context.replace(_pages[value]);
+          context.go(_pages[value]);
         }
       },
       destinations: [

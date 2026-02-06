@@ -17,7 +17,7 @@ class AqDataPage extends StatelessWidget {
         spacing: 10,
         children: [
           ListTile(
-            onTap: () => context.replace('/aq/data/live'),
+            onTap: () => context.go('/aq/data/live'),
             titleTextStyle: titleStyle,
             leading: FaIcon(FontAwesomeIcons.clock),
             title: Text('Podaci uživo'),
@@ -31,7 +31,7 @@ class AqDataPage extends StatelessWidget {
             subtitle: Text('Prikaži nedavne podatke pohranjene lokalno na uređaju.'),
           ),
           ListTile(
-            onTap: () => context.push('/aq/data/history'),
+            onTap: () => context.go('/aq/data/history'),
             titleTextStyle: titleStyle,
             leading: FaIcon(FontAwesomeIcons.book),
             title: Text('Povijesni podaci'),

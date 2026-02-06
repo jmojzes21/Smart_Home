@@ -13,7 +13,7 @@ class _AppBarMenu extends StatelessWidget {
     return MenuAnchor(
       menuChildren: [
         MenuItemButton(
-          onPressed: () => context.replace('/'),
+          onPressed: () => context.go('/'),
           leadingIcon: Icon(Icons.exit_to_app),
           child: Text('Zatvori uređaj'),
         ),
