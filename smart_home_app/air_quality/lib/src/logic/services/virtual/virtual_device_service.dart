@@ -16,10 +16,15 @@ class VirtualDeviceService extends IDeviceService {
       ipAddress: '192.168.1.1',
       ssid: 'wifi1',
       rssi: -20,
-      heapSize: 200 * 1024,
-      freeHeap: 150 * 1024,
-      minFreeHeap: 100 * 1024,
-      inputVoltage: 5000,
+      inputVoltage: 4.1,
+      memory: MemoryStatus(
+        heapSize: 200,
+        usedHeap: 50,
+        maxUsedHeap: 100,
+        psramSize: 4 * 1024,
+        usedPsram: 10,
+        maxUsedPsram: 100,
+      ),
     );
   }
 
