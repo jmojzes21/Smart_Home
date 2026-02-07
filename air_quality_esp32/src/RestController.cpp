@@ -200,8 +200,11 @@ void RestController::handlePatchRtcRequest(AsyncWebServerRequest *request, JsonV
 
 void RestController::respondJson(AsyncWebServerRequest* request, JsonDocument& doc) {
   
-  AsyncResponseStream* response = request->beginResponseStream("application/json");
+  std::string text;
+  serializeJson(doc, text);
 
-  serializeJson(doc, *response);
+  AsyncResponseStream* response = request->beginResponseStream("application/json");
+  response->write(text.c_str(), text.length());
   request->send(response);
+  
 }
