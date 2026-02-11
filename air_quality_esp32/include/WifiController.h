@@ -16,12 +16,18 @@ class WifiController {
   
   WifiController(DeviceController* deviceController);
 
-  void connect(std::vector<WifiNetwork>& networks);
+  void connect();
   
   void initMdns();
 
   String getLocalIP();
   String getSSID();
   int getRSSI();
+
+  private:
+
+  int findBestNetwork(std::vector<WifiNetwork>& networks);
+  bool connectToNetwork(WifiNetwork& network);
+  void startAccessPoint();
 
 };
