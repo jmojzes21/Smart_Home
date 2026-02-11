@@ -37,6 +37,8 @@ class RestController {
   void handleGetConfigRequest(AsyncWebServerRequest* request);
   void handlePatchConfigRequest(AsyncWebServerRequest* request, JsonVariant &jsonv);
 
+  void handleDeviceRestartRequest(AsyncWebServerRequest* request);
+
   void respondJson(AsyncWebServerRequest* request, JsonDocument& doc);
   void respondJson(AsyncWebServerRequest* request, std::string& json);
 

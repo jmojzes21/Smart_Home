@@ -126,3 +126,22 @@ void DeviceController::haltDevice() {
     delay(1000);
   }
 }
+
+void deviceRestartTask(void* param) {
+
+  int delayMs = *(int*)param;
+  delay(delayMs);
+
+  ESP.restart();
+
+}
+
+void DeviceController::restart(int delayMs) {
+
+  int* param = new int;
+  *param = delayMs;
+
+  TaskHandle_t restartTaskHandle;
+  xTaskCreateUniversal(deviceRestartTask, "restartTask", 4096, param, 1, &restartTaskHandle, ARDUINO_RUNNING_CORE);
+  
+}

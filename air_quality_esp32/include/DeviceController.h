@@ -42,4 +42,6 @@ class DeviceController {
   void showColor(uint32_t color);
   void haltDevice();
 
+  void restart(int delayMs);
+
 };

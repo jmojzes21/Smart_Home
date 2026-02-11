@@ -5,6 +5,8 @@
 #include "DateFormats.h"
 #include "PSRAMAllocator.h"
 
+#define DEVICE_RESTART_DELAY 2000
+
 RestController::RestController(DeviceController* deviceController, SensorController* sensorController,
   WifiController* wifiController) {
   this->deviceController = deviceController;
@@ -46,6 +48,10 @@ void RestController::init() {
 
   httpServer->on("/config", HTTP_PATCH, [&](AsyncWebServerRequest* request, JsonVariant &jsonv) {
     handlePatchConfigRequest(request, jsonv);
+  });
+
+  httpServer->on("/restart", HTTP_POST, [&](AsyncWebServerRequest* request) {
+    handleDeviceRestartRequest(request);
   });
   
   httpServer->begin();
@@ -225,6 +231,10 @@ void RestController::handlePatchConfigRequest(AsyncWebServerRequest *request, Js
   request->send(200);
 }
 
+void RestController::handleDeviceRestartRequest(AsyncWebServerRequest *request) {
+  deviceController->restart(DEVICE_RESTART_DELAY);
+  request->send(201);
+}
 
 void RestController::respondJson(AsyncWebServerRequest* request, JsonDocument& doc) {
   
