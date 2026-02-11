@@ -5,7 +5,7 @@
 #include <LittleFS.h>
 #include <DasduinoLed.h>
 
-#define WIFI_FILE_PATH "/wifi.json"
+#define CONFIG_FILE_PATH "/config.json"
 
 DeviceController::DeviceController() {
 
@@ -22,7 +22,61 @@ void DeviceController::init() {
   DasduinoLed::setBrightness(20);
 
   LittleFS.begin(true);
+  readConfig();
   
+}
+
+DeviceConfig& DeviceController::getConfig() {
+  return config;
+}
+
+
+void DeviceController::readConfig() {
+
+  auto configJson = readConfigFile();
+  log_i("Config: %s", configJson.c_str());
+
+  config.parse(configJson);
+
+}
+
+void DeviceController::saveConfig() {
+
+  auto configJson = config.toJson();
+  log_i("Config: %s", configJson.c_str());
+
+  writeConfigFile(configJson);
+  
+}
+
+std::string DeviceController::readConfigFile() {
+
+  File file = LittleFS.open(CONFIG_FILE_PATH, FILE_READ);
+
+  if(!file) {
+    showColor(LedColors::Orange);
+    haltDevice();
+  }
+
+  std::string configJson(file.size(), ' ');
+  file.readBytes((char*)configJson.data(), configJson.length());
+  file.close();
+
+  return configJson;
+}
+
+void DeviceController::writeConfigFile(std::string& configJson) {
+  
+  File file = LittleFS.open(CONFIG_FILE_PATH, FILE_WRITE);
+
+  if(!file) {
+    showColor(LedColors::Orange);
+    haltDevice();
+  }
+
+  file.write((uint8_t*)configJson.data(), configJson.size());
+  file.close();
+
 }
 
 struct tm DeviceController::getDateTime() {
@@ -57,27 +111,6 @@ void DeviceController::setDateTime(struct tm t) {
 
 tm DeviceController::getBootTime() {
   return bootTime;
-}
-
-void DeviceController::getWifiNetworks(std::vector<WifiNetwork> &networks) {
-
-  File file = LittleFS.open(WIFI_FILE_PATH, FILE_READ);
-
-  if(!file) {
-    showColor(LedColors::Orange);
-    haltDevice();
-  }
-
-  JsonDocument doc;
-  deserializeJson(doc, file);
-  file.close();
-
-  WifiNetwork network;
-  network.ssid = doc["ssid"].as<std::string>();
-  network.password = doc["password"].as<std::string>();
-
-  networks.push_back(network);
-  
 }
 
 void DeviceController::clearLed() {

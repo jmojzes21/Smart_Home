@@ -39,6 +39,14 @@ void RestController::init() {
   httpServer->on("/rtc", HTTP_PATCH, [&](AsyncWebServerRequest* request, JsonVariant &jsonv) {
     handlePatchRtcRequest(request, jsonv);
   });
+
+  httpServer->on("/config", HTTP_GET, [&](AsyncWebServerRequest* request) {
+    handleGetConfigRequest(request);
+  });
+
+  httpServer->on("/config", HTTP_PATCH, [&](AsyncWebServerRequest* request, JsonVariant &jsonv) {
+    handlePatchConfigRequest(request, jsonv);
+  });
   
   httpServer->begin();
 
@@ -52,13 +60,15 @@ void RestController::handleDeviceStatusRequest(AsyncWebServerRequest* request) {
   auto *vinParam = request->getParam("input_voltage");
   bool showInputVoltage = vinParam != nullptr && vinParam->value() == "true"; 
 
+  auto& config = deviceController->getConfig();
+
   JsonDocument doc;
 
+  doc["name"] = config.deviceName;
+  doc["hostname"] = config.hostname;
   doc["type"] = DEVICE_TYPE;
-  doc["hostname"] = DEVICE_DOMAIN;
-  doc["name"] = DEVICE_NAME;
   doc["version"] = DEVICE_VERSION;
-
+  
   doc["ip"] = wifiController->getLocalIP();
   doc["ssid"] = wifiController->getSSID();
   doc["rssi"] = wifiController->getRSSI();
@@ -198,13 +208,38 @@ void RestController::handlePatchRtcRequest(AsyncWebServerRequest *request, JsonV
 
 }
 
+
+void RestController::handleGetConfigRequest(AsyncWebServerRequest *request) {
+  std::string configJson = deviceController->readConfigFile();
+  respondJson(request, configJson);
+}
+
+void RestController::handlePatchConfigRequest(AsyncWebServerRequest *request, JsonVariant &jsonv) {
+
+  JsonObject json = jsonv.as<JsonObject>();
+
+  std::string configJson;
+  serializeJson(json, configJson);
+
+  deviceController->writeConfigFile(configJson);
+  request->send(200);
+}
+
+
 void RestController::respondJson(AsyncWebServerRequest* request, JsonDocument& doc) {
   
-  std::string text;
-  serializeJson(doc, text);
+  std::string json;
+  serializeJson(doc, json);
+
+  respondJson(request, json);
+
+}
+
+void RestController::respondJson(AsyncWebServerRequest *request, std::string &json) {
 
   AsyncResponseStream* response = request->beginResponseStream("application/json");
-  response->write(text.c_str(), text.length());
+
+  response->write(json.c_str(), json.length());
   request->send(response);
-  
+
 }

@@ -12,6 +12,8 @@ class DeviceController {
 
   private:
 
+  DeviceConfig config;
+
   PCF85063A rtc;
   SemaphoreHandle_t rtcMutex;
 
@@ -23,12 +25,18 @@ class DeviceController {
 
   void init();
 
+  DeviceConfig& getConfig();
+
+  void readConfig();
+  void saveConfig();
+
+  std::string readConfigFile();
+  void writeConfigFile(std::string& configJson);
+
   struct tm getDateTime();
   void setDateTime(struct tm t);
 
   struct tm getBootTime();
-
-  void getWifiNetworks(std::vector<WifiNetwork>& networks);
 
   void clearLed();
   void showColor(uint32_t color);

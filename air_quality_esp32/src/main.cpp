@@ -1,13 +1,13 @@
 
 #include <Arduino.h>
 #include <Wire.h>
+#include <LedColors.h>
 
 #include "DeviceController.h"
 #include "SensorController.h"
 #include "WifiController.h"
 #include "RestController.h"
 
-#include "DeviceConfig.h"
 
 DeviceController* deviceController;
 SensorController* sensorController;
@@ -28,13 +28,14 @@ void setup() {
   deviceController->init();
   sensorController->init();
   
-  std::vector<WifiNetwork> wifiNetworks;
-  deviceController->getWifiNetworks(wifiNetworks);
+  deviceController->showColor(LedColors::Blue);
 
-  wifiController->connect(wifiNetworks);
+  wifiController->connect();
   restController->init();
 
   wifiController->initMdns();
+
+  deviceController->clearLed();
 
 }
 
