@@ -25,6 +25,8 @@ class DeviceConfig {
   std::string hostname;
   std::string deviceName;
 
+  uint32_t recentHistoryPeriod = 0;
+
   /// @brief Index of last connected wifi network
   int lastNetworkIndex = 0;
   std::vector<WifiNetwork> networks;

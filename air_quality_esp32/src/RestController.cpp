@@ -107,24 +107,27 @@ void RestController::handleSensorDataRequest(AsyncWebServerRequest* request) {
 
   JsonDocument doc;
 
-  AirQualityData aqData;
-  sensorController->readSensorData(aqData);
+  AirQualityData aqData = sensorController->getAirQuality();
 
-  JsonObject bme280 = doc["bme280"].to<JsonObject>();
-  JsonObject shtc3 = doc["shtc3"].to<JsonObject>();
-  JsonObject pms = doc["pms"].to<JsonObject>();
-
-  bme280["temperature"] = aqData.bme280.temperature;
-  bme280["humidity"] = aqData.bme280.humidity;
-  bme280["pressure"] = aqData.bme280.pressure;
-
-  shtc3["temperature"] = aqData.shtc3.temperature;
-  shtc3["humidity"] = aqData.shtc3.humidity;
-
-  pms["pm2.5"] = aqData.pms.pm_25_env;
+  doc["temperature"] = aqData.temperature;
+  doc["humidity"] = aqData.humidity;
+  doc["pressure"] = aqData.pressure;
+  doc["pm2.5"] = aqData.pms.pm_25_env;
 
   if(showDetails) {
+    JsonObject bme280 = doc["bme280"].to<JsonObject>();
+    JsonObject shtc3 = doc["shtc3"].to<JsonObject>();
+    JsonObject pms = doc["pms"].to<JsonObject>();
+
+    bme280["temperature"] = aqData.bme280.temperature;
+    bme280["humidity"] = aqData.bme280.humidity;
+    bme280["pressure"] = aqData.bme280.pressure;
+
+    shtc3["temperature"] = aqData.shtc3.temperature;
+    shtc3["humidity"] = aqData.shtc3.humidity;
+
     pms["pm1.0"] = aqData.pms.pm_10_env;
+    pms["pm2.5"] = aqData.pms.pm_25_env;
     pms["pm10"] = aqData.pms.pm_100_env;
 
     pms["p0.3"] = aqData.pms.particles_03;
@@ -137,6 +140,12 @@ void RestController::handleSensorDataRequest(AsyncWebServerRequest* request) {
 
   respondJson(request, doc);
 
+}
+
+void metricsToJson(Metrics& metrics, JsonObject& jsonObj) {
+  jsonObj["average"] = (float)metrics.getAverage();
+  jsonObj["min"] = (float)metrics.getMinValue();
+  jsonObj["max"] = (float)metrics.getMaxValue();
 }
 
 void RestController::handleGetAqHistoryRequest(AsyncWebServerRequest* request) {
@@ -156,10 +165,16 @@ void RestController::handleGetAqHistoryRequest(AsyncWebServerRequest* request) {
   for(auto &e : aqHistoryList) {
     JsonObject jsonObj = aqHistoryJson.add<JsonObject>();
     jsonObj["time"] = e.timeSeconds;
-    jsonObj["temperature"] = e.temperature;
-    jsonObj["humidity"] = e.humidity;
-    jsonObj["pressure"] = e.pressure;
-    jsonObj["pm25"] = e.pm25;
+
+    JsonObject temp = jsonObj["temperature"].to<JsonObject>();
+    JsonObject hum = jsonObj["humidity"].to<JsonObject>();
+    JsonObject press = jsonObj["pressure"].to<JsonObject>();
+    JsonObject pm = jsonObj["pm25"].to<JsonObject>();
+
+    metricsToJson(e.temperatureMetrics, temp);
+    metricsToJson(e.humidityMetrics, hum);
+    metricsToJson(e.pressureMetrics, press);
+    metricsToJson(e.pm25Metrics, pm);
   }
 
   sensorController->giveAqHistoryMutex();
@@ -216,7 +231,10 @@ void RestController::handlePatchRtcRequest(AsyncWebServerRequest *request, JsonV
 
 
 void RestController::handleGetConfigRequest(AsyncWebServerRequest *request) {
-  std::string configJson = deviceController->readConfigFile();
+
+  auto& config = deviceController->getConfig();
+  std::string configJson = config.toJson();
+
   respondJson(request, configJson);
 }
 
@@ -227,8 +245,15 @@ void RestController::handlePatchConfigRequest(AsyncWebServerRequest *request, Js
   std::string configJson;
   serializeJson(json, configJson);
 
+  DeviceConfig config;
+  config.parse(configJson);
+
+  configJson = config.toJson();
+
   deviceController->writeConfigFile(configJson);
-  request->send(200);
+  deviceController->readConfig();
+
+  respondJson(request, configJson);
 }
 
 void RestController::handleDeviceRestartRequest(AsyncWebServerRequest *request) {

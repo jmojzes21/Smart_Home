@@ -7,7 +7,10 @@
 #define PMS_TX_PIN 15
 #define VIN_ADC_PIN 35
 
-#define SAVE_AQ_HISTORY_PERIOD 30000
+#define READ_SENSOR_DELAY 2000
+
+void readAirQualityTask(void* param);
+void aqHistoryTask(void* param);
 
 SensorController::SensorController(DeviceController* deviceController) {
   this->deviceController = deviceController;
@@ -15,10 +18,9 @@ SensorController::SensorController(DeviceController* deviceController) {
 
 void SensorController::init() {
 
-  memset(&pms5003Data, 0, sizeof(pms5003Data));
+  memset(&aqData.pms, 0, sizeof(PMS5003_Data));
 
-  i2cSensorMutex = xSemaphoreCreateMutex();
-  pmsMutex = xSemaphoreCreateMutex();
+  aqDataMutex = xSemaphoreCreateMutex();
   aqHistoryMutex = xSemaphoreCreateMutex();
   vinAdcMutex = xSemaphoreCreateMutex();
 
@@ -36,17 +38,32 @@ void SensorController::init() {
 
   pinMode(VIN_ADC_PIN, INPUT);
 
-  xTaskCreateUniversal(pmsTask, "pmsTask", 8192, this, 1, &pmsTaskHandle, ARDUINO_RUNNING_CORE);
+  xTaskCreateUniversal(readAirQualityTask, "aqTask", 8192, this, 1, &pmsTaskHandle, ARDUINO_RUNNING_CORE);
   xTaskCreateUniversal(aqHistoryTask, "aqHistory", 8192, this, 1, &aqHistoryTaskHandle, ARDUINO_RUNNING_CORE);
 
 }
 
-void SensorController::readSensorData(AirQualityData& aqData) {
+DeviceController *SensorController::getDeviceController() {
+  return deviceController;
+}
 
-  Bme280SensorData& bme280Data = aqData.bme280;
-  Shtc3SensorData& shtc3Data = aqData.shtc3;
+AirQualityData SensorController::getAirQuality() {
 
-  xSemaphoreTake(i2cSensorMutex, portMAX_DELAY);
+  AirQualityData aq;
+
+  xSemaphoreTake(aqDataMutex, portMAX_DELAY);
+  aq = this->aqData;
+  xSemaphoreGive(aqDataMutex);
+
+  return aq;
+}
+
+void SensorController::readSensorData() {
+
+  auto& bme280Data = aqData.bme280;
+  auto& shtc3Data = aqData.shtc3;
+
+  xSemaphoreTake(aqDataMutex, portMAX_DELAY);
 
   bme280Data.temperature = bme280Sensor.readTemperature();
   bme280Data.humidity = bme280Sensor.readHumidity();
@@ -56,11 +73,27 @@ void SensorController::readSensorData(AirQualityData& aqData) {
   shtc3Data.temperature = shtc3Sensor.readTempC();
   shtc3Data.humidity = shtc3Sensor.readHumidity();
 
-  xSemaphoreGive(i2cSensorMutex);
+  aqData.temperature = (bme280Data.temperature + shtc3Data.temperature) / 2.0;
+  aqData.humidity = (bme280Data.humidity + shtc3Data.humidity) / 2.0;
+  aqData.pressure = bme280Data.pressure;
 
-  xSemaphoreTake(pmsMutex, portMAX_DELAY);
-  aqData.pms = pms5003Data;
-  xSemaphoreGive(pmsMutex);
+  aqMetrics.temperatureMetrics.addValue(aqData.temperature);
+  aqMetrics.humidityMetrics.addValue(aqData.humidity);
+  aqMetrics.pressureMetrics.addValue(aqData.pressure);
+
+  xSemaphoreGive(aqDataMutex);
+
+  PMS5003_Data pmsTemp;
+  if(pms5003Sensor.read(&pmsTemp)) {
+
+    xSemaphoreTake(aqDataMutex, portMAX_DELAY);
+
+    aqData.pms = pmsTemp;
+    aqMetrics.pm25Metrics.addValue(aqData.pms.pm_25_env);
+
+    xSemaphoreGive(aqDataMutex);
+
+  }
   
 }
 
@@ -83,18 +116,26 @@ uint32_t SensorController::readInputVoltage() {
 
 void SensorController::saveAirQualityHistory() {
 
-  AirQualityData aqData;
-  readSensorData(aqData);
-
   uint32_t timeSeconds = (uint32_t)millis() / 1000;
 
   AirQualityHistory aqHistory;
   aqHistory.timeSeconds = timeSeconds;
 
-  aqHistory.temperature = (aqData.bme280.temperature + aqData.shtc3.temperature) / 2;
-  aqHistory.humidity = (aqData.bme280.humidity + aqData.shtc3.humidity) / 2;
-  aqHistory.pressure = aqData.bme280.pressure;
-  aqHistory.pm25 = aqData.pms.pm_25_env;
+  xSemaphoreTake(aqDataMutex, portMAX_DELAY);
+
+  aqHistory.temperatureMetrics = aqMetrics.temperatureMetrics;
+  aqHistory.humidityMetrics = aqMetrics.humidityMetrics;
+  aqHistory.pressureMetrics = aqMetrics.pressureMetrics;
+  aqHistory.pm25Metrics = aqMetrics.pm25Metrics;
+
+  aqMetrics.reset();
+
+  xSemaphoreGive(aqDataMutex);
+
+  aqHistory.temperatureMetrics.calculateAverage();
+  aqHistory.humidityMetrics.calculateAverage();
+  aqHistory.pressureMetrics.calculateAverage();
+  aqHistory.pm25Metrics.calculateAverage();
 
   takeAqHistoryMutex();
 
@@ -126,23 +167,13 @@ std::list<AirQualityHistory>& SensorController::getAirQualityHistory() {
   return aqHistoryList;
 }
 
-void pmsTask(void* param) {
+void readAirQualityTask(void* param) {
 
   auto sensorController = (SensorController*)param;
-  
-  PMS5003_Sensor& pms5003Sensor = sensorController->pms5003Sensor;
-  PMS5003_Data tdata;
-
-  SemaphoreHandle_t pmsMutex = sensorController->pmsMutex;
 
   while(true) {
-    if(pms5003Sensor.read(&tdata)) {
-      xSemaphoreTake(pmsMutex, portMAX_DELAY);
-      sensorController->pms5003Data = tdata;
-      xSemaphoreGive(pmsMutex);
-    }
-    
-    delay(2000);
+    sensorController->readSensorData();
+    delay(READ_SENSOR_DELAY);
   }
 
 }
@@ -150,18 +181,28 @@ void pmsTask(void* param) {
 void aqHistoryTask(void* param) {
 
   auto sensorController = (SensorController*)param;
+  auto deviceController = sensorController->getDeviceController();
 
-  sensorController->saveAqHistoryTime = millis() + SAVE_AQ_HISTORY_PERIOD;
+  uint32_t savePeriod = deviceController->getConfig().recentHistoryPeriod;
+  uint32_t t1 = millis() + savePeriod;
 
   while(true) {
-    
-    uint64_t now = millis();
-    if(now >= sensorController->saveAqHistoryTime) {
-      sensorController->saveAqHistoryTime = now + SAVE_AQ_HISTORY_PERIOD;
+
+    uint32_t t2 = millis();
+    if(t2 >= t1) {
+      t1 = t2 + savePeriod;
       sensorController->saveAirQualityHistory();
     }
 
     delay(2000);
+
   }
 
+}
+
+void AirQualityMetrics::reset() {
+  temperatureMetrics.reset();
+  humidityMetrics.reset();
+  pressureMetrics.reset();
+  pm25Metrics.reset();
 }
