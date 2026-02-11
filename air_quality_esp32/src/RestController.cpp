@@ -7,6 +7,9 @@
 
 #define DEVICE_RESTART_DELAY 2000
 
+void sensorDataToJson(AirQualityData& aqData, JsonDocument& doc, bool showDetails);
+void metricsToJson(Metrics& metrics, JsonObject& jsonObj);
+
 RestController::RestController(DeviceController* deviceController, SensorController* sensorController,
   WifiController* wifiController) {
   this->deviceController = deviceController;
@@ -17,6 +20,7 @@ RestController::RestController(DeviceController* deviceController, SensorControl
 void RestController::init() {
 
   httpServer = new AsyncWebServer(HTTP_SERVER_PORT);
+  webSocket = new AsyncWebSocket("/sensor-data-ws");
 
   httpServer->on("/device", HTTP_GET, [&](AsyncWebServerRequest* request) {
     handleDeviceStatusRequest(request);
@@ -54,7 +58,25 @@ void RestController::init() {
     handleDeviceRestartRequest(request);
   });
   
+  webSocket->onEvent([&](AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
+    switch(type) {
+      case WS_EVT_CONNECT: {
+        log_i("WebSocket client connected %ld", client->id());
+        break;
+      }
+      case WS_EVT_DISCONNECT: {
+        log_i("WebSocket client disconnected %ld", client->id());
+        break;
+      }
+    }
+  });
+  
+  httpServer->addHandler(webSocket);
   httpServer->begin();
+
+  sensorController->setOnSensorData([&](AirQualityData& aqData){
+    onSensorData(aqData);
+  });
 
 }
 
@@ -105,47 +127,13 @@ void RestController::handleSensorDataRequest(AsyncWebServerRequest* request) {
   auto *detailsParam = request->getParam("details");
   bool showDetails = detailsParam != nullptr && detailsParam->value() == "true"; 
 
-  JsonDocument doc;
-
   AirQualityData aqData = sensorController->getAirQuality();
-
-  doc["temperature"] = aqData.temperature;
-  doc["humidity"] = aqData.humidity;
-  doc["pressure"] = aqData.pressure;
-  doc["pm2.5"] = aqData.pms.pm_25_env;
-
-  if(showDetails) {
-    JsonObject bme280 = doc["bme280"].to<JsonObject>();
-    JsonObject shtc3 = doc["shtc3"].to<JsonObject>();
-    JsonObject pms = doc["pms"].to<JsonObject>();
-
-    bme280["temperature"] = aqData.bme280.temperature;
-    bme280["humidity"] = aqData.bme280.humidity;
-    bme280["pressure"] = aqData.bme280.pressure;
-
-    shtc3["temperature"] = aqData.shtc3.temperature;
-    shtc3["humidity"] = aqData.shtc3.humidity;
-
-    pms["pm1.0"] = aqData.pms.pm_10_env;
-    pms["pm2.5"] = aqData.pms.pm_25_env;
-    pms["pm10"] = aqData.pms.pm_100_env;
-
-    pms["p0.3"] = aqData.pms.particles_03;
-    pms["p0.5"] = aqData.pms.particles_05;
-    pms["p1.0"] = aqData.pms.particles_10;
-    pms["p2.5"] = aqData.pms.particles_25;
-    pms["p5.0"] = aqData.pms.particles_50;
-    pms["p10"] = aqData.pms.particles_100;
-  }
+  JsonDocument doc;
+  
+  sensorDataToJson(aqData, doc, showDetails);
 
   respondJson(request, doc);
 
-}
-
-void metricsToJson(Metrics& metrics, JsonObject& jsonObj) {
-  jsonObj["average"] = (float)metrics.getAverage();
-  jsonObj["min"] = (float)metrics.getMinValue();
-  jsonObj["max"] = (float)metrics.getMaxValue();
 }
 
 void RestController::handleGetAqHistoryRequest(AsyncWebServerRequest* request) {
@@ -261,6 +249,20 @@ void RestController::handleDeviceRestartRequest(AsyncWebServerRequest *request) 
   request->send(201);
 }
 
+void RestController::onSensorData(AirQualityData &aqData) {
+
+  webSocket->cleanupClients();
+
+  JsonDocument doc;
+  sensorDataToJson(aqData, doc, true);
+
+  std::string msg = "sensor-data;";
+  serializeJson(doc, msg);
+
+  webSocket->textAll(msg.c_str(), msg.length());
+
+}
+
 void RestController::respondJson(AsyncWebServerRequest* request, JsonDocument& doc) {
   
   std::string json;
@@ -277,4 +279,44 @@ void RestController::respondJson(AsyncWebServerRequest *request, std::string &js
   response->write(json.c_str(), json.length());
   request->send(response);
 
+}
+
+
+void sensorDataToJson(AirQualityData& aqData, JsonDocument& doc, bool showDetails) {
+
+  doc["temperature"] = aqData.temperature;
+  doc["humidity"] = aqData.humidity;
+  doc["pressure"] = aqData.pressure;
+  doc["pm2.5"] = aqData.pms.pm_25_env;
+
+  if(showDetails) {
+    JsonObject bme280 = doc["bme280"].to<JsonObject>();
+    JsonObject shtc3 = doc["shtc3"].to<JsonObject>();
+    JsonObject pms = doc["pms"].to<JsonObject>();
+
+    bme280["temperature"] = aqData.bme280.temperature;
+    bme280["humidity"] = aqData.bme280.humidity;
+    bme280["pressure"] = aqData.bme280.pressure;
+
+    shtc3["temperature"] = aqData.shtc3.temperature;
+    shtc3["humidity"] = aqData.shtc3.humidity;
+
+    pms["pm1.0"] = aqData.pms.pm_10_env;
+    pms["pm2.5"] = aqData.pms.pm_25_env;
+    pms["pm10"] = aqData.pms.pm_100_env;
+
+    pms["p0.3"] = aqData.pms.particles_03;
+    pms["p0.5"] = aqData.pms.particles_05;
+    pms["p1.0"] = aqData.pms.particles_10;
+    pms["p2.5"] = aqData.pms.particles_25;
+    pms["p5.0"] = aqData.pms.particles_50;
+    pms["p10"] = aqData.pms.particles_100;
+  }
+
+}
+
+void metricsToJson(Metrics& metrics, JsonObject& jsonObj) {
+  jsonObj["average"] = (float)metrics.getAverage();
+  jsonObj["min"] = (float)metrics.getMinValue();
+  jsonObj["max"] = (float)metrics.getMaxValue();
 }

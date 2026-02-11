@@ -95,6 +95,11 @@ void SensorController::readSensorData() {
 
   }
   
+  if(onSensorData != nullptr) {
+    AirQualityData aqData2 = getAirQuality();
+    onSensorData(aqData2);
+  }
+  
 }
 
 uint32_t SensorController::readInputVoltage() {
@@ -165,6 +170,10 @@ void SensorController::clearAirQualityHistory() {
 
 std::list<AirQualityHistory>& SensorController::getAirQualityHistory() {
   return aqHistoryList;
+}
+
+void SensorController::setOnSensorData(SensorDataHandler handler) {
+  onSensorData = handler;
 }
 
 void readAirQualityTask(void* param) {

@@ -17,6 +17,7 @@ class RestController {
   WifiController* wifiController;
 
   AsyncWebServer* httpServer;
+  AsyncWebSocket* webSocket;
 
   public:
   
@@ -38,6 +39,8 @@ class RestController {
   void handlePatchConfigRequest(AsyncWebServerRequest* request, JsonVariant &jsonv);
 
   void handleDeviceRestartRequest(AsyncWebServerRequest* request);
+
+  void onSensorData(AirQualityData& aqData);
 
   void respondJson(AsyncWebServerRequest* request, JsonDocument& doc);
   void respondJson(AsyncWebServerRequest* request, std::string& json);

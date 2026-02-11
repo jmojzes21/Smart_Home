@@ -10,6 +10,7 @@
 #include "DeviceController.h"
 #include "Metrics.h"
 
+
 struct Bme280SensorData {
   float temperature = 0;
   float humidity = 0;
@@ -56,6 +57,8 @@ class AirQualityMetrics {
 };
 
 
+typedef std::function<void(AirQualityData& aqData)> SensorDataHandler;
+
 class SensorController {
 
   private:
@@ -78,6 +81,7 @@ class SensorController {
 
   std::list<AirQualityHistory> aqHistoryList;
 
+  SensorDataHandler onSensorData = nullptr;
 
   public:
   
@@ -99,5 +103,7 @@ class SensorController {
 
   void clearAirQualityHistory();
   std::list<AirQualityHistory>& getAirQualityHistory();
+
+  void setOnSensorData(SensorDataHandler handler);
 
 };
