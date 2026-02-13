@@ -2,6 +2,8 @@
 #pragma once
 
 #include <Arduino.h>
+#include <string>
+#include <vector>
 #include <ESPAsyncWebServer.h>
 
 #include "DeviceController.h"
@@ -18,6 +20,10 @@ class RestController {
 
   AsyncWebServer* httpServer;
   AsyncWebSocket* webSocket;
+  AsyncAuthenticationMiddleware* authMiddleware;
+
+  std::string secretKey;
+  std::vector<std::string> validTokens;
 
   public:
   
@@ -41,6 +47,8 @@ class RestController {
   void handleDeviceRestartRequest(AsyncWebServerRequest* request);
 
   void onSensorData(AirQualityData& aqData);
+
+  bool handleAuthentification(AsyncWebServerRequest *request);
 
   void respondJson(AsyncWebServerRequest* request, JsonDocument& doc);
   void respondJson(AsyncWebServerRequest* request, std::string& json);

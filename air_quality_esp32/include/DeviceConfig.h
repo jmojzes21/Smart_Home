@@ -24,6 +24,7 @@ class DeviceConfig {
 
   std::string hostname;
   std::string deviceName;
+  std::string secretKey;
 
   uint32_t recentHistoryPeriod = 0;
 
@@ -31,7 +32,7 @@ class DeviceConfig {
   int lastNetworkIndex = 0;
   std::vector<WifiNetwork> networks;
 
-  void parse(std::string configJson);
+  bool parse(std::string configJson);
   std::string toJson();
   
 };

@@ -4,6 +4,7 @@
 #include <ArduinoJson.h>
 #include "helpers/DateFormats.h"
 #include "helpers/PSRAMAllocator.h"
+#include "helpers/Jwt.h"
 
 #define DEVICE_RESTART_DELAY 2000
 
@@ -18,6 +19,8 @@ RestController::RestController(DeviceController* deviceController, SensorControl
 }
 
 void RestController::init() {
+
+  secretKey = deviceController->getConfig().secretKey;
 
   httpServer = new AsyncWebServer(HTTP_SERVER_PORT);
   webSocket = new AsyncWebSocket("/sensor-data-ws");
@@ -70,7 +73,15 @@ void RestController::init() {
       }
     }
   });
-  
+
+  authMiddleware = new AsyncAuthenticationMiddleware();
+  authMiddleware->setAuthType(AsyncAuthType::AUTH_BEARER);
+  authMiddleware->setAuthentificationFunction([&](AsyncWebServerRequest* request) {
+    return handleAuthentification(request);
+  });
+
+  httpServer->addMiddleware(authMiddleware);
+
   httpServer->addHandler(webSocket);
   httpServer->begin();
 
@@ -234,7 +245,9 @@ void RestController::handlePatchConfigRequest(AsyncWebServerRequest *request, Js
   serializeJson(json, configJson);
 
   DeviceConfig config;
-  config.parse(configJson);
+  if(!config.parse(configJson)) {
+    request->send(400);
+  }
 
   configJson = config.toJson();
 
@@ -261,6 +274,42 @@ void RestController::onSensorData(AirQualityData &aqData) {
 
   webSocket->textAll(msg.c_str(), msg.length());
 
+}
+
+
+bool RestController::handleAuthentification(AsyncWebServerRequest *request) {
+
+  std::string tokenText = request->authChallenge().c_str();
+  
+  if(tokenText.empty()) {
+    if(request->url().startsWith("/device")) {
+      return true;
+    }
+    return false;
+  }
+
+  auto result = std::find(validTokens.begin(), validTokens.end(), tokenText);
+  if(result != validTokens.end()) {
+    return true;
+  }
+  
+  JwtToken token;
+
+  if(!token.decode(secretKey, tokenText)) {
+    return false;
+  }
+
+  struct tm timeInfo = deviceController->getDateTime();
+  uint32_t time = mktime(&timeInfo);
+
+  if(!token.isValid(time)) {
+    log_i("Token is not valid, time: %ld", time);
+    return false;
+  }
+
+  validTokens.push_back(tokenText);
+
+  return true;
 }
 
 void RestController::respondJson(AsyncWebServerRequest* request, JsonDocument& doc) {

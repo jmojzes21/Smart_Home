@@ -32,21 +32,17 @@ DeviceConfig& DeviceController::getConfig() {
 
 
 void DeviceController::readConfig() {
-
   auto configJson = readConfigFile();
-  log_i("Config: %s", configJson.c_str());
-
-  config.parse(configJson);
-
+  if(!config.parse(configJson)) {
+    log_e("Bad config");
+    showColor(LedColors::Orange);
+    haltDevice();
+  }
 }
 
 void DeviceController::saveConfig() {
-
   auto configJson = config.toJson();
-  log_i("Config: %s", configJson.c_str());
-
   writeConfigFile(configJson);
-  
 }
 
 std::string DeviceController::readConfigFile() {
@@ -54,6 +50,7 @@ std::string DeviceController::readConfigFile() {
   File file = LittleFS.open(CONFIG_FILE_PATH, FILE_READ);
 
   if(!file) {
+    log_e("Can't read config file %s", CONFIG_FILE_PATH);
     showColor(LedColors::Orange);
     haltDevice();
   }
@@ -70,6 +67,7 @@ void DeviceController::writeConfigFile(std::string& configJson) {
   File file = LittleFS.open(CONFIG_FILE_PATH, FILE_WRITE);
 
   if(!file) {
+    log_e("Can't write config file %s", CONFIG_FILE_PATH);
     showColor(LedColors::Orange);
     haltDevice();
   }

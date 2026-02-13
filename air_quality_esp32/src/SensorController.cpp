@@ -25,11 +25,13 @@ void SensorController::init() {
   vinAdcMutex = xSemaphoreCreateMutex();
 
   if(!bme280Sensor.begin(BME280_ADDRESS_ALTERNATE)) {
+    log_e("Can't init BME280 sensor");
     deviceController->showColor(LedColors::Orange);
     deviceController->haltDevice();
   }
 
   if(!shtc3Sensor.begin()) {
+    log_e("Can't init SHTC3 sensor");
     deviceController->showColor(LedColors::Orange);
     deviceController->haltDevice();
   }

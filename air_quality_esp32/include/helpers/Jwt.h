@@ -11,6 +11,7 @@ class JwtToken {
   JsonDocument payload;
 
   bool decode(const std::string& secretKey, const std::string& token);
+  bool isValid(uint32_t time);
 
   private:
 

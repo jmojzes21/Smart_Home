@@ -50,6 +50,14 @@ bool JwtToken::decode(const std::string& secretKey, const std::string& token) {
 
 }
 
+bool JwtToken::isValid(uint32_t time) {
+
+  uint32_t iat = payload["iat"];
+  uint32_t exp = payload["exp"];
+
+  return time >= iat && time < exp;
+}
+
 bool JwtToken::_extractTokenData(const std::string& token, std::string& header64, 
   std::string& payload64, std::string& signature64) {
 
