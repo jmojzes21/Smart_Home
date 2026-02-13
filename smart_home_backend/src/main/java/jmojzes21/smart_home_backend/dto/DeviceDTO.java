@@ -13,15 +13,11 @@ public class DeviceDTO {
 
   @JsonProperty("type")
   private String type;
-
-  @JsonProperty("access_key")
-  private String accessKey;
-
+  
   public DeviceDTO(Device device) {
     this.hostname = device.getHostname();
     this.name = device.getName();
     this.type = device.getType().getKey();
-    this.accessKey = device.getAccessKey();
   }
 
   public String getHostname() {
@@ -36,7 +32,4 @@ public class DeviceDTO {
     return type;
   }
 
-  public String getAccessKey() {
-    return accessKey;
-  }
 }

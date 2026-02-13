@@ -31,14 +31,8 @@ public class Device {
   @ManyToOne
   private DeviceType type;
 
-  @Column(name = "access_key")
-  private String accessKey;
-
-  @Column(name = "auth_key")
-  private String authKey;
-
-  @Column(name = "auth_salt")
-  private String authSalt;
+  @Column(name = "secret_key")
+  private String secretKey;
 
   public Device() {}
 
@@ -82,27 +76,12 @@ public class Device {
     this.type = type;
   }
 
-  public String getAccessKey() {
-    return accessKey;
+  public String getSecretKey() {
+    return secretKey;
   }
 
-  public void setAccessKey(String accessKey) {
-    this.accessKey = accessKey;
+  public void setSecretKey(String secretKey) {
+    this.secretKey = secretKey;
   }
-
-  public String getAuthKey() {
-    return authKey;
-  }
-
-  public void setAuthKey(String authKey) {
-    this.authKey = authKey;
-  }
-
-  public String getAuthSalt() {
-    return authSalt;
-  }
-
-  public void setAuthSalt(String authSalt) {
-    this.authSalt = authSalt;
-  }
+  
 }
