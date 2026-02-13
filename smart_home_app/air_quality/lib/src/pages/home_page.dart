@@ -1,4 +1,3 @@
-import 'package:go_router/go_router.dart';
 import 'package:smart_home_core/models.dart';
 import 'package:smart_home_core/widgets.dart';
 
@@ -24,7 +23,6 @@ class HomePage extends StatelessWidget {
             onException: (message) {
               if (!context.mounted) return;
               Dialogs.showSnackBar(context, message);
-              context.replace('/');
             },
           );
         },
