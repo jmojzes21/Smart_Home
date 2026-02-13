@@ -197,13 +197,13 @@ void RestController::handlePatchRtcRequest(AsyncWebServerRequest *request, JsonV
   JsonObject json = jsonv.as<JsonObject>();
 
   tm t = {0};
-  t.tm_wday = json["week_day"];
-  t.tm_mday = json["month_day"];
-  t.tm_mon = json["month"];
-  t.tm_year = json["year"];
-  t.tm_hour = json["hour"];
-  t.tm_min = json["minute"];
-  t.tm_sec = json["second"];
+  t.tm_wday = (int)json["week_day"];
+  t.tm_mday = (int)json["month_day"];
+  t.tm_mon = (int)json["month"] - 1;
+  t.tm_year = (int)json["year"] - 1900;
+  t.tm_hour = (int)json["hour"];
+  t.tm_min = (int)json["minute"];
+  t.tm_sec = (int)json["second"];
 
   deviceController->setDateTime(t);
   t = deviceController->getDateTime();

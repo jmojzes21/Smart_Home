@@ -87,8 +87,8 @@ struct tm DeviceController::getDateTime() {
 
   tm t;
   t.tm_mday = rtc.getDay();
-  t.tm_mon = rtc.getMonth();
-  t.tm_year = rtc.getYear();
+  t.tm_mon = rtc.getMonth() - 1;
+  t.tm_year = rtc.getYear() - 1900;
   t.tm_hour = rtc.getHour();
   t.tm_min = rtc.getMinute();
   t.tm_sec = rtc.getSecond();
@@ -102,7 +102,7 @@ void DeviceController::setDateTime(struct tm t) {
 
   xSemaphoreTake(rtcMutex, portMAX_DELAY);
 
-  rtc.setDate(t.tm_wday, t.tm_mday, t.tm_mon, t.tm_year);
+  rtc.setDate(t.tm_wday, t.tm_mday, t.tm_mon + 1, t.tm_year + 1900);
   rtc.setTime(t.tm_hour, t.tm_min, t.tm_sec);
 
   xSemaphoreGive(rtcMutex);
