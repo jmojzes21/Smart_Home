@@ -1,5 +1,5 @@
 
-#include "PSRAMAllocator.h"
+#include "helpers/PSRAMAllocator.h"
 
 void* SpiRamAllocator::allocate(size_t size) {
   return heap_caps_malloc(size, MALLOC_CAP_SPIRAM);

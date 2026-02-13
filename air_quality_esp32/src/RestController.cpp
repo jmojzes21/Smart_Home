@@ -2,8 +2,8 @@
 #include "RestController.h"
 
 #include <ArduinoJson.h>
-#include "DateFormats.h"
-#include "PSRAMAllocator.h"
+#include "helpers/DateFormats.h"
+#include "helpers/PSRAMAllocator.h"
 
 #define DEVICE_RESTART_DELAY 2000
 
