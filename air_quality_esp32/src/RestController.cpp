@@ -26,11 +26,15 @@ void RestController::init() {
   webSocket = new AsyncWebSocket("/sensor-data-ws");
 
   httpServer->on("/device", HTTP_GET, [&](AsyncWebServerRequest* request) {
-    handleDeviceStatusRequest(request);
+    handleGetDeviceRequest(request);
+  });
+
+  httpServer->on("/device-status", HTTP_GET, [&](AsyncWebServerRequest* request) {
+    handleGetDeviceStatusRequest(request);
   });
 
   httpServer->on("/sensor-data", HTTP_GET, [&](AsyncWebServerRequest* request) {
-    handleSensorDataRequest(request);
+    handleGetSensorDataRequest(request);
   });
 
   httpServer->on("/aq-history", HTTP_GET, [&](AsyncWebServerRequest* request) {
@@ -91,7 +95,26 @@ void RestController::init() {
 
 }
 
-void RestController::handleDeviceStatusRequest(AsyncWebServerRequest* request) {
+void RestController::handleGetDeviceRequest(AsyncWebServerRequest* request) {
+
+  auto& config = deviceController->getConfig();
+
+  JsonDocument doc;
+
+  doc["name"] = config.deviceName;
+  doc["hostname"] = config.hostname;
+  doc["type"] = DEVICE_TYPE;
+  doc["version"] = DEVICE_VERSION;
+  
+  doc["ip"] = wifiController->getLocalIP();
+  doc["ssid"] = wifiController->getSSID();
+  doc["rssi"] = wifiController->getRSSI();
+
+  respondJson(request, doc);
+
+}
+
+void RestController::handleGetDeviceStatusRequest(AsyncWebServerRequest* request) {
 
   auto *ramUsageParam = request->getParam("ram_usage");
   bool showRamUsage = ramUsageParam != nullptr && ramUsageParam->value() == "true";
@@ -133,7 +156,7 @@ void RestController::handleDeviceStatusRequest(AsyncWebServerRequest* request) {
 
 }
 
-void RestController::handleSensorDataRequest(AsyncWebServerRequest* request) {
+void RestController::handleGetSensorDataRequest(AsyncWebServerRequest* request) {
 
   auto *detailsParam = request->getParam("details");
   bool showDetails = detailsParam != nullptr && detailsParam->value() == "true"; 

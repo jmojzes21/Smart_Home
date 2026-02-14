@@ -34,8 +34,9 @@ class RestController {
 
   private:
 
-  void handleDeviceStatusRequest(AsyncWebServerRequest* request);
-  void handleSensorDataRequest(AsyncWebServerRequest* request);
+  void handleGetDeviceRequest(AsyncWebServerRequest* request);
+  void handleGetDeviceStatusRequest(AsyncWebServerRequest* request);
+  void handleGetSensorDataRequest(AsyncWebServerRequest* request);
   void handleGetAqHistoryRequest(AsyncWebServerRequest* request);
   void handleDeleteAqHistoryRequest(AsyncWebServerRequest* request);
   void handleGetRtcRequest(AsyncWebServerRequest* request);
