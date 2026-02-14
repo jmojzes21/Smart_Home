@@ -302,10 +302,11 @@ void RestController::onSensorData(AirQualityData &aqData) {
 
 bool RestController::handleAuthentification(AsyncWebServerRequest *request) {
 
+  /*
   std::string tokenText = request->authChallenge().c_str();
-  
+
   if(tokenText.empty()) {
-    if(request->url().startsWith("/device")) {
+    if(request->method() == HTTP_GET && request->url() == "/device") {
       return true;
     }
     return false;
@@ -331,6 +332,7 @@ bool RestController::handleAuthentification(AsyncWebServerRequest *request) {
   }
 
   validTokens.push_back(tokenText);
+  */
 
   return true;
 }
