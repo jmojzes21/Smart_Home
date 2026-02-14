@@ -97,11 +97,14 @@ class DeviceDiscovery {
     }
   }
 
-  GenericDevice _parseGenericDevice(Map<String, dynamic> json) {
-    return GenericDevice(
-      type: DeviceType.parse(json['type']),
+  ScannedDevice _parseGenericDevice(Map<String, dynamic> json) {
+    var type = DeviceType.parse(json['type']);
+    if (type == DeviceType.unknown) throw Exception('Unsupported device type ${json['type']}');
+
+    return ScannedDevice(
+      type: type,
       hostname: json['hostname'],
-      name: '',
+      name: json['name'],
       ipAddress: InternetAddress(json['ip']),
     );
   }

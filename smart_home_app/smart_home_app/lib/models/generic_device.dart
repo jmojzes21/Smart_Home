@@ -1,29 +1,29 @@
 import 'package:smart_home_core/device.dart';
 
-class GenericDevice extends Device {
-  bool isOnline;
+enum Availability { unknown, online, offline }
 
-  GenericDevice({
+class ScannedDevice extends Device {
+  Availability availability;
+
+  ScannedDevice({
     required super.type,
     required super.name,
     required super.hostname,
     super.ipAddress,
-    this.isOnline = false,
+    this.availability = Availability.unknown,
   });
 
-  factory GenericDevice.virtual({required String name, required DeviceType type}) {
-    return GenericDevice(type: type, name: name, hostname: '#virtual', isOnline: true);
+  factory ScannedDevice.virtual({required String name, required DeviceType type}) {
+    return ScannedDevice(type: type, name: name, hostname: '#virtual', availability: Availability.online);
   }
-
-  bool get isOffline => !isOnline;
 
   Map<String, dynamic> toJson() {
     return {'type': type.toString(), 'name': name, 'hostname': hostname};
   }
 
-  factory GenericDevice.fromJson(Map<String, dynamic> json) {
+  factory ScannedDevice.fromJson(Map<String, dynamic> json) {
     var type = DeviceType.parse(json['type']);
     if (type == DeviceType.unknown) throw Exception('Unsupported device type ${json['type']}');
-    return GenericDevice(type: type, name: json['name'], hostname: json['hostname']);
+    return ScannedDevice(type: type, name: json['name'], hostname: json['hostname']);
   }
 }

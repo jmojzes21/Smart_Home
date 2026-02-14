@@ -1,6 +1,8 @@
 import 'package:smart_home_core/device.dart';
 import 'package:smart_home_core/exceptions.dart';
+import 'package:smart_home_core/handler.dart';
 
+import '../../device_handlers.dart';
 import '../../models/generic_device.dart';
 import '../services/device_discovery.dart';
 import '../services/interfaces/device_service.dart';
@@ -9,20 +11,49 @@ import 'package:smart_home_core/view_model.dart';
 class DevicesPageViewModel extends ViewModel {
   final IDeviceService deviceService;
   final DeviceDiscovery deviceDiscovery;
+  final DeviceHandlers deviceHandlers;
   final Function(String message) onShowMessage;
+  final Function(DeviceHandler handler, DeviceContext deviceContext) onDeviceConnected;
 
-  var _devices = <GenericDevice>[];
+  var _devices = <ScannedDevice>[];
 
   var _isDiscovering = false;
   var _isLoading = true;
+  var _isConnecting = false;
 
-  DevicesPageViewModel({required this.deviceService, required this.deviceDiscovery, required this.onShowMessage}) {
+  DevicesPageViewModel({
+    required this.deviceService,
+    required this.deviceDiscovery,
+    required this.deviceHandlers,
+    required this.onShowMessage,
+    required this.onDeviceConnected,
+  }) {
     init();
   }
 
   Future<void> init() async {
     await _getDevicesFromCache();
-    startScan();
+  }
+
+  Future<void> connectDevice(ScannedDevice device) async {
+    var deviceHandler = deviceHandlers.getDeviceHandler(device.type);
+    if (deviceHandler == null) {
+      return;
+    }
+
+    _isConnecting = true;
+    notifyListeners();
+
+    try {
+      var deviceContext = await deviceHandler.connectDevice(device);
+      onDeviceConnected(deviceHandler, deviceContext);
+    } catch (e) {
+      _isConnecting = false;
+      notifyListeners();
+
+      String msg = Exceptions.getMessage(e);
+      onShowMessage(msg);
+    }
   }
 
   Future<void> startScan() async {
@@ -35,13 +66,19 @@ class DevicesPageViewModel extends ViewModel {
     await stream.forEach((device) {
       _onDeviceFound(device);
 
-      if (devices.every((e) => e.isOnline)) {
+      if (devices.every((e) => e.availability == Availability.online)) {
         deviceDiscovery.stop();
       }
       notifyListeners();
     });
 
     _isDiscovering = false;
+    for (var device in _devices) {
+      if (device.availability == Availability.unknown) {
+        device.availability = Availability.offline;
+      }
+    }
+
     notifyListeners();
   }
 
@@ -55,7 +92,7 @@ class DevicesPageViewModel extends ViewModel {
     notifyListeners();
 
     try {
-      List<GenericDevice> devices = await deviceService.getDevices();
+      List<ScannedDevice> devices = await deviceService.getDevices();
       await deviceService.saveDevicesToCache(devices);
 
       devices.addAll(_getVirtualDevices());
@@ -76,7 +113,7 @@ class DevicesPageViewModel extends ViewModel {
     _isLoading = true;
     notifyListeners();
 
-    List<GenericDevice> devices = await deviceService.getDevicesFromCache();
+    List<ScannedDevice> devices = await deviceService.getDevicesFromCache();
     if (devices.isEmpty) {
       getDevices();
       return;
@@ -89,8 +126,8 @@ class DevicesPageViewModel extends ViewModel {
     notifyListeners();
   }
 
-  List<GenericDevice> _getVirtualDevices() {
-    return [GenericDevice.virtual(name: 'Kvaliteta zraka - virtualni', type: DeviceType.airQuality)];
+  List<ScannedDevice> _getVirtualDevices() {
+    return [ScannedDevice.virtual(name: 'Kvaliteta zraka - virtualni', type: DeviceType.airQuality)];
   }
 
   void _onDeviceFound(Device newDevice) {
@@ -99,11 +136,12 @@ class DevicesPageViewModel extends ViewModel {
 
     var device = _devices[index];
     device.ipAddress = newDevice.ipAddress;
-    device.isOnline = true;
+    device.availability = Availability.online;
   }
 
   bool get isDiscovering => _isDiscovering;
   bool get isLoading => _isLoading;
+  bool get isConnecting => _isConnecting;
 
-  List<GenericDevice> get devices => _devices;
+  List<ScannedDevice> get devices => _devices;
 }

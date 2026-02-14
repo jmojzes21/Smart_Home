@@ -51,7 +51,9 @@ class AirQualityDeviceHandler extends DeviceHandler {
   }
 
   @override
-  DeviceContext createDeviceContext(Device genericDevice) {
+  Future<DeviceContext> connectDevice(Device genericDevice) async {
+    await checkAvailability(genericDevice);
+
     var device = AqDevice.fromDevice(genericDevice);
     return AqDeviceContext(device);
   }

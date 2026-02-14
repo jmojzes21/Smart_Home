@@ -11,7 +11,7 @@ import 'interfaces/device_service.dart';
 
 class DeviceService implements IDeviceService {
   @override
-  Future<List<GenericDevice>> getDevices() async {
+  Future<List<ScannedDevice>> getDevices() async {
     var username = AppContext.instance.currentUser.username;
 
     var client = BackendClient();
@@ -21,7 +21,7 @@ class DeviceService implements IDeviceService {
   }
 
   @override
-  Future<List<GenericDevice>> getDevicesFromCache() async {
+  Future<List<ScannedDevice>> getDevicesFromCache() async {
     var file = _getDevicesFile();
     if ((await file.exists()) == false) {
       return [];
@@ -35,7 +35,7 @@ class DeviceService implements IDeviceService {
   }
 
   @override
-  Future<void> saveDevicesToCache(List<GenericDevice> devices) async {
+  Future<void> saveDevicesToCache(List<ScannedDevice> devices) async {
     var file = _getDevicesFile();
     var data = devices.map((e) => e.toJson()).toList();
     var json = jsonEncode(data);
@@ -56,11 +56,11 @@ class DeviceService implements IDeviceService {
     return File(join(appDir, 'devices.json'));
   }
 
-  List<GenericDevice> _parseDevices(List<dynamic> json) {
-    var devices = <GenericDevice>[];
+  List<ScannedDevice> _parseDevices(List<dynamic> json) {
+    var devices = <ScannedDevice>[];
     for (var data in json) {
       try {
-        var device = GenericDevice.fromJson(data);
+        var device = ScannedDevice.fromJson(data);
         devices.add(device);
       } catch (e) {
         log(data.toString() + e.toString());
