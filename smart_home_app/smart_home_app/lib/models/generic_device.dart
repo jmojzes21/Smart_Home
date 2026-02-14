@@ -13,9 +13,9 @@ class ScannedDevice extends Device {
     this.availability = Availability.unknown,
   });
 
-  factory ScannedDevice.virtual({required String name, required DeviceType type}) {
-    return ScannedDevice(type: type, name: name, hostname: '#virtual', availability: Availability.online);
-  }
+  ScannedDevice.virtual({required super.name, required super.type})
+    : availability = Availability.online,
+      super.virtual();
 
   Map<String, dynamic> toJson() {
     return {'type': type.toString(), 'name': name, 'hostname': hostname};

@@ -24,6 +24,10 @@ abstract class DeviceHandler {
   Future<DeviceContext> connectDevice(Device genericDevice);
 
   Future<void> checkAvailability(Device device) async {
+    if (device.isVirtual) {
+      return;
+    }
+
     if (device.ipAddress == null) {
       var address = await _getIpAddress(device);
       device.ipAddress = address;

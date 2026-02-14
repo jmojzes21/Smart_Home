@@ -10,4 +10,7 @@ abstract class Device {
   InternetAddress? ipAddress;
 
   Device({required this.type, required this.hostname, required this.name, this.ipAddress});
+  Device.virtual({required this.type, required this.name}) : hostname = '#virtual';
+
+  bool get isVirtual => hostname == "#virtual";
 }
