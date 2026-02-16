@@ -45,20 +45,16 @@ void RestController::init() {
     handleDeleteAqHistoryRequest(request);
   });
 
-  httpServer->on("/rtc", HTTP_GET, [&](AsyncWebServerRequest* request) {
-    handleGetRtcRequest(request);
-  });
-
-  httpServer->on("/rtc", HTTP_PATCH, [&](AsyncWebServerRequest* request, JsonVariant &jsonv) {
-    handlePatchRtcRequest(request, jsonv);
-  });
-
   httpServer->on("/config", HTTP_GET, [&](AsyncWebServerRequest* request) {
     handleGetConfigRequest(request);
   });
 
   httpServer->on("/config", HTTP_PATCH, [&](AsyncWebServerRequest* request, JsonVariant &jsonv) {
     handlePatchConfigRequest(request, jsonv);
+  });
+
+  httpServer->on("/sync-time", HTTP_POST, [&](AsyncWebServerRequest* request, JsonVariant &jsonv) {
+    handleSyncTimeRequest(request, jsonv);
   });
 
   httpServer->on("/restart", HTTP_POST, [&](AsyncWebServerRequest* request) {
@@ -123,6 +119,7 @@ void RestController::handleGetDeviceStatusRequest(AsyncWebServerRequest* request
   bool showInputVoltage = vinParam != nullptr && vinParam->value() == "true"; 
 
   auto& config = deviceController->getConfig();
+  struct tm dateTime = deviceController->getDateTime();
 
   JsonDocument doc;
 
@@ -134,6 +131,9 @@ void RestController::handleGetDeviceStatusRequest(AsyncWebServerRequest* request
   doc["ip"] = wifiController->getLocalIP();
   doc["ssid"] = wifiController->getSSID();
   doc["rssi"] = wifiController->getRSSI();
+
+  std::string dateTimeText = DateFormats::formatDateTime(dateTime);
+  doc["date_time"] = dateTimeText;
 
   if(showRamUsage) {
     JsonObject ram = doc["ram"].to<JsonObject>();
@@ -213,45 +213,6 @@ void RestController::handleDeleteAqHistoryRequest(AsyncWebServerRequest *request
   request->send(200);
 }
 
-void RestController::handleGetRtcRequest(AsyncWebServerRequest *request) {
-
-  tm t = deviceController->getDateTime();
-
-  JsonDocument doc;
-
-  std::string dateTime = DateFormats::formatDateTime(t);
-  doc["date_time"] = dateTime;
-
-  respondJson(request, doc);
-
-}
-
-void RestController::handlePatchRtcRequest(AsyncWebServerRequest *request, JsonVariant &jsonv) {
-
-  JsonObject json = jsonv.as<JsonObject>();
-
-  tm t = {0};
-  t.tm_wday = (int)json["week_day"];
-  t.tm_mday = (int)json["month_day"];
-  t.tm_mon = (int)json["month"] - 1;
-  t.tm_year = (int)json["year"] - 1900;
-  t.tm_hour = (int)json["hour"];
-  t.tm_min = (int)json["minute"];
-  t.tm_sec = (int)json["second"];
-
-  deviceController->setDateTime(t);
-  t = deviceController->getDateTime();
-
-  JsonDocument doc;
-
-  std::string dateTime = DateFormats::formatDateTime(t);
-  doc["date_time"] = dateTime;
-
-  respondJson(request, doc);
-
-}
-
-
 void RestController::handleGetConfigRequest(AsyncWebServerRequest *request) {
 
   auto& config = deviceController->getConfig();
@@ -278,6 +239,31 @@ void RestController::handlePatchConfigRequest(AsyncWebServerRequest *request, Js
   deviceController->readConfig();
 
   respondJson(request, configJson);
+}
+
+void RestController::handleSyncTimeRequest(AsyncWebServerRequest *request, JsonVariant &jsonv) {
+
+  JsonObject json = jsonv.as<JsonObject>();
+
+  tm t = {0};
+  t.tm_wday = (int)json["week_day"];
+  t.tm_mday = (int)json["month_day"];
+  t.tm_mon = (int)json["month"] - 1;
+  t.tm_year = (int)json["year"] - 1900;
+  t.tm_hour = (int)json["hour"];
+  t.tm_min = (int)json["minute"];
+  t.tm_sec = (int)json["second"];
+
+  deviceController->setDateTime(t);
+  t = deviceController->getDateTime();
+
+  JsonDocument doc;
+
+  std::string dateTime = DateFormats::formatDateTime(t);
+  doc["date_time"] = dateTime;
+
+  respondJson(request, doc);
+
 }
 
 void RestController::handleDeviceRestartRequest(AsyncWebServerRequest *request) {

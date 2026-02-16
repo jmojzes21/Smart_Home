@@ -39,12 +39,11 @@ class RestController {
   void handleGetSensorDataRequest(AsyncWebServerRequest* request);
   void handleGetAqHistoryRequest(AsyncWebServerRequest* request);
   void handleDeleteAqHistoryRequest(AsyncWebServerRequest* request);
-  void handleGetRtcRequest(AsyncWebServerRequest* request);
-  void handlePatchRtcRequest(AsyncWebServerRequest* request, JsonVariant &jsonv);
 
   void handleGetConfigRequest(AsyncWebServerRequest* request);
   void handlePatchConfigRequest(AsyncWebServerRequest* request, JsonVariant &jsonv);
 
+  void handleSyncTimeRequest(AsyncWebServerRequest* request, JsonVariant &jsonv);
   void handleDeviceRestartRequest(AsyncWebServerRequest* request);
 
   void onSensorData(AirQualityData& aqData);

@@ -50,6 +50,10 @@ bool DeviceConfig::parse(std::string configJson) {
     networks.push_back(network);
   }
 
+  if(lastNetworkIndex < 0 || lastNetworkIndex >= networks.size()) {
+    lastNetworkIndex = -1;
+  }
+
   return true;
 }
 
