@@ -20,7 +20,7 @@ class SettingsPage extends StatelessWidget {
       create: (context) {
         var deviceContext = AqDeviceContext.of(context);
         return SettingsPageViewModel(
-          deviceService: deviceContext.serviceFactory.getDeviceService(),
+          deviceService: deviceContext.deviceService,
           onShowMessage: (message) {
             if (!context.mounted) return;
             Dialogs.showSnackBar(context, message);

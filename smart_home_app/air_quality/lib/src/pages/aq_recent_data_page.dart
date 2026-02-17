@@ -20,7 +20,7 @@ class AqRecentDataPage extends StatelessWidget {
         create: (context) {
           var deviceContext = AqDeviceContext.of(context);
           return LocalDataPageVm(
-            aqService: deviceContext.serviceFactory.getAirQualityService(),
+            aqService: deviceContext.airQualityService,
             onShowMessage: (message) {
               if (!context.mounted) return;
               Dialogs.showSnackBar(context, message);

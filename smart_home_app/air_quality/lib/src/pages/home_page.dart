@@ -19,7 +19,7 @@ class HomePage extends StatelessWidget {
         create: (context) {
           var deviceContext = AqDeviceContext.of(context);
           return HomePageViewModel(
-            aqService: deviceContext.serviceFactory.getAirQualityService(),
+            aqService: deviceContext.airQualityService,
             onException: (message) {
               if (!context.mounted) return;
               Dialogs.showSnackBar(context, message);

@@ -4,19 +4,21 @@ import 'package:smart_home_core/device.dart';
 
 import '../logic/services/device_client.dart';
 import '../logic/services/interfaces/air_quality_service.dart';
+import '../logic/services/interfaces/device_service.dart';
 import '../logic/services/service_factory.dart';
 import 'aq_device.dart';
 
 class AqDeviceContext extends DeviceContext<AqDevice> {
   late final DeviceClient client;
-  late final ServiceFactory serviceFactory;
 
+  late final IDeviceService deviceService;
   late final IAirQualityService airQualityService;
 
   AqDeviceContext(super.device) {
     client = DeviceClient(device);
-    serviceFactory = ServiceFactory(client);
 
+    var serviceFactory = ServiceFactory(client);
+    deviceService = serviceFactory.getDeviceService();
     airQualityService = serviceFactory.getAirQualityService();
   }
 
