@@ -194,7 +194,7 @@ void aqHistoryTask(void* param) {
   auto sensorController = (SensorController*)param;
   auto deviceController = sensorController->getDeviceController();
 
-  uint32_t savePeriod = deviceController->getConfig().recentHistoryPeriod;
+  uint32_t savePeriod = deviceController->getConfig().recentHistoryPeriod * 1000;
   uint32_t t1 = millis() + savePeriod;
 
   while(true) {

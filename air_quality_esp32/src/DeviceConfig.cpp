@@ -2,8 +2,8 @@
 #include "DeviceConfig.h"
 #include <ArduinoJson.h>
 
-#define RECENT_HISTORY_MIN_PERIOD (30 * 1000)
-#define RECENT_HISTORY_MAX_PERIOD (10 * 60 * 1000)
+#define RECENT_HISTORY_MIN_PERIOD_SEC (30)
+#define RECENT_HISTORY_MAX_PERIOD_SEC (10 * 60)
 
 bool DeviceConfig::parse(std::string configJson) {
 
@@ -25,10 +25,10 @@ bool DeviceConfig::parse(std::string configJson) {
   }
 
   uint32_t recentPeriod = doc["recent_history_period"].as<uint32_t>();
-  if(recentPeriod < RECENT_HISTORY_MIN_PERIOD) {
-    recentPeriod = RECENT_HISTORY_MIN_PERIOD;
-  }else if(recentPeriod > RECENT_HISTORY_MAX_PERIOD) {
-    recentPeriod = RECENT_HISTORY_MAX_PERIOD;
+  if(recentPeriod < RECENT_HISTORY_MIN_PERIOD_SEC) {
+    recentPeriod = RECENT_HISTORY_MIN_PERIOD_SEC;
+  }else if(recentPeriod > RECENT_HISTORY_MAX_PERIOD_SEC) {
+    recentPeriod = RECENT_HISTORY_MAX_PERIOD_SEC;
   }
 
   this->recentHistoryPeriod = recentPeriod;

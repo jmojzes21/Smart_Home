@@ -43,7 +43,7 @@ class SettingsPage extends StatelessWidget {
   }
 
   Widget buildBody(BuildContext context, SettingsPageViewModel model) {
-    if (model.deviceStatus == null) {
+    if (model.isLoading && model.deviceStatus == null) {
       return Center(child: CircularProgressIndicator());
     }
 
@@ -252,7 +252,31 @@ class SettingsPage extends StatelessWidget {
               expandedAlignment: Alignment.topLeft,
               childrenPadding: EdgeInsets.all(20),
               initiallyExpanded: false,
-              children: [basicInfoTable],
+              children: [
+                basicInfoTable,
+                SizedBox(height: 40),
+                DropdownMenu(
+                  initialSelection: model.deviceConfig!.recentHistoryPeriod,
+                  inputDecorationTheme: InputDecorationThemeData(isDense: true, border: OutlineInputBorder()),
+                  enableSearch: false,
+                  requestFocusOnTap: false,
+                  enableFilter: false,
+                  label: Text('Period za nedavna mjerenja'),
+                  onSelected: (int? value) {
+                    if (value != null) {
+                      model.updateRecentPeriod(value);
+                    }
+                  },
+                  dropdownMenuEntries: [
+                    DropdownMenuEntry(value: 30, label: '30 sekundi'),
+                    DropdownMenuEntry(value: 1 * 60, label: '1 minuta'),
+                    DropdownMenuEntry(value: 2 * 60, label: '2 minute'),
+                    DropdownMenuEntry(value: 3 * 60, label: '3 minute'),
+                    DropdownMenuEntry(value: 5 * 60, label: '5 minuta'),
+                    DropdownMenuEntry(value: 10 * 60, label: '10 minuta'),
+                  ],
+                ),
+              ],
             ),
             ExpansionTile(
               leading: FaIcon(FontAwesomeIcons.wifi),
@@ -313,6 +337,29 @@ class SettingsPage extends StatelessWidget {
               initiallyExpanded: false,
               children: [advancedInfoTable],
             ),
+            SizedBox(height: 40),
+            Row(
+              spacing: 20,
+              children: [
+                FilledButton(
+                  onPressed: enableButons && model.shouldSaveChanges
+                      ? () {
+                          model.updateSettings();
+                        }
+                      : null,
+                  child: Text('Spremi promjene'),
+                ),
+                TextButton(
+                  onPressed: enableButons && model.shouldSaveChanges
+                      ? () {
+                          model.refresh();
+                        }
+                      : null,
+                  child: Text('Poništi promjene'),
+                ),
+              ],
+            ),
+            SizedBox(height: 80),
           ],
         ),
       ),

@@ -10,6 +10,7 @@ class SettingsPageViewModel extends ViewModel {
   final Function(String message) onShowMessage;
 
   bool _isLoading = true;
+  bool _shouldSaveChanges = false;
 
   DeviceStatus? _deviceStatus;
   DeviceConfig? _deviceConfig;
@@ -27,6 +28,7 @@ class SettingsPageViewModel extends ViewModel {
       _currentTime = DateTime.now();
       await Future.wait([_getDeviceStatus(), _getDeviceConfig()]);
 
+      _shouldSaveChanges = false;
       notifyListeners();
     } catch (e) {
       String msg = Exceptions.getMessage(e);
@@ -61,28 +63,20 @@ class SettingsPageViewModel extends ViewModel {
     try {
       _checkNetwork(network);
 
-      var config = _deviceConfig!.clone();
-
-      bool exists = config.wifiNetworks.any((e) => e.name == network.name);
+      bool exists = wifiNetworks.any((e) => e.name == network.name);
       if (exists) {
         throw AppException('WiFi mreža ${network.name} već postoji!');
       }
 
-      config.wifiNetworks.add(network);
-      config.wifiNetworks.sort((a, b) => a.name.compareTo(b.name));
+      wifiNetworks.add(network);
+      wifiNetworks.sort((a, b) => a.name.compareTo(b.name));
 
-      _isLoading = true;
-      notifyListeners();
-
-      var updatedConfig = await deviceService.updateDeviceConfig(config);
-      _deviceConfig = updatedConfig;
-
+      _shouldSaveChanges = true;
       onShowMessage("Dodana WiFi mreža ${network.name}.");
     } catch (e) {
       String msg = Exceptions.getMessage(e);
       onShowMessage(msg);
     } finally {
-      _isLoading = false;
       notifyListeners();
     }
   }
@@ -91,45 +85,29 @@ class SettingsPageViewModel extends ViewModel {
     try {
       _checkNetwork(network);
 
-      var config = _deviceConfig!.clone();
-
-      WifiNetwork toUpdate = config.wifiNetworks.firstWhere((e) => e.name == network.name);
+      WifiNetwork toUpdate = wifiNetworks.firstWhere((e) => e.name == network.name);
       toUpdate.password = network.password;
 
-      _isLoading = true;
-      notifyListeners();
-
-      var updatedConfig = await deviceService.updateDeviceConfig(config);
-      _deviceConfig = updatedConfig;
-
+      _shouldSaveChanges = true;
       onShowMessage("Spremljene promjene WiFi mreže ${network.name}.");
     } catch (e) {
       String msg = Exceptions.getMessage(e);
       onShowMessage(msg);
     } finally {
-      _isLoading = false;
       notifyListeners();
     }
   }
 
   Future<void> delete(WifiNetwork network) async {
     try {
-      var config = _deviceConfig!.clone();
+      wifiNetworks.removeWhere((e) => e.name == network.name);
 
-      config.wifiNetworks.removeWhere((e) => e.name == network.name);
-
-      _isLoading = true;
-      notifyListeners();
-
-      var updatedConfig = await deviceService.updateDeviceConfig(config);
-      _deviceConfig = updatedConfig;
-
+      _shouldSaveChanges = true;
       onShowMessage("Obrisana WiFi mreža ${network.name}.");
     } catch (e) {
       String msg = Exceptions.getMessage(e);
       onShowMessage(msg);
     } finally {
-      _isLoading = false;
       notifyListeners();
     }
   }
@@ -137,6 +115,28 @@ class SettingsPageViewModel extends ViewModel {
   void _checkNetwork(WifiNetwork network) {
     if (network.name.isEmpty) {
       throw AppException('Potrebno je unijeti naziv WiFi mreže!');
+    }
+  }
+
+  void updateRecentPeriod(int value) {
+    _deviceConfig!.recentHistoryPeriod = value;
+    _shouldSaveChanges = true;
+    notifyListeners();
+  }
+
+  Future<void> updateSettings() async {
+    try {
+      var updatedConfig = await deviceService.updateDeviceConfig(_deviceConfig!);
+      _deviceConfig = updatedConfig;
+
+      _shouldSaveChanges = false;
+      onShowMessage("Promjene su uspješno spremljene.");
+    } catch (e) {
+      String msg = Exceptions.getMessage(e);
+      onShowMessage(msg);
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 
@@ -151,7 +151,10 @@ class SettingsPageViewModel extends ViewModel {
   }
 
   bool get isLoading => _isLoading;
+  bool get shouldSaveChanges => _shouldSaveChanges;
+
   DeviceStatus? get deviceStatus => _deviceStatus;
+  DeviceConfig? get deviceConfig => _deviceConfig;
   DateTime? get currentTime => _currentTime;
 
   List<WifiNetwork> get wifiNetworks => _deviceConfig!.wifiNetworks;

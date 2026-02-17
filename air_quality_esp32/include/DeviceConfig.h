@@ -26,6 +26,7 @@ class DeviceConfig {
   std::string deviceName;
   std::string secretKey;
 
+  /// @brief Recent history period in seconds
   uint32_t recentHistoryPeriod = 0;
 
   /// @brief Index of last connected wifi network
