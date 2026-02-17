@@ -41,4 +41,9 @@ class DeviceService extends IDeviceService {
 
     return DateTime.parse(dtText);
   }
+
+  @override
+  Future<void> restartDevice() async {
+    await client.httpPost('/restart', {}, statusCode: 201);
+  }
 }

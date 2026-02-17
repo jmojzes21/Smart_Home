@@ -62,7 +62,16 @@ class SettingsPage extends StatelessWidget {
             buildWifiSection(context, model),
             buildRtcSection(context, model, enableButons),
             buildAdvancedSection(context, model),
-            SizedBox(height: 40),
+
+            SizedBox(height: 20),
+
+            OutlinedButton.icon(
+              onPressed: enableButons ? () => model.restartDevice() : null,
+              icon: FaIcon(FontAwesomeIcons.arrowRotateLeft),
+              label: Text('Ponovno pokreni uređaj'),
+            ),
+
+            SizedBox(height: 20),
             Row(
               spacing: 20,
               children: [

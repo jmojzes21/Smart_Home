@@ -13,4 +13,6 @@ abstract class IDeviceService {
     DateTime time = DateTime.now();
     return updateRtcTime(time);
   }
+
+  Future<void> restartDevice();
 }

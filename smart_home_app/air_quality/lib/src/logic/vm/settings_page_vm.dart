@@ -126,12 +126,31 @@ class SettingsPageViewModel extends ViewModel {
   }
 
   Future<void> updateSettings() async {
+    _isLoading = true;
+    notifyListeners();
+
     try {
       var updatedConfig = await deviceService.updateDeviceConfig(_deviceConfig!);
       _deviceConfig = updatedConfig;
 
       _shouldSaveChanges = false;
       onShowMessage("Promjene su uspješno spremljene.");
+    } catch (e) {
+      String msg = Exceptions.getMessage(e);
+      onShowMessage(msg);
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> restartDevice() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      await deviceService.restartDevice();
+      onShowMessage("Uređaj se ponovno pokreće.");
     } catch (e) {
       String msg = Exceptions.getMessage(e);
       onShowMessage(msg);

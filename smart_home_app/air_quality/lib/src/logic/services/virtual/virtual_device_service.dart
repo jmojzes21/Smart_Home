@@ -55,4 +55,7 @@ class VirtualDeviceService extends IDeviceService {
   Future<DateTime> updateRtcTime(DateTime time) async {
     return DateTime.now();
   }
+
+  @override
+  Future<void> restartDevice() async {}
 }
