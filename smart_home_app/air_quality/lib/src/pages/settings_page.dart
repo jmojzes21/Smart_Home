@@ -7,26 +7,15 @@ import 'package:smart_home_core/widgets.dart';
 
 import '../logic/vm/settings_page_vm.dart';
 import '../models/aq_device_context.dart';
+import '../models/device_config.dart';
 import '../widgets/custom_app_bar.dart';
+import '../widgets/edit_wifi_net_dialog.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    /*
-      Align(
-          alignment: AlignmentGeometry.bottomRight,
-          child: Padding(
-            padding: EdgeInsets.all(20),
-            child: FloatingActionButton(
-              onPressed: enableButtons ? () => model.getDevices() : null,
-              child: FaIcon(FontAwesomeIcons.arrowsRotate),
-            ),
-          ),
-        ),
-*/
-
     return ChangeNotifierProvider(
       create: (context) {
         var deviceContext = AqDeviceContext.of(context);
@@ -61,15 +50,18 @@ class SettingsPage extends StatelessWidget {
     var enableButons = !model.isLoading;
 
     var device = model.deviceStatus!;
-    var memory = device.memory;
+    var memory = device.memory!;
 
     var textTheme = context.textTheme;
-    var sectionStyle = textTheme.titleLarge;
+    var sectionStyle = textTheme.titleMedium;
     var keyStyle = textTheme.titleMedium;
     var valueStyle = textTheme.bodyMedium;
 
     const columnSpacing = SizedBox();
     const rowDivider = TableRow(children: [Divider(), Divider(), Divider()]);
+
+    const double lpiHeight = 6;
+    const double lpiMaxWidth = 200;
 
     var basicInfoTable = Table(
       columnWidths: {0: IntrinsicColumnWidth(), 1: FixedColumnWidth(20), 2: FlexColumnWidth()},
@@ -111,7 +103,10 @@ class SettingsPage extends StatelessWidget {
                   '${device.inputVoltage.toStringAsFixed(1)} V (${(device.inputVoltagePercent * 100).round()}%)',
                   style: valueStyle,
                 ),
-                LinearProgressIndicator(value: device.inputVoltagePercent),
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: lpiMaxWidth),
+                  child: LinearProgressIndicator(value: device.inputVoltagePercent, minHeight: lpiHeight),
+                ),
               ],
             ),
           ],
@@ -163,7 +158,7 @@ class SettingsPage extends StatelessWidget {
           children: [
             Text('Uređaj', style: keyStyle),
             columnSpacing,
-            Text(Formats.formatDateTime(model.rtcTime), style: valueStyle),
+            Text(Formats.formatDateTime(model.deviceStatus!.rtcTime), style: valueStyle),
           ],
         ),
       ],
@@ -184,13 +179,22 @@ class SettingsPage extends StatelessWidget {
                 Text(_memoryUsageText(memory.usedHeap, memory.heapSize, memory.usedHeapPercent), style: valueStyle),
                 SizedBox(height: 10),
 
-                LinearProgressIndicator(value: memory.usedHeapPercent),
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: lpiMaxWidth),
+                  child: LinearProgressIndicator(value: memory.usedHeapPercent, minHeight: lpiHeight),
+                ),
                 SizedBox(height: 10),
 
                 Text('Max iskorišteno', style: textTheme.titleSmall),
                 Text(
                   _memoryUsageText(memory.maxUsedHeap, memory.heapSize, memory.maxUsedHeapPercent),
                   style: valueStyle,
+                ),
+                SizedBox(height: 10),
+
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: lpiMaxWidth),
+                  child: LinearProgressIndicator(value: memory.maxUsedHeapPercent, minHeight: lpiHeight),
                 ),
                 SizedBox(height: 10),
               ],
@@ -210,13 +214,22 @@ class SettingsPage extends StatelessWidget {
                 Text(_memoryUsageText(memory.usedPsram, memory.psramSize, memory.usedPsramPercent), style: valueStyle),
                 SizedBox(height: 10),
 
-                LinearProgressIndicator(value: memory.usedPsramPercent),
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: lpiMaxWidth),
+                  child: LinearProgressIndicator(value: memory.usedPsramPercent, minHeight: lpiHeight),
+                ),
                 SizedBox(height: 10),
 
                 Text('Max iskorišteno', style: textTheme.titleSmall),
                 Text(
                   _memoryUsageText(memory.maxUsedPsram, memory.psramSize, memory.maxUsedPsramPercent),
                   style: valueStyle,
+                ),
+                SizedBox(height: 10),
+
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: lpiMaxWidth),
+                  child: LinearProgressIndicator(value: memory.maxUsedPsramPercent, minHeight: lpiHeight),
                 ),
                 SizedBox(height: 10),
               ],
@@ -251,10 +264,26 @@ class SettingsPage extends StatelessWidget {
               children: [
                 wifiTable,
                 SizedBox(height: 20),
+                Text('WiFi mreže', style: textTheme.titleMedium),
+                SizedBox(height: 10),
+                Column(
+                  children: model.wifiNetworks.map((e) {
+                    return ListTile(
+                      onTap: () {
+                        _showEditNetworkDialog(context, model, e);
+                      },
+                      leading: FaIcon(FontAwesomeIcons.wifi),
+                      title: Text(e.name),
+                    );
+                  }).toList(),
+                ),
+                SizedBox(height: 10),
                 OutlinedButton.icon(
-                  onPressed: enableButons ? () {} : null,
-                  icon: FaIcon(FontAwesomeIcons.sliders),
-                  label: Text('Upravljanje mrežama'),
+                  onPressed: () {
+                    _showEditNetworkDialog(context, model, null);
+                  },
+                  icon: Icon(Icons.add),
+                  label: Text('Dodaj'),
                 ),
               ],
             ),
@@ -287,6 +316,16 @@ class SettingsPage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void _showEditNetworkDialog(BuildContext context, SettingsPageViewModel model, WifiNetwork? network) {
+    showDialog(
+      context: context,
+      fullscreenDialog: true,
+      builder: (context) {
+        return EditWifiNetworkDialog(model: model, network: network);
+      },
     );
   }
 

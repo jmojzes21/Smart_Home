@@ -1,3 +1,4 @@
+import '../../models/device_config.dart';
 import '../../models/device_status.dart';
 import 'device_client.dart';
 import 'interfaces/device_service.dart';
@@ -9,21 +10,25 @@ class DeviceService extends IDeviceService {
 
   @override
   Future<DeviceStatus> getDeviceStatus() async {
-    var json = await client.httpGet('/device', {'ram_usage': 'true', 'input_voltage': 'true'});
+    var json = await client.httpGet('/device-status', {'ram_usage': 'true', 'input_voltage': 'true'});
     return DeviceStatus.fromJson(json);
   }
 
   @override
-  Future<DateTime> getRtcTime() async {
-    var json = await client.httpGet('/rtc');
-    String dtText = json['date_time'];
-
-    return DateTime.parse(dtText);
+  Future<DeviceConfig> getDeviceConfig() async {
+    var json = await client.httpGet('/config');
+    return DeviceConfig.fromJson(json);
   }
 
   @override
-  Future<DateTime> setRtcTime(DateTime time) async {
-    var json = await client.httpPatch('/rtc', {
+  Future<DeviceConfig> updateDeviceConfig(DeviceConfig config) async {
+    var json = await client.httpPatch('/config', config.toJson());
+    return DeviceConfig.fromJson(json);
+  }
+
+  @override
+  Future<DateTime> updateRtcTime(DateTime time) async {
+    var json = await client.httpPost('/sync-time', {
       'week_day': time.weekday,
       'month_day': time.day,
       'month': time.month,

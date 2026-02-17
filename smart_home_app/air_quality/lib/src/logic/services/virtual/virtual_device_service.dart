@@ -1,4 +1,5 @@
 import '../../../models/aq_device.dart';
+import '../../../models/device_config.dart';
 import '../../../models/device_status.dart';
 import '../interfaces/device_service.dart';
 
@@ -16,6 +17,7 @@ class VirtualDeviceService extends IDeviceService {
       ipAddress: '192.168.1.1',
       ssid: 'wifi1',
       rssi: -20,
+      rtcTime: DateTime.now(),
       inputVoltage: 4.1,
       memory: MemoryStatus(
         heapSize: 200,
@@ -29,12 +31,28 @@ class VirtualDeviceService extends IDeviceService {
   }
 
   @override
-  Future<DateTime> getRtcTime() async {
-    return DateTime.now();
+  Future<DeviceConfig> getDeviceConfig() async {
+    return DeviceConfig(
+      hostname: device.hostname,
+      deviceName: device.name,
+      secretKey: 'secret_key',
+      recentHistoryPeriod: 60 * 1000,
+      lastWifiIndex: 0,
+      wifiNetworks: [
+        WifiNetwork(name: 'wifi1', password: 'wifi1'),
+        WifiNetwork(name: 'wifi2', password: 'wifi2'),
+        WifiNetwork(name: 'wifi3', password: 'wifi3'),
+      ],
+    );
   }
 
   @override
-  Future<DateTime> setRtcTime(DateTime time) async {
+  Future<DeviceConfig> updateDeviceConfig(DeviceConfig config) async {
+    return config;
+  }
+
+  @override
+  Future<DateTime> updateRtcTime(DateTime time) async {
     return DateTime.now();
   }
 }

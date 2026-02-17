@@ -7,12 +7,13 @@ class DeviceStatus {
   String ssid;
   int rssi;
 
+  DateTime? rtcTime;
+
   /// Input voltage in volts
   double inputVoltage;
-
   double inputVoltagePercent = 0;
 
-  MemoryStatus memory;
+  MemoryStatus? memory;
 
   DeviceStatus({
     this.name = '',
@@ -21,8 +22,9 @@ class DeviceStatus {
     this.ipAddress = '',
     this.ssid = '',
     this.rssi = 0,
+    this.rtcTime,
     this.inputVoltage = 0,
-    required this.memory,
+    this.memory,
   }) {
     inputVoltagePercent = calculateInputVoltagePercent(inputVoltage);
   }
@@ -63,6 +65,7 @@ class DeviceStatus {
       ipAddress: json['ip'],
       ssid: json['ssid'],
       rssi: json['rssi'],
+      rtcTime: DateTime.parse(json['date_time']),
       inputVoltage: inputVoltage / 1000.0,
       memory: MemoryStatus(
         heapSize: _toKB(heapSize),
