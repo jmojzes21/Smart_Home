@@ -18,42 +18,49 @@ class DeviceClient {
     var url = Uri.http(hostname, path, queryParameters);
     var response = await http.get(url).timeout(_timeout);
 
+    String body = response.body.trim();
+
     if (response.statusCode != 200) {
-      throw AppException(response.body);
+      throw AppException(body);
     }
 
-    return jsonDecode(response.body);
+    return jsonDecode(body);
   }
 
-  Future<dynamic> httpPost(String path, Object body) async {
+  Future<dynamic> _httpPostLike(String method, String path, Object body, int statusCode) async {
     var headers = {'Content-Type': 'application/json'};
     String bodyJson = jsonEncode(body);
 
     var hostname = device.ipAddress!.address;
     var url = Uri.http(hostname, path);
 
-    var response = await http.post(url, headers: headers, body: bodyJson, encoding: utf8).timeout(_timeout);
-
-    if (response.statusCode != 200) {
-      throw AppException(response.body);
+    http.Response response;
+    if (method == 'post') {
+      response = await http.post(url, headers: headers, body: bodyJson, encoding: utf8).timeout(_timeout);
+    } else if (method == 'patch') {
+      response = await http.patch(url, headers: headers, body: bodyJson, encoding: utf8).timeout(_timeout);
+    } else {
+      throw ArgumentError('Unsupported method $method');
     }
 
-    return jsonDecode(response.body);
+    String responseBody = response.body.trim();
+
+    if (response.statusCode != statusCode) {
+      throw AppException(responseBody);
+    }
+
+    if (responseBody.isEmpty) {
+      return '';
+    }
+
+    return jsonDecode(responseBody);
   }
 
-  Future<dynamic> httpPatch(String path, Object body) async {
-    var headers = {'Content-Type': 'application/json'};
-    String bodyJson = jsonEncode(body);
+  Future<dynamic> httpPost(String path, Object body, {int statusCode = 200}) async {
+    return _httpPostLike('post', path, body, statusCode);
+  }
 
-    var hostname = device.ipAddress!.address;
-    var url = Uri.http(hostname, path);
-
-    var response = await http.patch(url, headers: headers, body: bodyJson, encoding: utf8).timeout(_timeout);
-
-    if (response.statusCode != 200) {
-      throw AppException(response.body);
-    }
-
-    return jsonDecode(response.body);
+  Future<dynamic> httpPatch(String path, Object body, {int statusCode = 200}) async {
+    return _httpPostLike('patch', path, body, statusCode);
   }
 }
