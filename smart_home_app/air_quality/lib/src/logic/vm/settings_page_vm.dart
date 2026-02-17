@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:smart_home_core/exceptions.dart';
 import 'package:smart_home_core/view_model.dart';
 
@@ -59,7 +60,7 @@ class SettingsPageViewModel extends ViewModel {
     }
   }
 
-  Future<void> addNetwork(WifiNetwork network) async {
+  Future<void> addNetwork(WifiNetwork network, VoidCallback onSuccess) async {
     try {
       _checkNetwork(network);
 
@@ -72,7 +73,7 @@ class SettingsPageViewModel extends ViewModel {
       wifiNetworks.sort((a, b) => a.name.compareTo(b.name));
 
       _shouldSaveChanges = true;
-      onShowMessage("Dodana WiFi mreža ${network.name}.");
+      onSuccess();
     } catch (e) {
       String msg = Exceptions.getMessage(e);
       onShowMessage(msg);
@@ -81,7 +82,7 @@ class SettingsPageViewModel extends ViewModel {
     }
   }
 
-  Future<void> updateNetwork(WifiNetwork network) async {
+  Future<void> updateNetwork(WifiNetwork network, VoidCallback onSuccess) async {
     try {
       _checkNetwork(network);
 
@@ -89,7 +90,7 @@ class SettingsPageViewModel extends ViewModel {
       toUpdate.password = network.password;
 
       _shouldSaveChanges = true;
-      onShowMessage("Spremljene promjene WiFi mreže ${network.name}.");
+      onSuccess();
     } catch (e) {
       String msg = Exceptions.getMessage(e);
       onShowMessage(msg);

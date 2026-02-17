@@ -87,9 +87,10 @@ class _EditWifiNetworkDialogState extends State<EditWifiNetworkDialog> {
                     if (isEditMode)
                       FilledButton(
                         onPressed: () async {
-                          await model.updateNetwork(getNetwork());
-                          if (!context.mounted) return;
-                          context.pop();
+                          await model.updateNetwork(getNetwork(), () {
+                            if (!context.mounted) return;
+                            context.pop();
+                          });
                         },
                         child: Text('Spremi'),
                       ),
@@ -97,9 +98,10 @@ class _EditWifiNetworkDialogState extends State<EditWifiNetworkDialog> {
                     if (!isEditMode)
                       FilledButton(
                         onPressed: () async {
-                          await model.addNetwork(getNetwork());
-                          if (!context.mounted) return;
-                          context.pop();
+                          await model.addNetwork(getNetwork(), () {
+                            if (!context.mounted) return;
+                            context.pop();
+                          });
                         },
                         child: Text('Dodaj'),
                       ),

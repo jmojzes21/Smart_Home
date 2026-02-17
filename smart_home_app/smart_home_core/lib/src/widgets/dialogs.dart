@@ -3,9 +3,9 @@ import 'package:go_router/go_router.dart';
 
 class Dialogs {
   static void showSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(behavior: SnackBarBehavior.floating, showCloseIcon: true, content: Text(message)));
+    var m = ScaffoldMessenger.of(context);
+    m.clearSnackBars();
+    m.showSnackBar(SnackBar(behavior: SnackBarBehavior.floating, showCloseIcon: true, content: Text(message)));
   }
 
   static Future<bool> showConfirmDialog(BuildContext context, String message) async {
