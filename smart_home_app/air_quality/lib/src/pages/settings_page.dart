@@ -50,7 +50,7 @@ class SettingsPage extends StatelessWidget {
       return Center(child: CircularProgressIndicator());
     }
 
-    var enableButons = !model.isLoading;
+    var enableButtons = !model.isLoading;
 
     return SingleChildScrollView(
       child: Padding(
@@ -59,14 +59,14 @@ class SettingsPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             buildBasicInfoSection(context, model),
-            buildWifiSection(context, model),
-            buildRtcSection(context, model, enableButons),
+            buildWifiSection(context, model, enableButtons),
+            buildRtcSection(context, model, enableButtons),
             buildAdvancedSection(context, model),
 
             SizedBox(height: 20),
 
             OutlinedButton.icon(
-              onPressed: enableButons ? () => model.restartDevice() : null,
+              onPressed: enableButtons ? () => model.restartDevice() : null,
               icon: FaIcon(FontAwesomeIcons.arrowRotateLeft),
               label: Text('Ponovno pokreni uređaj'),
             ),
@@ -76,7 +76,7 @@ class SettingsPage extends StatelessWidget {
               spacing: 20,
               children: [
                 FilledButton(
-                  onPressed: enableButons && model.shouldSaveChanges
+                  onPressed: enableButtons && model.shouldSaveChanges
                       ? () {
                           model.updateSettings();
                         }
@@ -84,7 +84,7 @@ class SettingsPage extends StatelessWidget {
                   child: Text('Spremi promjene'),
                 ),
                 TextButton(
-                  onPressed: enableButons && model.shouldSaveChanges
+                  onPressed: enableButtons && model.shouldSaveChanges
                       ? () {
                           model.refresh();
                         }
@@ -219,7 +219,7 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Widget buildWifiSection(BuildContext context, SettingsPageViewModel model) {
+  Widget buildWifiSection(BuildContext context, SettingsPageViewModel model, bool enableButtons) {
     var textTheme = context.textTheme;
     var sectionStyle = textTheme.titleMedium;
 
@@ -236,6 +236,7 @@ class SettingsPage extends StatelessWidget {
         Column(
           children: model.wifiNetworks.map((e) {
             return ListTile(
+              enabled: enableButtons,
               onTap: () {
                 showEditNetworkDialog(context, model, e);
               },
@@ -256,7 +257,7 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Widget buildRtcSection(BuildContext context, SettingsPageViewModel model, bool enableButons) {
+  Widget buildRtcSection(BuildContext context, SettingsPageViewModel model, bool enableButtons) {
     var textTheme = context.textTheme;
     var sectionStyle = textTheme.titleMedium;
     var keyStyle = textTheme.titleMedium;
@@ -295,7 +296,7 @@ class SettingsPage extends StatelessWidget {
         ),
         SizedBox(height: 20),
         OutlinedButton.icon(
-          onPressed: enableButons ? () => model.syncRtcTime() : null,
+          onPressed: enableButtons ? () => model.syncRtcTime() : null,
           icon: FaIcon(FontAwesomeIcons.arrowsRotate),
           label: Text('Sinkroniziraj vrijeme'),
         ),

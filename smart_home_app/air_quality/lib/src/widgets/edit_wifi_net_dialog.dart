@@ -86,22 +86,16 @@ class _EditWifiNetworkDialogState extends State<EditWifiNetworkDialog> {
                   children: [
                     if (isEditMode)
                       FilledButton(
-                        onPressed: () async {
-                          await model.updateNetwork(getNetwork(), () {
-                            if (!context.mounted) return;
-                            context.pop();
-                          });
+                        onPressed: () {
+                          model.updateNetwork(getNetwork(), () => context.pop());
                         },
                         child: Text('Spremi'),
                       ),
 
                     if (!isEditMode)
                       FilledButton(
-                        onPressed: () async {
-                          await model.addNetwork(getNetwork(), () {
-                            if (!context.mounted) return;
-                            context.pop();
-                          });
+                        onPressed: () {
+                          model.addNetwork(getNetwork(), () => context.pop());
                         },
                         child: Text('Dodaj'),
                       ),
@@ -118,11 +112,9 @@ class _EditWifiNetworkDialogState extends State<EditWifiNetworkDialog> {
                         context,
                         'Jeste li sigurni da želite obrisati WiFi mrežu?',
                       );
-                      if (!result) return;
+                      if (!result || !context.mounted) return;
 
-                      await model.delete(getNetwork());
-                      if (!context.mounted) return;
-                      context.pop();
+                      model.deleteNetwork(getNetwork(), () => context.pop());
                     },
                     child: Text('Obriši'),
                   ),

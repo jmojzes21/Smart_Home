@@ -60,7 +60,7 @@ class SettingsPageViewModel extends ViewModel {
     }
   }
 
-  Future<void> addNetwork(WifiNetwork network, VoidCallback onSuccess) async {
+  void addNetwork(WifiNetwork network, VoidCallback onSuccess) {
     try {
       _checkNetwork(network);
 
@@ -82,7 +82,7 @@ class SettingsPageViewModel extends ViewModel {
     }
   }
 
-  Future<void> updateNetwork(WifiNetwork network, VoidCallback onSuccess) async {
+  void updateNetwork(WifiNetwork network, VoidCallback onSuccess) {
     try {
       _checkNetwork(network);
 
@@ -99,12 +99,13 @@ class SettingsPageViewModel extends ViewModel {
     }
   }
 
-  Future<void> delete(WifiNetwork network) async {
+  void deleteNetwork(WifiNetwork network, VoidCallback onSuccess) {
     try {
       wifiNetworks.removeWhere((e) => e.name == network.name);
 
       _shouldSaveChanges = true;
       onShowMessage("Obrisana WiFi mreža ${network.name}.");
+      onSuccess();
     } catch (e) {
       String msg = Exceptions.getMessage(e);
       onShowMessage(msg);
