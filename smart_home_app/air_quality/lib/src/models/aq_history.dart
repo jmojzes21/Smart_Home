@@ -1,11 +1,22 @@
-class AqHistory {
-  /// Seconds after start time
-  int time;
+class AqMetrics {
+  double average;
+  double min;
+  double max;
 
-  double temperature;
-  double humidity;
-  double pressure;
-  int pm25;
+  AqMetrics({required this.average, required this.min, required this.max});
+
+  factory AqMetrics.fromJson(Map<String, dynamic> json) {
+    return AqMetrics(average: json['average'].toDouble(), min: json['min'].toDouble(), max: json['max'].toDouble());
+  }
+}
+
+class AqHistory {
+  DateTime time;
+
+  AqMetrics temperature;
+  AqMetrics humidity;
+  AqMetrics pressure;
+  AqMetrics pm25;
 
   AqHistory({
     required this.time,
@@ -14,14 +25,4 @@ class AqHistory {
     required this.pressure,
     required this.pm25,
   });
-
-  factory AqHistory.fromJson(Map<String, dynamic> json) {
-    return AqHistory(
-      time: json['time'].toInt(),
-      temperature: json['temperature'].toDouble(),
-      humidity: json['humidity'].toDouble(),
-      pressure: json['pressure'].toDouble(),
-      pm25: json['pm25'].toInt(),
-    );
-  }
 }

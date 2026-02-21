@@ -1,7 +1,7 @@
 import 'package:smart_home_core/exceptions.dart';
 import 'package:smart_home_core/view_model.dart';
 
-import '../../models/aq_history_data.dart';
+import '../../models/aq_chart_data.dart';
 import '../services/interfaces/air_quality_service.dart';
 
 class LocalDataPageVm extends ViewModel {
@@ -9,7 +9,7 @@ class LocalDataPageVm extends ViewModel {
   final Function(String message) onShowMessage;
 
   bool _isLoading = true;
-  AqHistoryData? _aqData;
+  AqChartData? _aqData;
 
   LocalDataPageVm({required this.aqService, required this.onShowMessage}) {
     refresh();
@@ -20,8 +20,7 @@ class LocalDataPageVm extends ViewModel {
     notifyListeners();
 
     try {
-      _aqData = await aqService.getLocalAq();
-      _aqData!.calculateRanges();
+      _aqData = await aqService.getRecentHistory();
     } catch (e) {
       String msg = Exceptions.getMessage(e);
       onShowMessage(msg);
@@ -32,5 +31,5 @@ class LocalDataPageVm extends ViewModel {
   }
 
   bool get isLoading => _isLoading;
-  AqHistoryData? get aqData => _aqData;
+  AqChartData? get aqData => _aqData;
 }

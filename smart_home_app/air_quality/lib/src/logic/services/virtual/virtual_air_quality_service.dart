@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import '../../../models/aq_history.dart';
-import '../../../models/aq_history_data.dart';
+import '../../../models/aq_chart_data.dart';
 import '../interfaces/air_quality_service.dart';
 import '../../../models/air_quality.dart';
 
@@ -14,28 +14,28 @@ class VirtualAirQualityService implements IAirQualityService {
   }
 
   @override
-  Future<AqHistoryData> getLocalAq() async {
-    int time = 0;
+  Future<AqChartData> getRecentHistory() async {
+    DateTime time = DateTime.now();
 
     var data = List.generate(10, (index) {
       var aq = _getAq();
       var aqh = AqHistory(
         time: time,
-        temperature: aq.temperature,
-        humidity: aq.humidity,
-        pressure: aq.pressure,
-        pm25: aq.pm25,
+        temperature: _getAqMetrics(aq.temperature, 4),
+        humidity: _getAqMetrics(aq.humidity, 10),
+        pressure: _getAqMetrics(aq.pressure, 10),
+        pm25: _getAqMetrics(aq.pm25.toDouble(), 20),
       );
-      time += 60;
+      time = time.add(Duration(minutes: 1));
 
       return aqh;
     });
 
-    return AqHistoryData(startTime: DateTime.now(), data: data);
+    return AqChartData(data);
   }
 
   @override
-  Future<void> clearLocalAq() async {}
+  Future<void> clearRecentHistory() async {}
 
   AirQuality _getAq() {
     return AirQuality(
@@ -44,5 +44,11 @@ class VirtualAirQualityService implements IAirQualityService {
       pressure: 990 + 30 * random.nextDouble(),
       pm25: 5 + random.nextInt(95),
     );
+  }
+
+  AqMetrics _getAqMetrics(double value, double d) {
+    double p1 = random.nextDouble();
+    double p2 = random.nextDouble();
+    return AqMetrics(average: value, min: value - p1 * d, max: value + p2 * d);
   }
 }

@@ -5,7 +5,7 @@ import 'package:smart_home_core/handler.dart';
 
 import 'models/aq_device.dart';
 import 'models/aq_device_context.dart';
-import 'pages/aq_data_page.dart';
+import 'pages/aq_data_selection_page.dart';
 import 'pages/aq_history_data_page.dart';
 import 'pages/aq_live_data_page.dart';
 import 'pages/aq_recent_data_page.dart';
@@ -33,7 +33,7 @@ class AirQualityDeviceHandler extends DeviceHandler {
 
           GoRoute(
             path: '/aq/data',
-            builder: (context, state) => AqDataPage(),
+            builder: (context, state) => AqDataSelectionPage(),
             routes: [
               GoRoute(path: 'live', builder: (context, state) => AqLiveDataPage()),
               GoRoute(path: 'recent', builder: (context, state) => AqRecentDataPage()),

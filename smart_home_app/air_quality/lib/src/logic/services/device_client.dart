@@ -63,4 +63,16 @@ class DeviceClient {
   Future<dynamic> httpPatch(String path, Object body, {int statusCode = 200}) async {
     return _httpPostLike('patch', path, body, statusCode);
   }
+
+  Future<void> httpDelete(String path) async {
+    var hostname = device.ipAddress!.address;
+    var url = Uri.http(hostname, path);
+    var response = await http.delete(url);
+
+    String responseBody = response.body.trim();
+
+    if (response.statusCode != 202) {
+      throw AppException(responseBody);
+    }
+  }
 }

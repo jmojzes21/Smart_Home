@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_home_core/extensions.dart';
 import 'package:smart_home_core/widgets.dart';
 
-import '../logic/vm/local_data_page_vm.dart';
+import '../logic/vm/aq_data_page_vm.dart';
 import '../models/aq_device_context.dart';
-import '../models/aq_history_data.dart';
+import '../models/aq_chart_data.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/metrics_charts.dart';
 
@@ -37,44 +36,16 @@ class AqRecentDataPage extends StatelessWidget {
       return Center(child: CircularProgressIndicator());
     }
 
-    AqHistoryData? aqData = model.aqData;
+    AqChartData? aqData = model.aqData;
     if (aqData == null) {
       return SizedBox();
     }
 
-    var textTheme = context.textTheme;
-    var titleStyle = textTheme.titleLarge;
-
     return SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.all(40),
-        child: Center(
-          child: Wrap(
-            spacing: 20,
-            runSpacing: 20,
-            children: [
-              buildChart(Text('Temperatura', style: titleStyle), TemperatureChart(aqData: aqData)),
-              buildChart(Text('Vlaga', style: titleStyle), HumidityChart(aqData: aqData)),
-              buildChart(Text('Tlak', style: titleStyle), PressureChart(aqData: aqData)),
-              buildChart(Text('PM2.5', style: titleStyle), Pm25Chart(aqData: aqData)),
-            ],
-          ),
-        ),
+        padding: EdgeInsets.all(20),
+        child: Center(child: AirQualityCharts(aqData: aqData)),
       ),
-    );
-  }
-
-  Widget buildChart(Widget title, Widget chart) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        title,
-        SizedBox(height: 20),
-        ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 500),
-          child: AspectRatio(aspectRatio: 2, child: chart),
-        ),
-      ],
     );
   }
 }

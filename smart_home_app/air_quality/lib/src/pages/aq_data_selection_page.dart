@@ -5,8 +5,8 @@ import 'package:smart_home_core/extensions.dart';
 
 import '../widgets/custom_app_bar.dart';
 
-class AqDataPage extends StatelessWidget {
-  const AqDataPage({super.key});
+class AqDataSelectionPage extends StatelessWidget {
+  const AqDataSelectionPage({super.key});
 
   @override
   Widget build(BuildContext context) {

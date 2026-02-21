@@ -1,115 +1,269 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:smart_home_core/extensions.dart';
+import 'package:smart_home_core/formats.dart';
 
-import '../models/aq_history_data.dart';
+import '../models/aq_chart_data.dart';
+import '../models/aq_history.dart';
 
-class TemperatureChart extends StatelessWidget {
-  final AqHistoryData aqData;
-
-  const TemperatureChart({super.key, required this.aqData});
+class AirQualityCharts extends StatelessWidget {
+  final AqChartData aqData;
+  const AirQualityCharts({super.key, required this.aqData});
 
   @override
   Widget build(BuildContext context) {
-    return MetricsChart(
-      spots: aqData.data.map((e) => FlSpot(e.time.toDouble(), e.temperature)).toList(),
-      lineColor: Color(0xFFFF485D),
-      minY: aqData.temperatureRange[0],
-      maxY: aqData.temperatureRange[1],
+    var textTheme = context.textTheme;
+    var titleStyle = textTheme.titleMedium;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double spacing = 20;
+
+        int columns = constraints.biggest.width > 750 ? 2 : 1;
+        double chartWidth = (constraints.biggest.width - (columns - 1) * spacing) / columns;
+
+        return Wrap(
+          spacing: spacing,
+          runSpacing: 20,
+          children: [
+            buildChart(chartWidth, Text('Temperatura', style: titleStyle), TemperatureChart(aqData: aqData)),
+            buildChart(chartWidth, Text('Vlaga', style: titleStyle), HumidityChart(aqData: aqData)),
+            buildChart(chartWidth, Text('Tlak', style: titleStyle), PressureChart(aqData: aqData)),
+            buildChart(chartWidth, Text('PM2.5', style: titleStyle), Pm25Chart(aqData: aqData)),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget buildChart(double chartWidth, Widget title, Widget chart) {
+    return SizedBox(
+      width: chartWidth,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          title,
+          SizedBox(height: 20),
+          AspectRatio(aspectRatio: 1.7, child: chart),
+        ],
+      ),
     );
   }
 }
 
-class HumidityChart extends StatelessWidget {
-  final AqHistoryData aqData;
-
-  const HumidityChart({super.key, required this.aqData});
+class TemperatureChart extends _BaseMetricsChart {
+  const TemperatureChart({required super.aqData}) : super(lineColor: const Color(0xFFFF485D));
 
   @override
-  Widget build(BuildContext context) {
-    return MetricsChart(
-      spots: aqData.data.map((e) => FlSpot(e.time.toDouble(), e.humidity)).toList(),
-      lineColor: Color(0xFF0A64EA),
-      minY: aqData.humidityRange[0],
-      maxY: aqData.humidityRange[1],
-    );
+  AqMetrics getMetrics(AqHistoryChart aq) {
+    return aq.temperature;
+  }
+
+  @override
+  List<double> getYRange(AqChartData data) {
+    return data.temperatureRange;
+  }
+
+  @override
+  List<TextSpan> getTooltipItems(AqHistoryChart aq) {
+    return [
+      TextSpan(
+        text: '${aq.temperature.average.toStringAsFixed(1)} °C',
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+      ),
+    ];
   }
 }
 
-class PressureChart extends StatelessWidget {
-  final AqHistoryData aqData;
-
-  const PressureChart({super.key, required this.aqData});
+class HumidityChart extends _BaseMetricsChart {
+  const HumidityChart({required super.aqData}) : super(lineColor: const Color(0xFF0A64EA));
 
   @override
-  Widget build(BuildContext context) {
-    return MetricsChart(
-      spots: aqData.data.map((e) => FlSpot(e.time.toDouble(), e.pressure)).toList(),
-      lineColor: Color(0xFFFCCA05),
-      minY: aqData.pressureRange[0],
-      maxY: aqData.pressureRange[1],
-    );
+  AqMetrics getMetrics(AqHistoryChart aq) {
+    return aq.humidity;
+  }
+
+  @override
+  List<double> getYRange(AqChartData data) {
+    return data.humidityRange;
+  }
+
+  @override
+  List<TextSpan> getTooltipItems(AqHistoryChart aq) {
+    return [
+      TextSpan(
+        text: '${aq.humidity.average.round()} %',
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+      ),
+    ];
   }
 }
 
-class Pm25Chart extends StatelessWidget {
-  final AqHistoryData aqData;
-
-  const Pm25Chart({super.key, required this.aqData});
+class PressureChart extends _BaseMetricsChart {
+  const PressureChart({required super.aqData}) : super(lineColor: const Color(0xFFFCCA05));
 
   @override
-  Widget build(BuildContext context) {
-    return MetricsChart(
-      spots: aqData.data.map((e) => FlSpot(e.time.toDouble(), e.pm25.toDouble())).toList(),
-      lineColor: Color(0xFF0094FF),
-      minY: aqData.pm25Range[0],
-      maxY: aqData.pm25Range[1],
-    );
+  AqMetrics getMetrics(AqHistoryChart aq) {
+    return aq.pressure;
+  }
+
+  @override
+  List<double> getYRange(AqChartData data) {
+    return data.pressureRange;
+  }
+
+  @override
+  List<TextSpan> getTooltipItems(AqHistoryChart aq) {
+    return [
+      TextSpan(
+        text: '${aq.pressure.average.toStringAsFixed(1)} hPa',
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+      ),
+    ];
   }
 }
 
-class MetricsChart extends StatelessWidget {
-  final List<FlSpot> spots;
+class Pm25Chart extends _BaseMetricsChart {
+  const Pm25Chart({required super.aqData}) : super(lineColor: const Color(0xFF0094FF));
+
+  @override
+  AqMetrics getMetrics(AqHistoryChart aq) {
+    return aq.pm25;
+  }
+
+  @override
+  List<double> getYRange(AqChartData data) {
+    return data.pm25Range;
+  }
+
+  @override
+  List<TextSpan> getTooltipItems(AqHistoryChart aq) {
+    return [
+      TextSpan(
+        text: '${aq.pm25.average.round()} µg/m',
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+      ),
+      TextSpan(
+        text: '3',
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, fontFeatures: [FontFeature.superscripts()]),
+      ),
+    ];
+  }
+}
+
+abstract class _BaseMetricsChart extends StatelessWidget {
+  final AqChartData aqData;
   final Color lineColor;
 
-  final double? minY;
-  final double? maxY;
+  const _BaseMetricsChart({required this.aqData, required this.lineColor});
 
-  const MetricsChart({super.key, required this.spots, required this.lineColor, this.minY, this.maxY});
+  AqMetrics getMetrics(AqHistoryChart aq);
+  List<double> getYRange(AqChartData data);
+  List<TextSpan> getTooltipItems(AqHistoryChart aq);
 
   @override
   Widget build(BuildContext context) {
+    return _MetricsChart(
+      aqData: aqData,
+      averageSpots: aqData.data.map((e) => FlSpot(e.x, getMetrics(e).average)).toList(),
+      minSpots: aqData.data.map((e) => FlSpot(e.x, getMetrics(e).min)).toList(),
+      maxSpots: aqData.data.map((e) => FlSpot(e.x, getMetrics(e).max)).toList(),
+      lineColor: lineColor,
+      xRange: aqData.xRange,
+      yRange: getYRange(aqData),
+      createTooltipItem: (barSpot) {
+        var aq = aqData.data[barSpot.spotIndex];
+
+        String timeText;
+        if (aqData.tooltipShowDate) {
+          timeText = Formats.formatDateTime(aq.time, false);
+        } else {
+          timeText = Formats.formatTime(aq.time, true);
+        }
+
+        return LineTooltipItem('$timeText\n', TextStyle(color: Colors.white), children: getTooltipItems(aq));
+      },
+    );
+  }
+}
+
+class _MetricsChart extends StatelessWidget {
+  final AqChartData aqData;
+  final List<FlSpot> averageSpots;
+  final List<FlSpot> minSpots;
+  final List<FlSpot> maxSpots;
+
+  final Color lineColor;
+  final List<double> xRange;
+  final List<double> yRange;
+
+  final LineTooltipItem Function(LineBarSpot barSpot)? createTooltipItem;
+
+  const _MetricsChart({
+    required this.aqData,
+    required this.averageSpots,
+    required this.minSpots,
+    required this.maxSpots,
+    required this.lineColor,
+    required this.xRange,
+    required this.yRange,
+    this.createTooltipItem,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var lineColor2 = lineColor.withValues(alpha: 0.2);
     var chartData = LineChartData(
       lineBarsData: [
         LineChartBarData(
-          spots: spots,
+          spots: averageSpots,
           isCurved: true,
-          barWidth: 2,
+          barWidth: 3,
           color: lineColor,
           dotData: FlDotData(show: true),
-          belowBarData: BarAreaData(show: true, color: lineColor.withValues(alpha: 0.1)),
+        ),
+        LineChartBarData(
+          show: false,
+          spots: minSpots,
+          isCurved: true,
+          barWidth: 1,
+          color: lineColor2,
+          dotData: FlDotData(show: false),
+        ),
+        LineChartBarData(
+          show: false,
+          spots: maxSpots,
+          isCurved: true,
+          barWidth: 1,
+          color: lineColor2,
+          dotData: FlDotData(show: false),
         ),
       ],
-      minY: minY,
-      maxY: maxY,
+      betweenBarsData: [BetweenBarsData(fromIndex: 1, toIndex: 2, color: lineColor2)],
+
+      minY: yRange[0],
+      maxY: yRange[1],
+
       lineTouchData: LineTouchData(
         enabled: true,
+
+        touchSpotThreshold: 40,
+
         touchTooltipData: LineTouchTooltipData(
+          maxContentWidth: 300,
+          fitInsideHorizontally: true,
+          fitInsideVertically: true,
           getTooltipItems: (List<LineBarSpot> touchedSpots) {
-            return touchedSpots.map((LineBarSpot barSpot) {
-              return LineTooltipItem(barSpot.y.toStringAsFixed(1), TextStyle(color: Colors.white));
-            }).toList();
+            return touchedSpots.map((LineBarSpot barSpot) => createTooltipItem?.call(barSpot)).toList();
           },
         ),
 
         getTouchedSpotIndicator: (LineChartBarData barData, List<int> spotIndexes) {
           return spotIndexes.map((int spotIndex) {
             return TouchedSpotIndicatorData(
-              FlLine(color: Colors.blue, strokeWidth: 2, dashArray: [8, 2]),
+              FlLine(color: lineColor, strokeWidth: 2, dashArray: [10, 10]),
               FlDotData(
-                show: true,
-                getDotPainter: (spot, percent, barData, index) {
-                  return FlDotCirclePainter(radius: 6, color: lineColor);
-                },
+                getDotPainter: (spot, percent, barData, index) => FlDotCirclePainter(radius: 6, color: lineColor),
               ),
             );
           }).toList();
@@ -120,17 +274,22 @@ class MetricsChart extends StatelessWidget {
 
       titlesData: FlTitlesData(
         show: true,
+
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 50,
+            reservedSize: 40,
+            minIncluded: false,
+            maxIncluded: false,
 
-            // minIncluded: false,
-            // maxIncluded: false,
             getTitlesWidget: (value, meta) {
-              // var time = aqData.getDateTime(value.toInt());
-              // return SideTitleWidget(meta: meta, child: Text(Formats.formatTime(time, false)));
-              return SideTitleWidget(meta: meta, child: Text(''));
+              var time = aqData.getDateTimeFromX(value);
+              return SideTitleWidget(
+                angle: 0.8,
+                meta: meta,
+                fitInside: SideTitleFitInsideData.fromTitleMeta(meta),
+                child: Text(Formats.formatTime(time, false), style: TextStyle(fontWeight: FontWeight.w500)),
+              );
             },
           ),
         ),
@@ -139,6 +298,8 @@ class MetricsChart extends StatelessWidget {
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 40,
+            minIncluded: false,
+            maxIncluded: false,
             getTitlesWidget: (value, meta) {
               return SideTitleWidget(meta: meta, child: Text(value.toStringAsFixed(0)));
             },
