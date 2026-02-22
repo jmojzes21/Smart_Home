@@ -33,7 +33,7 @@ class HomePage extends StatelessWidget {
   }
 
   Widget buildBody(BuildContext context, HomePageViewModel model) {
-    if (model.isLoading) {
+    if (model.isLoading || model.airQuality == null) {
       return Center(child: CircularProgressIndicator());
     }
 
@@ -55,10 +55,12 @@ class HomePage extends StatelessWidget {
     var mcTitleStyle = isMobile ? textTheme.bodyMedium : textTheme.titleMedium;
     var mcValueStyle = isMobile ? textTheme.bodyLarge : textTheme.titleLarge;
 
+    var airQuality = model.airQuality!;
+
     var mcTemperature = MetricsCard(
       image: getImage('assets/air_quality/temperature.png', imgSize),
       title: Text('Temperatura', style: mcTitleStyle),
-      value: Text('${model.airQuality.temperature.toStringAsFixed(1)} °C', style: mcValueStyle),
+      value: Text('${airQuality.temperature.toStringAsFixed(1)} °C', style: mcValueStyle),
       padding: mcPadding,
       imageSpacing: mcImgSpacing,
     );
@@ -66,7 +68,7 @@ class HomePage extends StatelessWidget {
     var mcHumidity = MetricsCard(
       image: getImage('assets/air_quality/humidity.png', imgSize),
       title: Text('Vlaga', style: mcTitleStyle),
-      value: Text('${model.airQuality.humidity.round()} %', style: mcValueStyle),
+      value: Text('${airQuality.humidity.round()} %', style: mcValueStyle),
       padding: mcPadding,
       imageSpacing: mcImgSpacing,
     );
@@ -74,7 +76,7 @@ class HomePage extends StatelessWidget {
     var mcPressure = MetricsCard(
       image: getImage('assets/air_quality/cloud.png', imgSize),
       title: Text('Tlak', style: mcTitleStyle),
-      value: Text('${model.airQuality.pressure.toStringAsFixed(1)} hPa', style: mcValueStyle),
+      value: Text('${airQuality.pressure.toStringAsFixed(1)} hPa', style: mcValueStyle),
       padding: mcPadding,
       imageSpacing: mcImgSpacing,
     );
@@ -86,7 +88,7 @@ class HomePage extends StatelessWidget {
         text: TextSpan(
           style: mcValueStyle,
           children: [
-            TextSpan(text: '${model.airQuality.pm25} µg/m'),
+            TextSpan(text: '${airQuality.pm25} µg/m'),
             TextSpan(
               text: '3',
               style: mcValueStyle!.copyWith(fontFeatures: [FontFeature.superscripts()]),

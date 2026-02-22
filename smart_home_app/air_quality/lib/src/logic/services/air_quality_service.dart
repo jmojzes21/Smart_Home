@@ -1,3 +1,10 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:smart_home_core/exceptions.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+
 import '../../models/aq_history.dart';
 import 'interfaces/air_quality_service.dart';
 import 'device_client.dart';
@@ -6,11 +13,63 @@ import '../../models/air_quality.dart';
 class AirQualityService extends IAirQualityService {
   final DeviceClient client;
 
+  final StreamController<AirQuality> _liveDataController = StreamController.broadcast();
+
+  bool _isLiveDataListening = false;
+  WebSocketChannel? _wsChannel;
+  StreamSubscription? _wsStreamSub;
+
   AirQualityService(this.client);
 
   @override
   Future<AirQuality> getAirQuality() async {
     return AirQuality.fromJson(await client.httpGet('/sensor-data'));
+  }
+
+  @override
+  Future<void> startLiveData() async {
+    if (_isLiveDataListening) return;
+
+    var hostname = client.device.ipAddress!.address;
+    var url = Uri.parse('ws://$hostname/sensor-data-ws');
+
+    _wsChannel = WebSocketChannel.connect(url);
+    await _wsChannel!.ready;
+
+    _wsStreamSub = _wsChannel!.stream.listen((data) {
+      if (data is String) {
+        _onWebSocketSensorData(data);
+      }
+    });
+
+    _isLiveDataListening = true;
+  }
+
+  void _onWebSocketSensorData(String data) {
+    try {
+      Map<String, dynamic> json = jsonDecode(data);
+      AirQuality aq = AirQuality.fromJson(json);
+
+      _liveDataController.sink.add(aq);
+    } catch (e) {
+      String msg = Exceptions.getMessage(e);
+      log(msg);
+    }
+  }
+
+  @override
+  void stopLiveData() {
+    _wsStreamSub?.cancel();
+    _wsChannel?.sink.close();
+
+    _wsStreamSub = null;
+    _wsChannel = null;
+    _isLiveDataListening = false;
+  }
+
+  @override
+  Stream<AirQuality> getLiveDataStream() {
+    return _liveDataController.stream;
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:smart_home_core/models.dart';
 import 'package:smart_home_core/view_model.dart';
 
@@ -9,51 +10,40 @@ class HomePageViewModel extends ViewModel {
   final IAirQualityService aqService;
   final Function(String message) onException;
 
-  var _airQuality = AirQuality.empty();
+  AirQuality? _airQuality;
+  StreamSubscription? _streamSub;
 
   bool _isLoading = true;
-  Timer? _refreshTimer;
 
   HomePageViewModel({required this.aqService, required this.onException}) {
     _init();
   }
 
-  bool get isLoading => _isLoading;
-  AirQuality get airQuality => _airQuality;
-
   Future<void> _init() async {
     try {
-      await _getAirQuality();
+      await aqService.startLiveData();
+      var stream = aqService.getLiveDataStream();
+      _streamSub = stream.listen((aq) {
+        _airQuality = aq;
+        notifyListeners();
+      });
     } catch (e) {
       String msg = Exceptions.getMessage(e);
+      log(msg);
       onException(msg);
-      return;
-    }
-
-    _isLoading = false;
-    notifyListeners();
-
-    _refreshTimer = Timer.periodic(Duration(seconds: 2), (timer) => _onRefresh());
-  }
-
-  Future<void> _getAirQuality() async {
-    _airQuality = await aqService.getAirQuality();
-    notifyListeners();
-  }
-
-  Future<void> _onRefresh() async {
-    try {
-      await _getAirQuality();
-    } catch (e) {
-      _refreshTimer?.cancel();
-      String msg = Exceptions.getMessage(e);
-      onException(msg);
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
+
+  bool get isLoading => _isLoading;
+  AirQuality? get airQuality => _airQuality;
 
   @override
   void dispose() {
-    _refreshTimer?.cancel();
+    _streamSub?.cancel();
+    aqService.stopLiveData();
     super.dispose();
   }
 }
