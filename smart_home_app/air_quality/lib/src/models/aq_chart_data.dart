@@ -28,6 +28,8 @@ class AqChartData {
   }
 
   void calculateValues() {
+    if (data.isEmpty) return;
+
     _startTime = data.first.time.millisecondsSinceEpoch / 1000;
     for (var aq in data) {
       double t = aq.time.millisecondsSinceEpoch / 1000;

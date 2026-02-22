@@ -27,7 +27,7 @@ class AirQualityService extends IAirQualityService {
 
   @override
   Future<void> clearRecentHistory() async {
-    await client.httpDelete('/aq-history');
+    await client.httpDelete('/aq-history', statusCode: 200);
   }
 
   AqHistory _parseRecentAqHistory(DateTime bootTime, Map<String, dynamic> json) {

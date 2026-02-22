@@ -252,7 +252,6 @@ class _MetricsChart extends StatelessWidget {
         touchTooltipData: LineTouchTooltipData(
           maxContentWidth: 300,
           fitInsideHorizontally: true,
-          fitInsideVertically: true,
           getTooltipItems: (List<LineBarSpot> touchedSpots) {
             return touchedSpots.map((LineBarSpot barSpot) => createTooltipItem?.call(barSpot)).toList();
           },
