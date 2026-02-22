@@ -13,7 +13,9 @@ class AirQualityCharts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var textTheme = context.textTheme;
-    var titleStyle = textTheme.titleMedium;
+    var titleStyle = textTheme.titleLarge;
+
+    double imgSize = 40;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -26,23 +28,57 @@ class AirQualityCharts extends StatelessWidget {
           spacing: spacing,
           runSpacing: 20,
           children: [
-            buildChart(chartWidth, Text('Temperatura', style: titleStyle), TemperatureChart(aqData: aqData)),
-            buildChart(chartWidth, Text('Vlaga', style: titleStyle), HumidityChart(aqData: aqData)),
-            buildChart(chartWidth, Text('Tlak', style: titleStyle), PressureChart(aqData: aqData)),
-            buildChart(chartWidth, Text('PM2.5', style: titleStyle), Pm25Chart(aqData: aqData)),
+            _ChartContainer(
+              chartWidth: chartWidth,
+              icon: getImage('assets/air_quality/temperature.png', imgSize),
+              title: Text('Temperatura', style: titleStyle),
+              chart: TemperatureChart(aqData: aqData),
+            ),
+            _ChartContainer(
+              chartWidth: chartWidth,
+              icon: getImage('assets/air_quality/humidity.png', imgSize),
+              title: Text('Vlaga', style: titleStyle),
+              chart: HumidityChart(aqData: aqData),
+            ),
+            _ChartContainer(
+              chartWidth: chartWidth,
+              icon: getImage('assets/air_quality/cloud.png', imgSize),
+              title: Text('Tlak', style: titleStyle),
+              chart: PressureChart(aqData: aqData),
+            ),
+            _ChartContainer(
+              chartWidth: chartWidth,
+              icon: getImage('assets/air_quality/wind.png', imgSize),
+              title: Text('PM2.5', style: titleStyle),
+              chart: Pm25Chart(aqData: aqData),
+            ),
           ],
         );
       },
     );
   }
 
-  Widget buildChart(double chartWidth, Widget title, Widget chart) {
+  Widget getImage(String name, double size) {
+    return Image.asset(name, width: size, height: size, filterQuality: FilterQuality.medium);
+  }
+}
+
+class _ChartContainer extends StatelessWidget {
+  final double chartWidth;
+  final Widget title;
+  final Widget chart;
+  final Widget? icon;
+
+  const _ChartContainer({required this.chartWidth, this.icon, required this.title, required this.chart});
+
+  @override
+  Widget build(BuildContext context) {
     return SizedBox(
       width: chartWidth,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          title,
+          Row(mainAxisSize: MainAxisSize.min, spacing: 10, children: [if (icon != null) icon!, title]),
           SizedBox(height: 20),
           AspectRatio(aspectRatio: 1.7, child: chart),
         ],

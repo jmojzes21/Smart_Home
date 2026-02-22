@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_home_core/extensions.dart';
+import 'package:smart_home_core/formats.dart';
+import 'package:smart_home_core/models.dart';
 import 'package:smart_home_core/widgets.dart';
 
 import '../logic/vm/aq_data_page_vm.dart';
@@ -65,6 +67,8 @@ class AqRecentDataPage extends StatelessWidget {
   }
 
   Widget buildBody(BuildContext context, AirQualityDataPageViewModel model) {
+    bool isMobile = AppContext.instance.isMobile;
+
     if (model.isLoading) {
       return Center(child: CircularProgressIndicator());
     }
@@ -81,12 +85,19 @@ class AqRecentDataPage extends StatelessWidget {
       );
     }
 
+    var textTheme = context.textTheme;
+
     return SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+        padding: EdgeInsets.all(isMobile ? 20 : 40),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text('Datum', style: textTheme.titleLarge),
+            Text(Formats.formatDate(model.getRecentHistoryDate()), style: textTheme.titleMedium),
+
+            SizedBox(height: 40),
+
             AirQualityCharts(aqData: aqData),
             SizedBox(height: 40),
             OutlinedButton.icon(

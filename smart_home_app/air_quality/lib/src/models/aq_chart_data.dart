@@ -22,7 +22,7 @@ class AqChartData {
 
   double _startTime = 0;
 
-  AqChartData(List<AqHistory> data) {
+  AqChartData(List<AqHistory> data, {this.tooltipShowDate = true}) {
     this.data = data.map((e) => AqHistoryChart(e)).toList();
     calculateValues();
   }

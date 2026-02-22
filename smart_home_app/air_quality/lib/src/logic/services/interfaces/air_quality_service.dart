@@ -1,9 +1,9 @@
 import '../../../models/air_quality.dart';
-import '../../../models/aq_chart_data.dart';
+import '../../../models/aq_history.dart';
 
 abstract class IAirQualityService {
   Future<AirQuality> getAirQuality();
 
-  Future<AqChartData> getRecentHistory();
+  Future<List<AqHistory>> getRecentHistory();
   Future<void> clearRecentHistory();
 }

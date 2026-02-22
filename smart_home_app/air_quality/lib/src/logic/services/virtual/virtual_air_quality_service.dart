@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import '../../../models/aq_history.dart';
-import '../../../models/aq_chart_data.dart';
 import '../interfaces/air_quality_service.dart';
 import '../../../models/air_quality.dart';
 
@@ -14,7 +13,7 @@ class VirtualAirQualityService implements IAirQualityService {
   }
 
   @override
-  Future<AqChartData> getRecentHistory() async {
+  Future<List<AqHistory>> getRecentHistory() async {
     DateTime time = DateTime.now();
 
     var data = List.generate(10, (index) {
@@ -31,7 +30,7 @@ class VirtualAirQualityService implements IAirQualityService {
       return aqh;
     });
 
-    return AqChartData(data);
+    return data;
   }
 
   @override

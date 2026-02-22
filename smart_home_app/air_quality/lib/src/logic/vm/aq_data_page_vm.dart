@@ -21,7 +21,8 @@ class AirQualityDataPageViewModel extends ViewModel {
     notifyListeners();
 
     try {
-      _aqData = await aqService.getRecentHistory();
+      var data = await aqService.getRecentHistory();
+      _aqData = AqChartData(data, tooltipShowDate: false);
     } catch (e) {
       String msg = Exceptions.getMessage(e);
       onShowMessage(msg);
@@ -57,7 +58,8 @@ class AirQualityDataPageViewModel extends ViewModel {
 
     try {
       await aqService.clearRecentHistory();
-      _aqData = await aqService.getRecentHistory();
+      var data = await aqService.getRecentHistory();
+      _aqData = AqChartData(data, tooltipShowDate: false);
     } catch (e) {
       String msg = Exceptions.getMessage(e);
       onShowMessage(msg);
@@ -65,6 +67,10 @@ class AirQualityDataPageViewModel extends ViewModel {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  DateTime getRecentHistoryDate() {
+    return _aqData!.data.last.time;
   }
 
   bool get isLoading => _isLoading;

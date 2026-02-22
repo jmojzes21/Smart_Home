@@ -1,4 +1,3 @@
-import '../../models/aq_chart_data.dart';
 import '../../models/aq_history.dart';
 import 'interfaces/air_quality_service.dart';
 import 'device_client.dart';
@@ -15,14 +14,14 @@ class AirQualityService extends IAirQualityService {
   }
 
   @override
-  Future<AqChartData> getRecentHistory() async {
+  Future<List<AqHistory>> getRecentHistory() async {
     var json = await client.httpGet('/aq-history');
 
     var bootTime = DateTime.parse(json['boot_time']);
     var aqHistory = json['aq_history'] as List<dynamic>;
 
     var data = aqHistory.map((e) => _parseRecentAqHistory(bootTime, e)).toList();
-    return AqChartData(data);
+    return data;
   }
 
   @override
