@@ -2,7 +2,7 @@
 #include "ota_update.h"
 #include "rest_api.h"
 
-#include "secret.h"
+#include "secret/secret.h"
 
 #define OTA_UPDATE_STATE_READY 10
 #define OTA_UPDATE_STATE_UPLOAD_FIRMWARE 11

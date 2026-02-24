@@ -23,16 +23,12 @@ class Firmware {
 Firmware loadFirmware() {
   String deviceType = 'Smart LEDs L7';
 
-  List<int> hmacKey = [
-    72, 4, 232, 223, 231, 86, 70, 190, 236, 105, 77, 223, 246, 182, 30, 25, 74,
-    56, 46, 220, 149, 246, 4, 222, 9, 218, 211, 62, 152, 170, 22, 141 //
-  ];
+  String secretKeyPath = p.join(p.current, 'secret', 'secret_key.txt');
+  String secretKey64 = File(secretKeyPath).readAsStringSync().trim();
+  List<int> hmacKey = base64.decode(secretKey64);
 
-  String firmwarePath = p.join(p.current, '..', '..', 'smart_leds_esp32',
-      '.pio', 'build', 'esp32dev', 'firmware.bin');
-
-  String mainCppPath =
-      p.join(p.current, '..', '..', 'smart_leds_esp32', 'src', 'main.cpp');
+  String firmwarePath = p.join(p.current, '..', '..', 'smart_leds_esp32', '.pio', 'build', 'esp32dev', 'firmware.bin');
+  String mainCppPath = p.join(p.current, '..', '..', 'smart_leds_esp32', 'src', 'main.cpp');
 
   String version = _getFirmwareVersion(mainCppPath);
   Uint8List firmwareBytes = _getFirmware(firmwarePath);
@@ -86,8 +82,7 @@ Uint8List _getFirmware(String firmwarePath) {
 
   Uint8List firmware = firmwareFile.readAsBytesSync();
 
-  print(
-      'Dohvaćeno, veličina: ${(firmware.length / (1024 * 1024)).toStringAsFixed(2)} MB');
+  print('Dohvaćeno, veličina: ${(firmware.length / (1024 * 1024)).toStringAsFixed(2)} MB');
 
   return firmware;
 }
