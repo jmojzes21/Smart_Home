@@ -6,12 +6,11 @@
 #include "patterns/color_pattern.h"
 #include "core/led_driver.h"
 
-extern LedDriver ledDriver;
-
 class LedManager {
 
     private:
 
+    ILedDriver* _ledDriver = nullptr;
     SemaphoreHandle_t _mutex;
 
     bool _directAccess = false;

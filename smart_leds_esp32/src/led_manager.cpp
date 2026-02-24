@@ -8,15 +8,19 @@
 #include "patterns/rainbow_balls.h"
 #include "patterns/rain.h"
 
+#include "core/platforms/esp32_driver.h"
+
 #define DLA_PAYLOAD_SIZE (sizeof(Color) * LED_COUNT)
 
 void LedManager::setup() {
 
     Serial.printf("Postavi LED upravitelja\n");
 
+    _ledDriver = new Esp32Driver();
+
     _mutex = xSemaphoreCreateMutex();
 
-    ledDriver.init();
+    _ledDriver->init();
 
     _udp.onPacket([&](AsyncUDPPacket packet) {
         _onUdpPacket(packet);
@@ -77,7 +81,7 @@ void LedManager::setBrightness(uint8_t value) {
 
     xSemaphoreTake(_mutex, portMAX_DELAY);
 
-    ledDriver.setBrightness(value);
+    _ledDriver->setBrightness(value);
     
     xSemaphoreGive(_mutex);
 
@@ -135,8 +139,8 @@ void LedManager::_clearPattern() {
         _currentPattern = nullptr;
     }
 
-    ledDriver.clear();
-    ledDriver.show();
+    _ledDriver->clear();
+    _ledDriver->show();
 
 }
 
@@ -175,18 +179,18 @@ void LedManager::_onUdpPacket(AsyncUDPPacket& packet) {
 
             case 10:
                 if(length == DLA_PAYLOAD_SIZE + 1) {
-                    memcpy(ledDriver.colors(), data + 1, DLA_PAYLOAD_SIZE);
-                    ledDriver.show();
+                    memcpy(_ledDriver->colors(), data + 1, DLA_PAYLOAD_SIZE);
+                    _ledDriver->show();
                 }
                 break;
 
             case 20:
-                ledDriver.clear();
+                _ledDriver->clear();
                 break;
             case 21:
                 if(length == 2) {
                     uint8_t brightness = data[1];
-                    ledDriver.setBrightness(brightness);
+                    _ledDriver->setBrightness(brightness);
                 }
                 break;
         }
@@ -200,15 +204,15 @@ void LedManager::_onUdpPacket(AsyncUDPPacket& packet) {
 ColorPattern* LedManager::_createPattern(std::string& name) {
 
     if(name == "single") {
-        return new SingleColorPattern();
+        return new SingleColorPattern(_ledDriver);
     }else if(name == "wave") {
-        return new WavePattern();
+        return new WavePattern(_ledDriver);
     }else if(name == "rainbow") {
-        return new RainbowPattern();
+        return new RainbowPattern(_ledDriver);
     }else if(name == "rainbow_balls") {
-        return new RainbowBallsPattern();
+        return new RainbowBallsPattern(_ledDriver);
     }else if(name == "rain") {
-        return new RainPattern();
+        return new RainPattern(_ledDriver);
     }
 
     return nullptr;

@@ -1,4 +1,5 @@
 
+#include <WiFi.h>
 #include <AsyncJson.h>
 
 #include "rest_api.h"
