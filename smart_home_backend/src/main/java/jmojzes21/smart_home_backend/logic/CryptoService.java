@@ -1,11 +1,13 @@
 package jmojzes21.smart_home_backend.logic;
 
+import jakarta.enterprise.context.RequestScoped;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+@RequestScoped
 public class CryptoService {
 
   public byte[] getRandomBytes(int size) {

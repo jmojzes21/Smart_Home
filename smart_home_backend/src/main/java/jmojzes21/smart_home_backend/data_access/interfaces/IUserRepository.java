@@ -11,4 +11,6 @@ public interface IUserRepository {
 
   void addUser(User user);
 
+  void flush();
+
 }

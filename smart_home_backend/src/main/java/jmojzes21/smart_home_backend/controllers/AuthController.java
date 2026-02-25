@@ -1,26 +1,27 @@
 package jmojzes21.smart_home_backend.controllers;
 
+import jakarta.inject.Inject;
 import jakarta.validation.Valid;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 import jmojzes21.smart_home_backend.dto.UserDTO;
 import jmojzes21.smart_home_backend.dto.UserLogin;
 import jmojzes21.smart_home_backend.logic.AuthService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/api/auth")
+@Path("/api/auth")
 public class AuthController {
 
-  private final AuthService authService;
+  @Inject
+  private AuthService authService;
 
-  public AuthController(AuthService authService) {
-    this.authService = authService;
-  }
-
-  @PostMapping("/user/login")
-  public UserDTO userLogin(@RequestBody @Valid UserLogin userLogin) {
+  @POST
+  @Path("/user/login")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  public UserDTO userLogin(@Valid UserLogin userLogin) {
     return authService.authenticateUser(userLogin);
   }
 

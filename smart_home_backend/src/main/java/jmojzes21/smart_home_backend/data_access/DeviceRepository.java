@@ -1,16 +1,16 @@
 package jmojzes21.smart_home_backend.data_access;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import java.util.List;
 import jmojzes21.smart_home_backend.data_access.interfaces.IDeviceRepository;
 import jmojzes21.smart_home_backend.models.Device;
-import org.springframework.stereotype.Repository;
 
-@Repository
+@ApplicationScoped
 public class DeviceRepository implements IDeviceRepository {
 
-  @PersistenceContext
+  @Inject
   private EntityManager em;
 
   @Override

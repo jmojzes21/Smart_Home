@@ -1,17 +1,16 @@
 package jmojzes21.smart_home_backend.data_access;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 import java.util.List;
 import jmojzes21.smart_home_backend.data_access.interfaces.IUserRepository;
 import jmojzes21.smart_home_backend.models.User;
-import org.springframework.stereotype.Repository;
 
-@Repository
+@ApplicationScoped
 public class UserRepository implements IUserRepository {
 
-  @PersistenceContext
+  @Inject
   private EntityManager em;
 
   @Override
@@ -24,6 +23,7 @@ public class UserRepository implements IUserRepository {
         .getResultList();
   }
 
+  @Override
   public User getUser(String username) {
     var cb = em.getCriteriaBuilder();
     var cq = cb.createQuery(User.class);
@@ -36,9 +36,12 @@ public class UserRepository implements IUserRepository {
   }
 
   @Override
-  @Transactional
   public void addUser(User user) {
     em.persist(user);
   }
 
+  public void flush() {
+    em.flush();
+  }
+  
 }

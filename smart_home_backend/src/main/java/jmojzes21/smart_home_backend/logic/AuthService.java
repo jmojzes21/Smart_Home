@@ -1,23 +1,20 @@
 package jmojzes21.smart_home_backend.logic;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import jmojzes21.smart_home_backend.data_access.interfaces.IUserRepository;
+import jmojzes21.smart_home_backend.data_access.UserRepository;
 import jmojzes21.smart_home_backend.dto.UserDTO;
 import jmojzes21.smart_home_backend.dto.UserLogin;
+import jmojzes21.smart_home_backend.exceptions.UnauthorizedException;
 import jmojzes21.smart_home_backend.models.User;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
-@Service
+@ApplicationScoped
 public class AuthService {
 
-  private final IUserRepository userRepository;
-
-  public AuthService(IUserRepository userRepository) {
-    this.userRepository = userRepository;
-  }
+  @Inject
+  private UserRepository userRepository;
 
   public UserDTO authenticateUser(UserLogin userLogin) {
 
@@ -26,7 +23,7 @@ public class AuthService {
 
     User user = userRepository.getUser(username);
     if (user == null) {
-      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+      throw new UnauthorizedException("Podaci za prijavu nisu točni!");
     }
 
     var cryptoService = new CryptoService();
@@ -38,7 +35,7 @@ public class AuthService {
     String passwordHash = Base64.getEncoder().encodeToString(passwordHashBytes);
 
     if (!passwordHash.equals(user.getPassword())) {
-      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+      throw new UnauthorizedException("Podaci za prijavu nisu točni!");
     }
 
     return new UserDTO(user);
