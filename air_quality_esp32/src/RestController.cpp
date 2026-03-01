@@ -20,8 +20,6 @@ RestController::RestController(DeviceController* deviceController, SensorControl
 
 void RestController::init() {
 
-  secretKey = deviceController->getConfig().secretKey;
-
   httpServer = new AsyncWebServer(HTTP_SERVER_PORT);
   webSocket = new AsyncWebSocket("/sensor-data-ws");
 

@@ -24,13 +24,10 @@ class DeviceConfig {
 
   std::string hostname;
   std::string deviceName;
-  std::string secretKey;
 
   /// @brief Recent history period in seconds
   uint32_t recentHistoryPeriod = 0;
 
-  /// @brief Index of last connected wifi network
-  int lastNetworkIndex = 0;
   std::vector<WifiNetwork> networks;
 
   bool parse(std::string configJson);

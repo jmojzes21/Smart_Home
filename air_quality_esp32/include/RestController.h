@@ -22,8 +22,8 @@ class RestController {
   AsyncWebSocket* webSocket;
   AsyncAuthenticationMiddleware* authMiddleware;
 
-  std::string secretKey;
-  std::vector<std::string> validTokens;
+  //std::string secretKey;
+  //std::vector<std::string> validTokens;
 
   public:
   

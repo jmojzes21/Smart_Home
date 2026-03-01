@@ -28,35 +28,23 @@ void WifiController::connect() {
 
   auto& config = deviceController->getConfig();
   auto& networks = config.networks;
-  int lastConnected = config.lastNetworkIndex;
   
   if(networks.size() == 0) {
     startAccessPoint();
     return;
   }
 
-  if(lastConnected >= 0 && lastConnected < networks.size()) {
-    // connect to last connected wifi network
-    bool success = connectToNetwork(networks[lastConnected]);
-    if(success) {
-      return;
-    }
-  }
-
   // find available networks and connect to best
   int bestNetwork = findBestNetwork(networks);
   
-  if(bestNetwork == -1 || bestNetwork == lastConnected) {
+  if(bestNetwork == -1) {
     startAccessPoint();
     return;
   }
 
   bool success = connectToNetwork(networks[bestNetwork]);
 
-  if(success) {
-    config.lastNetworkIndex = bestNetwork;
-    deviceController->saveConfig();
-  }else{
+  if(!success) {
     startAccessPoint();
   }
   

@@ -18,9 +18,8 @@ bool DeviceConfig::parse(std::string configJson) {
 
   hostname = doc["hostname"].as<std::string>();
   deviceName = doc["device_name"].as<std::string>();
-  secretKey = doc["secret_key"].as<std::string>();
 
-  if(hostname.empty() || deviceName.empty() || secretKey.empty()) {
+  if(hostname.empty() || deviceName.empty()) {
     return false;
   }
 
@@ -33,10 +32,7 @@ bool DeviceConfig::parse(std::string configJson) {
 
   this->recentHistoryPeriod = recentPeriod;
 
-  JsonObject wifiJson = doc["wifi"].as<JsonObject>();
-  JsonArray networksJson = wifiJson["networks"].as<JsonArray>();
-
-  lastNetworkIndex = wifiJson["last"].as<int>();
+  JsonArray networksJson = doc["wifi_networks"].as<JsonArray>();
 
   for(JsonObject e : networksJson) {
     WifiNetwork network;
@@ -50,10 +46,6 @@ bool DeviceConfig::parse(std::string configJson) {
     networks.push_back(network);
   }
 
-  if(lastNetworkIndex < 0 || lastNetworkIndex >= networks.size()) {
-    lastNetworkIndex = -1;
-  }
-
   return true;
 }
 
@@ -63,15 +55,11 @@ std::string DeviceConfig::toJson() {
 
   doc["hostname"] = hostname;
   doc["device_name"] = deviceName;
-  doc["secret_key"] = secretKey;
 
   doc["recent_history_period"] = recentHistoryPeriod;
 
-  JsonObject wifiJson = doc["wifi"].to<JsonObject>();
-  JsonArray networksJson = wifiJson["networks"].to<JsonArray>();
-
-  wifiJson["last"] = lastNetworkIndex;
-
+  JsonArray networksJson = doc["wifi_networks"].to<JsonArray>();
+  
   for(auto& net : networks) {
     JsonObject netJson = networksJson.add<JsonObject>();
     netJson["ssid"] = net.ssid;

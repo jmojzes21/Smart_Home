@@ -35,9 +35,7 @@ class VirtualDeviceService extends IDeviceService {
     return DeviceConfig(
       hostname: device.hostname,
       deviceName: device.name,
-      secretKey: 'secret_key',
       recentHistoryPeriod: 60 * 1000,
-      lastWifiIndex: 0,
       wifiNetworks: [
         WifiNetwork(name: 'wifi1', password: 'wifi1'),
         WifiNetwork(name: 'wifi2', password: 'wifi2'),
