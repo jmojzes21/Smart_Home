@@ -25,9 +25,7 @@ public class DeviceRepository implements IDeviceRepository {
         .where(cb.equal(user.get("username"), username));
     return em
         .createQuery(cq)
-        .getResultList()
-        .stream()
-        .toList();
+        .getResultList();
   }
 
 }
