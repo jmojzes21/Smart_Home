@@ -25,8 +25,14 @@ class DeviceConfig {
   std::string hostname;
   std::string deviceName;
 
-  /// @brief Recent history period in seconds
-  uint32_t recentHistoryPeriod = 0;
+  std::string deviceUuid;
+  std::string backendAddress;
+
+  /// @brief Recent data period in seconds
+  uint32_t recentDataPeriod = 0;
+
+  /// @brief History data period in seconds
+  uint32_t historyDataPeriod = 0;
 
   std::vector<WifiNetwork> networks;
 

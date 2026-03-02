@@ -3,11 +3,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smart_home_core/widgets.dart';
 
-import '../logic/vm/settings_page_vm.dart';
+import '../logic/vm/advanced_page_vm.dart';
 import '../models/device_config.dart';
 
 class EditWifiNetworkDialog extends StatefulWidget {
-  final SettingsPageViewModel model;
+  final AdvancedPageViewModel model;
   final WifiNetwork? network;
 
   const EditWifiNetworkDialog({super.key, required this.model, required this.network});
@@ -21,7 +21,7 @@ class _EditWifiNetworkDialogState extends State<EditWifiNetworkDialog> {
   final tecPassword = TextEditingController();
   bool showPassword = false;
 
-  late SettingsPageViewModel model;
+  late AdvancedPageViewModel model;
   late bool isEditMode;
 
   @override

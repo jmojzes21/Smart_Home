@@ -6,9 +6,11 @@ import '../../models/device_config.dart';
 import '../../models/device_status.dart';
 import '../services/interfaces/device_service.dart';
 
-class SettingsPageViewModel extends ViewModel {
+class AdvancedPageViewModel extends ViewModel {
   final IDeviceService deviceService;
   final Function(String message) onShowMessage;
+
+  final _tecBackendAddr = TextEditingController();
 
   bool _isLoading = true;
   bool _shouldSaveChanges = false;
@@ -17,7 +19,7 @@ class SettingsPageViewModel extends ViewModel {
   DeviceConfig? _deviceConfig;
   DateTime? _currentTime;
 
-  SettingsPageViewModel({required this.deviceService, required this.onShowMessage}) {
+  AdvancedPageViewModel({required this.deviceService, required this.onShowMessage}) {
     refresh();
   }
 
@@ -121,9 +123,24 @@ class SettingsPageViewModel extends ViewModel {
   }
 
   void updateRecentPeriod(int value) {
-    _deviceConfig!.recentHistoryPeriod = value;
+    _deviceConfig!.recentPeriod = value;
     _shouldSaveChanges = true;
     notifyListeners();
+  }
+
+  void updateHistoryPeriod(int value) {
+    _deviceConfig!.historyPeriod = value;
+    _shouldSaveChanges = true;
+    notifyListeners();
+  }
+
+  void onUpdatedBackendAddress(String value) {
+    bool shouldSave = value != _deviceConfig!.backendAddress;
+
+    if (shouldSave != _shouldSaveChanges) {
+      _shouldSaveChanges = shouldSave;
+      notifyListeners();
+    }
   }
 
   Future<void> updateSettings() async {
@@ -131,6 +148,9 @@ class SettingsPageViewModel extends ViewModel {
     notifyListeners();
 
     try {
+      String backendAddr = _tecBackendAddr.text.trim();
+      _deviceConfig!.backendAddress = backendAddr;
+
       var updatedConfig = await deviceService.updateDeviceConfig(_deviceConfig!);
       _deviceConfig = updatedConfig;
 
@@ -169,6 +189,7 @@ class SettingsPageViewModel extends ViewModel {
   Future<void> _getDeviceConfig() async {
     var config = await deviceService.getDeviceConfig();
     _deviceConfig = config;
+    _tecBackendAddr.text = config.backendAddress;
   }
 
   bool get isLoading => _isLoading;
@@ -178,5 +199,12 @@ class SettingsPageViewModel extends ViewModel {
   DeviceConfig? get deviceConfig => _deviceConfig;
   DateTime? get currentTime => _currentTime;
 
+  TextEditingController get tecBackendAddr => _tecBackendAddr;
   List<WifiNetwork> get wifiNetworks => _deviceConfig!.wifiNetworks;
+
+  @override
+  void dispose() {
+    _tecBackendAddr.dispose();
+    super.dispose();
+  }
 }

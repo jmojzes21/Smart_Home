@@ -10,7 +10,7 @@ import 'pages/aq_history_data_page.dart';
 import 'pages/aq_live_data_page.dart';
 import 'pages/aq_recent_data_page.dart';
 import 'pages/home_page.dart';
-import 'pages/settings_page.dart';
+import 'pages/advanced_page.dart';
 import 'widgets/navigation.dart';
 
 class AirQualityDeviceHandler extends DeviceHandler {
@@ -29,7 +29,7 @@ class AirQualityDeviceHandler extends DeviceHandler {
         },
         routes: [
           GoRoute(path: '/aq/home', builder: (context, state) => HomePage()),
-          GoRoute(path: '/aq/settings', builder: (context, state) => SettingsPage()),
+          GoRoute(path: '/aq/advanced', builder: (context, state) => AdvancedPage()),
 
           GoRoute(
             path: '/aq/data',

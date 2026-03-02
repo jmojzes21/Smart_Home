@@ -21,14 +21,24 @@ class DeviceConfig {
   String hostname;
   String deviceName;
 
-  int recentHistoryPeriod;
+  String deviceUuid;
+  String backendAddress;
+
+  /// Recent period in seconds
+  int recentPeriod;
+
+  // History period for sending data to backend in seconds
+  int historyPeriod;
 
   List<WifiNetwork> wifiNetworks;
 
   DeviceConfig({
     required this.hostname,
     required this.deviceName,
-    required this.recentHistoryPeriod,
+    required this.deviceUuid,
+    required this.backendAddress,
+    required this.recentPeriod,
+    required this.historyPeriod,
     required this.wifiNetworks,
   });
 
@@ -40,7 +50,10 @@ class DeviceConfig {
     return DeviceConfig(
       hostname: hostname,
       deviceName: deviceName,
-      recentHistoryPeriod: recentHistoryPeriod,
+      deviceUuid: deviceUuid,
+      backendAddress: backendAddress,
+      recentPeriod: recentPeriod,
+      historyPeriod: historyPeriod,
       wifiNetworks: wifiNetworks.map((e) => e.clone()).toList(),
     );
   }
@@ -49,7 +62,10 @@ class DeviceConfig {
     return DeviceConfig(
       hostname: json['hostname'],
       deviceName: json['device_name'],
-      recentHistoryPeriod: json['recent_history_period'],
+      deviceUuid: json['device_uuid'],
+      backendAddress: json['backend_addr'],
+      recentPeriod: json['recent_data_period'],
+      historyPeriod: json['history_data_period'],
       wifiNetworks: (json['wifi_networks'] as List<dynamic>).map((e) => WifiNetwork.fromJson(e)).toList(),
     );
   }
@@ -58,7 +74,10 @@ class DeviceConfig {
     return {
       'hostname': hostname,
       'device_name': deviceName,
-      'recent_history_period': recentHistoryPeriod,
+      'device_uuid': deviceUuid,
+      'backend_addr': backendAddress,
+      'recent_data_period': recentPeriod,
+      'history_data_period': historyPeriod,
       'wifi_networks': wifiNetworks.map((e) => e.toJson()).toList(),
     };
   }

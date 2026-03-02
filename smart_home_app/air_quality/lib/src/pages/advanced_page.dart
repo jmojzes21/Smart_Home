@@ -5,24 +5,24 @@ import 'package:smart_home_core/extensions.dart';
 import 'package:smart_home_core/formats.dart';
 import 'package:smart_home_core/widgets.dart';
 
-import '../logic/vm/settings_page_vm.dart';
+import '../logic/vm/advanced_page_vm.dart';
 import '../models/aq_device_context.dart';
 import '../models/device_config.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/edit_wifi_net_dialog.dart';
 
-class SettingsPage extends StatelessWidget {
+class AdvancedPage extends StatelessWidget {
   final double lpiHeight = 6;
   final double lpiMaxWidth = 200;
 
-  const SettingsPage({super.key});
+  const AdvancedPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) {
         var deviceContext = AqDeviceContext.of(context);
-        return SettingsPageViewModel(
+        return AdvancedPageViewModel(
           deviceService: deviceContext.deviceService,
           onShowMessage: (message) {
             if (!context.mounted) return;
@@ -30,10 +30,10 @@ class SettingsPage extends StatelessWidget {
           },
         );
       },
-      child: Consumer<SettingsPageViewModel>(
+      child: Consumer<AdvancedPageViewModel>(
         builder: (context, model, child) {
           return Scaffold(
-            appBar: CustomAppBar(title: Text('Postavke')),
+            appBar: CustomAppBar(title: Text('Napredno')),
             body: buildBody(context, model),
             floatingActionButton: FloatingActionButton(
               onPressed: !model.isLoading ? () => model.refresh() : null,
@@ -45,7 +45,7 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Widget buildBody(BuildContext context, SettingsPageViewModel model) {
+  Widget buildBody(BuildContext context, AdvancedPageViewModel model) {
     if (model.isLoading && model.deviceStatus == null) {
       return Center(child: CircularProgressIndicator());
     }
@@ -59,9 +59,10 @@ class SettingsPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             buildBasicInfoSection(context, model),
-            buildWifiSection(context, model, enableButtons),
             buildRtcSection(context, model, enableButtons),
-            buildAdvancedSection(context, model),
+            buildMiscSection(context, model),
+            buildWifiSection(context, model, enableButtons),
+            buildSettingsSection(context, model),
 
             SizedBox(height: 20),
 
@@ -100,7 +101,7 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Widget buildBasicInfoSection(BuildContext context, SettingsPageViewModel model) {
+  Widget buildBasicInfoSection(BuildContext context, AdvancedPageViewModel model) {
     var device = model.deviceStatus!;
 
     var textTheme = context.textTheme;
@@ -156,7 +157,7 @@ class SettingsPage extends StatelessWidget {
                   spacing: 10,
                   children: [
                     Text(
-                      '${device.inputVoltage.toStringAsFixed(1)} V (${(device.inputVoltagePercent * 100).round()}%)',
+                      '${device.inputVoltage.toStringAsFixed(2)} V (${(device.inputVoltagePercent * 100).round()}%)',
                       style: valueStyle,
                     ),
                     ConstrainedBox(
@@ -193,33 +194,11 @@ class SettingsPage extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 40),
-        DropdownMenu(
-          initialSelection: model.deviceConfig!.recentHistoryPeriod,
-          inputDecorationTheme: InputDecorationThemeData(isDense: true, border: OutlineInputBorder()),
-          enableSearch: false,
-          requestFocusOnTap: false,
-          enableFilter: false,
-          label: Text('Period za nedavna mjerenja'),
-          onSelected: (int? value) {
-            if (value != null) {
-              model.updateRecentPeriod(value);
-            }
-          },
-          dropdownMenuEntries: [
-            DropdownMenuEntry(value: 30, label: '30 sekundi'),
-            DropdownMenuEntry(value: 1 * 60, label: '1 minuta'),
-            DropdownMenuEntry(value: 2 * 60, label: '2 minute'),
-            DropdownMenuEntry(value: 3 * 60, label: '3 minute'),
-            DropdownMenuEntry(value: 5 * 60, label: '5 minuta'),
-            DropdownMenuEntry(value: 10 * 60, label: '10 minuta'),
-          ],
-        ),
       ],
     );
   }
 
-  Widget buildWifiSection(BuildContext context, SettingsPageViewModel model, bool enableButtons) {
+  Widget buildWifiSection(BuildContext context, AdvancedPageViewModel model, bool enableButtons) {
     var textTheme = context.textTheme;
     var sectionStyle = textTheme.titleMedium;
 
@@ -257,7 +236,7 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Widget buildRtcSection(BuildContext context, SettingsPageViewModel model, bool enableButtons) {
+  Widget buildRtcSection(BuildContext context, AdvancedPageViewModel model, bool enableButtons) {
     var textTheme = context.textTheme;
     var sectionStyle = textTheme.titleMedium;
     var keyStyle = textTheme.titleMedium;
@@ -304,7 +283,7 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Widget buildAdvancedSection(BuildContext context, SettingsPageViewModel model) {
+  Widget buildMiscSection(BuildContext context, AdvancedPageViewModel model) {
     var device = model.deviceStatus!;
     var memory = device.memory!;
 
@@ -317,8 +296,8 @@ class SettingsPage extends StatelessWidget {
     const rowDivider = TableRow(children: [Divider(), Divider(), Divider()]);
 
     return ExpansionTile(
-      leading: FaIcon(FontAwesomeIcons.sliders),
-      title: Text('Napredno', style: sectionStyle),
+      leading: FaIcon(FontAwesomeIcons.microchip),
+      title: Text('Ostalo', style: sectionStyle),
       expandedCrossAxisAlignment: CrossAxisAlignment.start,
       expandedAlignment: Alignment.topLeft,
       childrenPadding: EdgeInsets.all(20),
@@ -405,7 +384,74 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  void showEditNetworkDialog(BuildContext context, SettingsPageViewModel model, WifiNetwork? network) {
+  Widget buildSettingsSection(BuildContext context, AdvancedPageViewModel model) {
+    var textTheme = context.textTheme;
+    var sectionStyle = textTheme.titleMedium;
+
+    return ExpansionTile(
+      leading: FaIcon(FontAwesomeIcons.gear),
+      title: Text('Postavke', style: sectionStyle),
+      expandedCrossAxisAlignment: CrossAxisAlignment.start,
+      expandedAlignment: Alignment.topLeft,
+      childrenPadding: EdgeInsets.all(20),
+      initiallyExpanded: false,
+      children: [
+        TextField(
+          controller: model.tecBackendAddr,
+          onChanged: (value) {
+            model.onUpdatedBackendAddress(value);
+          },
+          textInputAction: TextInputAction.next,
+          decoration: InputDecoration(label: Text('Backend poslužitelj'), isDense: true, border: OutlineInputBorder()),
+        ),
+        SizedBox(height: 20),
+        DropdownMenu(
+          initialSelection: model.deviceConfig!.recentPeriod,
+          inputDecorationTheme: InputDecorationThemeData(isDense: true, border: OutlineInputBorder()),
+          enableSearch: false,
+          requestFocusOnTap: false,
+          enableFilter: false,
+          label: Text('Period za nedavna mjerenja'),
+          onSelected: (int? value) {
+            if (value != null) {
+              model.updateRecentPeriod(value);
+            }
+          },
+          dropdownMenuEntries: [
+            DropdownMenuEntry(value: 30, label: '30 sekundi'),
+            DropdownMenuEntry(value: 1 * 60, label: '1 minuta'),
+            DropdownMenuEntry(value: 2 * 60, label: '2 minute'),
+            DropdownMenuEntry(value: 3 * 60, label: '3 minute'),
+            DropdownMenuEntry(value: 5 * 60, label: '5 minuta'),
+            DropdownMenuEntry(value: 10 * 60, label: '10 minuta'),
+          ],
+        ),
+        SizedBox(height: 20),
+        DropdownMenu(
+          initialSelection: model.deviceConfig!.historyPeriod,
+          inputDecorationTheme: InputDecorationThemeData(isDense: true, border: OutlineInputBorder()),
+          enableSearch: false,
+          requestFocusOnTap: false,
+          enableFilter: false,
+          label: Text('Period za povijesna mjerenja'),
+          onSelected: (int? value) {
+            if (value != null) {
+              model.updateHistoryPeriod(value);
+            }
+          },
+          dropdownMenuEntries: [
+            DropdownMenuEntry(value: 5 * 60, label: '5 minuta'),
+            DropdownMenuEntry(value: 10 * 60, label: '10 minuta'),
+            DropdownMenuEntry(value: 10 * 60, label: '15 minuta'),
+            DropdownMenuEntry(value: 10 * 60, label: '30 minuta'),
+            DropdownMenuEntry(value: 10 * 60, label: '60 minuta'),
+          ],
+        ),
+      ],
+    );
+  }
+
+  void showEditNetworkDialog(BuildContext context, AdvancedPageViewModel model, WifiNetwork? network) {
     showDialog(
       context: context,
       fullscreenDialog: true,

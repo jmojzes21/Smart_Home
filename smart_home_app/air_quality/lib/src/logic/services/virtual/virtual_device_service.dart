@@ -35,7 +35,10 @@ class VirtualDeviceService extends IDeviceService {
     return DeviceConfig(
       hostname: device.hostname,
       deviceName: device.name,
-      recentHistoryPeriod: 60 * 1000,
+      deviceUuid: '',
+      backendAddress: 'localhost:8080',
+      recentPeriod: 60,
+      historyPeriod: 300,
       wifiNetworks: [
         WifiNetwork(name: 'wifi1', password: 'wifi1'),
         WifiNetwork(name: 'wifi2', password: 'wifi2'),

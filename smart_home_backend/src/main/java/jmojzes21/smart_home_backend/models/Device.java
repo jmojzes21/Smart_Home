@@ -3,19 +3,20 @@ package jmojzes21.smart_home_backend.models;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.util.UUID;
 
 @Entity
 @Table(name = "device", schema = "public")
 public class Device {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Integer id;
+  @GeneratedValue()
+  @Column(name = "uuid", nullable = false)
+  private UUID uuid;
 
   @JoinColumn(name = "user_id")
   @ManyToOne
@@ -36,12 +37,12 @@ public class Device {
 
   public Device() {}
 
-  public Integer getId() {
-    return id;
+  public UUID getUuid() {
+    return uuid;
   }
 
-  public void setId(Integer id) {
-    this.id = id;
+  public void setUuid(UUID uuid) {
+    this.uuid = uuid;
   }
 
   public User getUser() {
@@ -83,5 +84,5 @@ public class Device {
   public void setSecretKey(String secretKey) {
     this.secretKey = secretKey;
   }
-  
+
 }
