@@ -21,6 +21,9 @@ class HomePageViewModel extends ViewModel {
 
   Future<void> _init() async {
     try {
+      _airQuality = await aqService.getAirQuality();
+      notifyListeners();
+
       await aqService.startLiveData();
       var stream = aqService.getLiveDataStream();
       _streamSub = stream.listen((aq) {
