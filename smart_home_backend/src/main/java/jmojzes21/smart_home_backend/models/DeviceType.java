@@ -11,6 +11,9 @@ import jakarta.persistence.Table;
 @Table(name = "device_type", schema = "public")
 public class DeviceType {
 
+  public static final String SMART_LEDS = "smart_leds";
+  public static final String AIR_QUALITY = "air_quality";
+
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id;

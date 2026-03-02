@@ -58,6 +58,8 @@ class AirQualityMetrics {
 
 
 typedef std::function<void(AirQualityData& aqData)> SensorDataHandler;
+typedef std::function<void(struct tm time, AirQualityHistory& aqData)> SaveHistoryDataHandler;
+
 
 class SensorController {
 
@@ -70,18 +72,20 @@ class SensorController {
   PMS5003_Sensor pms5003Sensor;
 
   AirQualityData aqData;
-  AirQualityMetrics aqMetrics;
+  AirQualityMetrics recentAqMetrics;
+  AirQualityMetrics historyAqMetrics;
 
   SemaphoreHandle_t aqDataMutex;
-  SemaphoreHandle_t aqHistoryMutex;
+  SemaphoreHandle_t aqRecentHistoryMutex;
   SemaphoreHandle_t vinAdcMutex;
 
   TaskHandle_t pmsTaskHandle;
   TaskHandle_t aqHistoryTaskHandle;
 
-  std::list<AirQualityHistory> aqHistoryList;
+  std::list<AirQualityHistory> aqRecentHistoryList;
 
   SensorDataHandler onSensorData = nullptr;
+  SaveHistoryDataHandler onSaveHistoryData = nullptr;
 
   public:
   
@@ -96,14 +100,16 @@ class SensorController {
   void readSensorData();
   uint32_t readInputVoltage();
   
-  void saveAirQualityHistory();
+  void saveRecentHistory();
+  void saveHistory();
 
-  void takeAqHistoryMutex();
-  void giveAqHistoryMutex();
+  void takeRecentHistoryMutex();
+  void giveRecentHistoryMutex();
 
-  void clearAirQualityHistory();
-  std::list<AirQualityHistory>& getAirQualityHistory();
+  void clearRecentHistory();
+  std::list<AirQualityHistory>& getRecentHistory();
 
   void setOnSensorData(SensorDataHandler handler);
+  void setOnSaveHistoryData(SaveHistoryDataHandler handler);
 
 };

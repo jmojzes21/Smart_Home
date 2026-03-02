@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "air_quality", schema = "public")
@@ -27,9 +28,9 @@ public class AirQuality {
   @NotNull
   private LocalDateTime time;
 
-  @Column(name = "device_id")
+  @Column(name = "device_uuid")
   @JsonIgnore
-  private int deviceId;
+  private UUID deviceUuid;
 
   @Embedded
   @AttributeOverrides({
@@ -85,12 +86,12 @@ public class AirQuality {
     this.time = time;
   }
 
-  public int getDeviceId() {
-    return deviceId;
+  public UUID getDeviceUuid() {
+    return deviceUuid;
   }
 
-  public void setDeviceId(int deviceId) {
-    this.deviceId = deviceId;
+  public void setDeviceUuid(UUID deviceUuid) {
+    this.deviceUuid = deviceUuid;
   }
 
   public AqMetrics getTemperature() {

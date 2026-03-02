@@ -53,4 +53,6 @@ class RestController {
   void respondJson(AsyncWebServerRequest* request, JsonDocument& doc);
   void respondJson(AsyncWebServerRequest* request, std::string& json);
 
+  void sendHistoryData(struct tm time, AirQualityHistory& aqData);
+
 };

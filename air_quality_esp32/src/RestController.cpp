@@ -2,6 +2,8 @@
 #include "RestController.h"
 
 #include <ArduinoJson.h>
+#include <HTTPClient.h>
+
 #include "helpers/DateFormats.h"
 #include "helpers/PSRAMAllocator.h"
 #include "helpers/Jwt.h"
@@ -85,6 +87,10 @@ void RestController::init() {
 
   sensorController->setOnSensorData([&](AirQualityData& aqData){
     onSensorData(aqData);
+  });
+
+  sensorController->setOnSaveHistoryData([&](struct tm time, AirQualityHistory& aqData) {
+    sendHistoryData(time, aqData);
   });
 
 }
@@ -179,8 +185,8 @@ void RestController::handleGetAqHistoryRequest(AsyncWebServerRequest* request) {
 
   JsonArray aqHistoryJson = doc["aq_history"].to<JsonArray>();
 
-  sensorController->takeAqHistoryMutex();
-  auto& aqHistoryList = sensorController->getAirQualityHistory();
+  sensorController->takeRecentHistoryMutex();
+  auto& aqHistoryList = sensorController->getRecentHistory();
   
   for(auto &e : aqHistoryList) {
     JsonObject jsonObj = aqHistoryJson.add<JsonObject>();
@@ -197,7 +203,7 @@ void RestController::handleGetAqHistoryRequest(AsyncWebServerRequest* request) {
     metricsToJson(e.pm25Metrics, pm);
   }
 
-  sensorController->giveAqHistoryMutex();
+  sensorController->giveRecentHistoryMutex();
 
   doc.shrinkToFit();
   respondJson(request, doc);
@@ -206,7 +212,7 @@ void RestController::handleGetAqHistoryRequest(AsyncWebServerRequest* request) {
 
 void RestController::handleDeleteAqHistoryRequest(AsyncWebServerRequest *request) {
 
-  sensorController->clearAirQualityHistory();
+  sensorController->clearRecentHistory();
 
   request->send(200);
 }
@@ -339,6 +345,43 @@ void RestController::respondJson(AsyncWebServerRequest *request, std::string &js
 
 }
 
+void RestController::sendHistoryData(tm time, AirQualityHistory &aqData) {
+
+  std::string timeText = DateFormats::formatDateTime(time);
+  
+  JsonDocument doc;
+  doc["time"] = timeText;
+
+  JsonObject temp = doc["temperature"].to<JsonObject>();
+  JsonObject hum = doc["humidity"].to<JsonObject>();
+  JsonObject press = doc["pressure"].to<JsonObject>();
+  JsonObject pm = doc["pm25"].to<JsonObject>();
+
+  metricsToJson(aqData.temperatureMetrics, temp);
+  metricsToJson(aqData.humidityMetrics, hum);
+  metricsToJson(aqData.pressureMetrics, press);
+  metricsToJson(aqData.pm25Metrics, pm);
+
+  std::string body = "";
+  serializeJson(doc, body);
+
+  auto& config = deviceController->getConfig();
+  std::string url = config.backendAddress + "/api/air_quality/device/" + config.deviceUuid;
+  
+  HTTPClient client;
+  client.begin(url.c_str());
+
+  log_i("HTTP POST %s", url.c_str());
+  log_i("Body %s", body.c_str());
+
+  int statusCode = client.POST((uint8_t*)body.c_str(), body.length());
+  String response = client.getString();
+
+  log_i("%d %s", statusCode, response.c_str());
+
+  client.end();
+
+}
 
 void sensorDataToJson(AirQualityData& aqData, JsonDocument& doc, bool showDetails) {
 
