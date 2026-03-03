@@ -4,7 +4,6 @@ import 'package:smart_home_core/device.dart';
 import '../logic/device/device.dart';
 import '../models/misc/wifi_network.dart';
 import '../models/smart_leds_device_context.dart';
-import '../widgets/dialogs/change_password.dart';
 import '../theme.dart';
 import '../widgets/dialogs/simple_dialogs.dart';
 import '../widgets/dialogs/firmware_update.dart';
@@ -64,18 +63,6 @@ class _SettingsPageState extends State<_SettingsPageBody> {
 
     if (result) {
       device.restart();
-    }
-  }
-
-  void changePassword() async {
-    var result = await ChangePasswordDialog.show(context);
-    if (result) {
-      if (!mounted) return;
-      SimpleDialogs.showMessage(
-        context: context,
-        title: 'Promjena lozinke',
-        message: 'Uspješno ste promijenili lozinku.',
-      );
     }
   }
 
@@ -228,12 +215,6 @@ class _SettingsPageState extends State<_SettingsPageBody> {
   List<Widget> buildSystemSection(BuildContext context) {
     return [
       const Text('Sigurnost', style: MyTheme.bodyMediumBold),
-      const SizedBox(height: 20),
-      OutlinedButton.icon(
-        onPressed: () => changePassword(),
-        icon: const Icon(Icons.lock_outline),
-        label: const Text('Promijeni lozinku'),
-      ),
       const SizedBox(height: 20),
       OutlinedButton.icon(
         onPressed: () => wipeData(),

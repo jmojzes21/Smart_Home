@@ -25,8 +25,6 @@ class DeviceClient {
   late WifiController wifi;
   late PowerSensor powerSensor;
 
-  String _authentication = '';
-
   DeviceClient({this.name = '', required this.ipAddress}) {
     leds = LedController(this);
     wifi = WifiController(this);
@@ -54,18 +52,8 @@ class DeviceClient {
     wifi.rssi = rssi;
   }
 
-  Future<void> login(String password) async {
-    await postHttp(path: '/login', body: {}, auth: password);
-    _authentication = password;
-  }
-
   Future<void> restart() async {
     await postHttp(path: '/restart', body: {});
-  }
-
-  Future<void> changePassword(String oldPassword, String newPassword) async {
-    await postHttp(path: '/auth', body: {'pass': newPassword}, auth: oldPassword);
-    _authentication = newPassword;
   }
 
   Future<void> wipeData() async {
@@ -85,7 +73,6 @@ class DeviceClient {
           'Device-Type': firmware.deviceType,
           'Firmware-Size': firmware.bytes.length.toString(),
           'Firmware-HMAC': firmware.hmac,
-          'Authorization': _authentication,
         },
         body: firmware.bytes,
       );
@@ -107,11 +94,11 @@ class DeviceClient {
     return base64;
   }
 
-  Future<JsonObject> getHttp({required String path, String? auth}) async {
+  Future<JsonObject> getHttp({required String path}) async {
     Uri uri = Uri.http(ipAddress.address, path);
     log('GET $path');
 
-    var headers = {'Authorization': auth ?? _authentication};
+    var headers = <String, String>{};
 
     http.Response res;
     var st = Stopwatch()..start();
@@ -139,12 +126,12 @@ class DeviceClient {
     return data;
   }
 
-  Future<JsonObject> postHttp({required String path, required JsonObject body, String? auth}) async {
+  Future<JsonObject> postHttp({required String path, required JsonObject body}) async {
     Uri uri = Uri.http(ipAddress.address, path);
     log('POST $path');
 
     String json = jsonEncode(body);
-    var headers = {'Content-Type': 'application/json', 'Authorization': auth ?? _authentication};
+    var headers = {'Content-Type': 'application/json'};
 
     http.Response res;
     var st = Stopwatch()..start();

@@ -26,7 +26,6 @@ void Settings::load() {
     JsonObject device = document["device"];
 
     deviceName = device["name"].as<std::string>();
-    devicePassword = device["password"].as<std::string>();
     deviceUuid = device["uuid"].as<std::string>();
 
     JsonObject wifi = document["wifi"];
@@ -59,7 +58,6 @@ void Settings::save() {
     JsonObject device = document["device"].to<JsonObject>();
 
     device["name"] = deviceName;
-    device["password"] = devicePassword;
     device["uuid"] = deviceUuid;
 
     JsonObject wifi = document["wifi"].to<JsonObject>();
@@ -91,10 +89,8 @@ void Settings::_loadInitial() {
     _isLoaded = true;
 
     deviceName = "Pametne LEDice";
+    deviceUuid = "";
 
-    // lozinka: "pass"
-    devicePassword = "10/w7o2juYBrGMh32/KbveULW9jk2tejpyUAD+uC6PE=";
-    
     preferredWifiNetwork = -1;
     wifiNetworks.clear();
 }

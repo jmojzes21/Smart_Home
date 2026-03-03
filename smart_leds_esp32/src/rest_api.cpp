@@ -113,18 +113,6 @@ void DeviceRestApi::_initDeviceApi() {
 
     });
 
-    // POST /login
-
-    httpServer.on("/login", HTTP_POST, [&](AsyncWebServerRequest* request) {
-        bool result = checkAuthentication(request);
-
-        if(result) {
-            respondCode(request, 201);
-        }else{
-            respondMessage(request, 400, "Netočna lozinka.");
-        }
-    });
-
 }
 
 void DeviceRestApi::_initWifiApi() {
@@ -246,29 +234,6 @@ void DeviceRestApi::_initMiscApi() {
         device.restart(2000);
         respondCode(request, 201);
     });
-
-    // POST /auth
-
-    auto postAuth = new AsyncCallbackJsonWebHandler("/auth", nullptr);
-    postAuth->setMethod(HTTP_POST);
-    postAuth->onRequest([&](AsyncWebServerRequest* request, JsonVariant& jsonv) {
-        
-        if(!authenticate(request)) return;
-
-        JsonObject json = jsonv.as<JsonObject>();    
-        std::string newPassword = json["pass"];
-
-        device.password = newPassword;
-
-        Settings settings;
-        settings.load();
-        settings.devicePassword = newPassword;
-        settings.save();
-
-        respondCode(request, 201);
-
-    });
-    httpServer.addHandler(postAuth);
 
     // POST /dla_start
 
