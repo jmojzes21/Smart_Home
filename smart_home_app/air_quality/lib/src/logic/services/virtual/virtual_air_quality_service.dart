@@ -38,7 +38,19 @@ class VirtualAirQualityService implements IAirQualityService {
 
   @override
   Future<List<AqHistory>> getRecentHistory() async {
-    DateTime time = DateTime.now();
+    return _generateHistory(DateTime.now(), Duration(minutes: 2));
+  }
+
+  @override
+  Future<List<AqHistory>> getHistory(DateTime start, DateTime end) async {
+    return _generateHistory(DateTime.now(), Duration(minutes: 10));
+  }
+
+  @override
+  Future<void> clearRecentHistory() async {}
+
+  List<AqHistory> _generateHistory(DateTime start, Duration d) {
+    DateTime time = start;
 
     var data = List.generate(10, (index) {
       var aq = _getAq();
@@ -49,16 +61,13 @@ class VirtualAirQualityService implements IAirQualityService {
         pressure: _getAqMetrics(aq.pressure, 10),
         pm25: _getAqMetrics(aq.pm25.toDouble(), 20),
       );
-      time = time.add(Duration(minutes: 1));
+      time = time.add(d);
 
       return aqh;
     });
 
     return data;
   }
-
-  @override
-  Future<void> clearRecentHistory() async {}
 
   AirQuality _getAq() {
     return AirQuality(

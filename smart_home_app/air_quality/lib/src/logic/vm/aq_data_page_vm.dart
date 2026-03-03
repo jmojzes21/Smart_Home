@@ -11,7 +11,10 @@ class AirQualityDataPageViewModel extends ViewModel {
   final IAirQualityService aqService;
   final Function(String message) onShowMessage;
 
-  bool _isLoading = true;
+  DateTime? _historyStartDate;
+  DateTime? _historyEndDate;
+
+  bool _isLoading = false;
   AqChartData? _aqData;
 
   AirQualityDataPageViewModel({required this.aqService, required this.onShowMessage});
@@ -23,6 +26,36 @@ class AirQualityDataPageViewModel extends ViewModel {
     try {
       var data = await aqService.getRecentHistory();
       _aqData = AqChartData(data, tooltipShowDate: false);
+    } catch (e) {
+      String msg = Exceptions.getMessage(e);
+      onShowMessage(msg);
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> showHistoryData() async {
+    try {
+      if (_historyStartDate == null) {
+        throw AppException('Odaberite počeni datum!');
+      }
+
+      if (_historyEndDate == null) {
+        throw AppException('Odaberite završni datum!');
+      }
+
+      if (_historyStartDate!.compareTo(_historyEndDate!) > 0) {
+        DateTime t = _historyStartDate!;
+        _historyStartDate = _historyEndDate;
+        _historyEndDate = t;
+      }
+
+      _isLoading = true;
+      notifyListeners();
+
+      var data = await aqService.getHistory(_historyStartDate!, _historyEndDate!);
+      _aqData = AqChartData(data, tooltipShowDate: true);
     } catch (e) {
       String msg = Exceptions.getMessage(e);
       onShowMessage(msg);
@@ -71,6 +104,25 @@ class AirQualityDataPageViewModel extends ViewModel {
 
   DateTime getRecentHistoryDate() {
     return _aqData!.data.last.time;
+  }
+
+  DateTime? get historyStartDate => _historyStartDate;
+  DateTime? get historyEndDate => _historyEndDate;
+
+  void setHistoryStartDate(DateTime? value) {
+    _historyStartDate = value;
+    notifyListeners();
+  }
+
+  void setHistoryEndDate(DateTime? value) {
+    _historyEndDate = value;
+    notifyListeners();
+  }
+
+  void setHistoryRange(DateTime start, DateTime end) {
+    _historyStartDate = start;
+    _historyEndDate = end;
+    notifyListeners();
   }
 
   bool get isLoading => _isLoading;

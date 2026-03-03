@@ -1,4 +1,3 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -12,29 +11,10 @@ import '../models/aq_device_context.dart';
 import '../models/aq_chart_data.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/metrics_charts.dart';
+import 'aq_data_common.dart';
 
 class AqRecentDataPage extends StatelessWidget {
   const AqRecentDataPage({super.key});
-
-  void saveData(BuildContext context, AirQualityDataPageViewModel model) async {
-    var fileName = model.aqData!.data.first.time.toIso8601String();
-    fileName = fileName.replaceAll('T', ' ').replaceAll(':', '-');
-    fileName = '$fileName.csv';
-
-    String? path = await FilePicker.platform.saveFile(
-      lockParentWindow: true,
-      type: FileType.custom,
-      allowedExtensions: ['csv'],
-      fileName: fileName,
-    );
-    if (path == null) return;
-
-    if (!path.endsWith('.csv')) {
-      path = '$path.csv';
-    }
-
-    model.saveData(path);
-  }
 
   void clearData(BuildContext context, AirQualityDataPageViewModel model) async {
     bool result = await Dialogs.showConfirmDialog(context, 'Jeste li sigurni da želite obrisati nedavnu povijest?');
@@ -101,7 +81,7 @@ class AqRecentDataPage extends StatelessWidget {
             AirQualityCharts(aqData: aqData),
             SizedBox(height: 40),
             OutlinedButton.icon(
-              onPressed: () => saveData(context, model),
+              onPressed: () => saveAirQualityHistoryData(context, model),
               icon: FaIcon(FontAwesomeIcons.floppyDisk),
               label: Text('Spremi podatke'),
             ),

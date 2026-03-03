@@ -19,7 +19,7 @@ import java.util.UUID;
 public class AirQuality {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "air_quality_id_seq")
   @Column(name = "id")
   @JsonIgnore
   private long id;

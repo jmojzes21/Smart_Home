@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:smart_home_core/exceptions.dart';
+import 'package:smart_home_core/services.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../../models/aq_history.dart';
@@ -88,12 +89,39 @@ class AirQualityService extends IAirQualityService {
     await client.httpDelete('/aq-history', statusCode: 200);
   }
 
+  @override
+  Future<List<AqHistory>> getHistory(DateTime start, DateTime end) async {
+    String uuid = '';
+
+    var backendClient = BackendClient();
+    var data = await backendClient.httpGet('/api/air_quality/device/$uuid', {
+      'from': start.toIso8601String(),
+      'to': end.toIso8601String(),
+    });
+
+    var aqHistory = data as List<dynamic>;
+    var aqData = aqHistory.map((e) => _parseAqHistory(e)).toList();
+    aqData.sort((a, b) => a.time.compareTo(b.time));
+
+    return aqData;
+  }
+
   AqHistory _parseRecentAqHistory(DateTime bootTime, Map<String, dynamic> json) {
     int timeSeconds = json['time'];
     DateTime time = bootTime.add(Duration(seconds: timeSeconds));
 
     return AqHistory(
       time: time,
+      temperature: AqMetrics.fromJson(json['temperature']),
+      humidity: AqMetrics.fromJson(json['humidity']),
+      pressure: AqMetrics.fromJson(json['pressure']),
+      pm25: AqMetrics.fromJson(json['pm25']),
+    );
+  }
+
+  AqHistory _parseAqHistory(Map<String, dynamic> json) {
+    return AqHistory(
+      time: DateTime.parse(json['time']),
       temperature: AqMetrics.fromJson(json['temperature']),
       humidity: AqMetrics.fromJson(json['humidity']),
       pressure: AqMetrics.fromJson(json['pressure']),

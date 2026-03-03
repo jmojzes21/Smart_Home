@@ -10,4 +10,6 @@ abstract class IAirQualityService {
 
   Future<List<AqHistory>> getRecentHistory();
   Future<void> clearRecentHistory();
+
+  Future<List<AqHistory>> getHistory(DateTime start, DateTime end);
 }
