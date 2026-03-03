@@ -103,6 +103,7 @@ void RestController::handleGetDeviceRequest(AsyncWebServerRequest* request) {
 
   doc["name"] = config.deviceName;
   doc["hostname"] = config.hostname;
+  doc["uuid"] = config.deviceUuid;
   doc["type"] = DEVICE_TYPE;
   doc["version"] = DEVICE_VERSION;
   
@@ -129,6 +130,7 @@ void RestController::handleGetDeviceStatusRequest(AsyncWebServerRequest* request
 
   doc["name"] = config.deviceName;
   doc["hostname"] = config.hostname;
+  doc["uuid"] = config.deviceUuid;
   doc["type"] = DEVICE_TYPE;
   doc["version"] = DEVICE_VERSION;
   

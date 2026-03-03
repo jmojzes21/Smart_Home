@@ -100,6 +100,7 @@ void DeviceRestApi::_initDeviceApi() {
 
         doc["name"] = device.name;
         doc["hostname"] = device.domain;
+        doc["uuid"] = device.uuid;
         doc["type"] = device.deviceType;
         doc["version"] = device.version;
 

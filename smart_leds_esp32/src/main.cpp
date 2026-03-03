@@ -48,6 +48,7 @@ void setup() {
 
     device.name = settings.deviceName;
     device.password = settings.devicePassword;
+    device.uuid = settings.deviceUuid;
 
     device.version = firmwareVersion;
     device.deviceType = deviceType;

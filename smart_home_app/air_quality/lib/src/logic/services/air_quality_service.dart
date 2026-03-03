@@ -91,7 +91,7 @@ class AirQualityService extends IAirQualityService {
 
   @override
   Future<List<AqHistory>> getHistory(DateTime start, DateTime end) async {
-    String uuid = '';
+    String uuid = client.device.uuid;
 
     var backendClient = BackendClient();
     var data = await backendClient.httpGet('/api/air_quality/device/$uuid', {

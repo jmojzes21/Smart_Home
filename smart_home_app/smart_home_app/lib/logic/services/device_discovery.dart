@@ -104,6 +104,7 @@ class DeviceDiscovery {
     return ScannedDevice(
       type: type,
       hostname: json['hostname'],
+      uuid: json['uuid'],
       name: json['name'],
       ipAddress: InternetAddress(json['ip']),
     );

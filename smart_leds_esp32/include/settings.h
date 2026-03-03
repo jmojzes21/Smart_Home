@@ -17,6 +17,7 @@ class Settings {
 
     std::string deviceName;
     std::string devicePassword;
+    std::string deviceUuid;
 
     int preferredWifiNetwork;
     std::vector<WifiNetwork> wifiNetworks;

@@ -11,6 +11,7 @@ class Device {
     
     std::string name = "";
     std::string password = "";
+    std::string uuid = "";
 
     const char* version = nullptr;
     const char* deviceType = nullptr;

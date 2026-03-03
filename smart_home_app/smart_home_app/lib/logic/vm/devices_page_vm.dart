@@ -131,7 +131,7 @@ class DevicesPageViewModel extends ViewModel {
   }
 
   void _onDeviceFound(Device newDevice) {
-    int index = _devices.indexWhere((e) => e.hostname == newDevice.hostname && e.type == newDevice.type);
+    int index = _devices.indexWhere((e) => e.uuid == newDevice.uuid);
     if (index == -1) return;
 
     var device = _devices[index];

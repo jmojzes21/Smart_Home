@@ -1,7 +1,7 @@
 
 #include "settings.h"
 
-static const char* _settingsPath = "/settings";
+static const char* _settingsPath = "/settings.json";
 
 void Settings::load() {
 
@@ -27,6 +27,7 @@ void Settings::load() {
 
     deviceName = device["name"].as<std::string>();
     devicePassword = device["password"].as<std::string>();
+    deviceUuid = device["uuid"].as<std::string>();
 
     JsonObject wifi = document["wifi"];
     preferredWifiNetwork = wifi["preferred"].as<int>();
@@ -59,6 +60,7 @@ void Settings::save() {
 
     device["name"] = deviceName;
     device["password"] = devicePassword;
+    device["uuid"] = deviceUuid;
 
     JsonObject wifi = document["wifi"].to<JsonObject>();
     wifi["preferred"] = preferredWifiNetwork;

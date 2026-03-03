@@ -17,7 +17,10 @@ class DeviceService implements IDeviceService {
     var client = BackendClient();
     var response = await client.httpGet('/api/users/$username/devices');
 
-    return _parseDevices(response);
+    var devices = _parseDevices(response);
+    devices.sort((a, b) => a.name.compareTo(b.name));
+
+    return devices;
   }
 
   @override

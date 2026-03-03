@@ -9,6 +9,7 @@ class ScannedDevice extends Device {
     required super.type,
     required super.name,
     required super.hostname,
+    required super.uuid,
     super.ipAddress,
     this.availability = Availability.unknown,
   });
@@ -18,12 +19,12 @@ class ScannedDevice extends Device {
       super.virtual();
 
   Map<String, dynamic> toJson() {
-    return {'type': type.toString(), 'name': name, 'hostname': hostname};
+    return {'type': type.toString(), 'name': name, 'hostname': hostname, 'uuid': uuid};
   }
 
   factory ScannedDevice.fromJson(Map<String, dynamic> json) {
     var type = DeviceType.parse(json['type']);
     if (type == DeviceType.unknown) throw Exception('Unsupported device type ${json['type']}');
-    return ScannedDevice(type: type, name: json['name'], hostname: json['hostname']);
+    return ScannedDevice(type: type, name: json['name'], hostname: json['hostname'], uuid: json['uuid']);
   }
 }
