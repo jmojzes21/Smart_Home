@@ -37,12 +37,16 @@ void RestController::init() {
     handleGetSensorDataRequest(request);
   });
 
-  httpServer->on("/aq-history", HTTP_GET, [&](AsyncWebServerRequest* request) {
+  httpServer->on("/aq-recent-history", HTTP_GET, [&](AsyncWebServerRequest* request) {
     handleGetAqHistoryRequest(request);
   });
 
-  httpServer->on("/aq-history", HTTP_DELETE, [&](AsyncWebServerRequest* request) {
+  httpServer->on("/aq-recent-history", HTTP_DELETE, [&](AsyncWebServerRequest* request) {
     handleDeleteAqHistoryRequest(request);
+  });
+
+  httpServer->on("/send-aq-history", HTTP_POST, [&](AsyncWebServerRequest* request, JsonVariant &jsonv) {
+    handleSendAqHistoryRequest(request, jsonv);
   });
 
   httpServer->on("/config", HTTP_GET, [&](AsyncWebServerRequest* request) {
@@ -141,6 +145,8 @@ void RestController::handleGetDeviceStatusRequest(AsyncWebServerRequest* request
   std::string dateTimeText = DateFormats::formatDateTime(dateTime);
   doc["date_time"] = dateTimeText;
 
+  doc["send_aq_history"] = sensorController->isSendingAirQualityHistory();
+
   if(showRamUsage) {
     JsonObject ram = doc["ram"].to<JsonObject>();
 
@@ -217,6 +223,21 @@ void RestController::handleDeleteAqHistoryRequest(AsyncWebServerRequest *request
   sensorController->clearRecentHistory();
 
   request->send(200);
+}
+
+void RestController::handleSendAqHistoryRequest(AsyncWebServerRequest *request, JsonVariant &jsonv) {
+
+  
+  JsonObject json = jsonv.as<JsonObject>();
+
+  bool send = json["value"].as<bool>();
+  sensorController->setSendingAirQualityHistory(send);
+
+  JsonDocument doc;
+  doc["value"] = send;
+
+  respondJson(request, doc);
+
 }
 
 void RestController::handleGetConfigRequest(AsyncWebServerRequest *request) {

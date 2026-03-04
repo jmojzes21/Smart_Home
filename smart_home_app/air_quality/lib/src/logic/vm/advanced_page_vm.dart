@@ -134,6 +134,22 @@ class AdvancedPageViewModel extends ViewModel {
     notifyListeners();
   }
 
+  Future<void> updateSendAirQualityHistory(bool value) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      bool result = await deviceService.updateSendAirQualityHistory(value);
+      deviceStatus!.sendAqHistory = result;
+    } catch (e) {
+      String msg = Exceptions.getMessage(e);
+      onShowMessage(msg);
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
   void onUpdatedBackendAddress(String value) {
     bool shouldSave = value != _deviceConfig!.backendAddress;
 

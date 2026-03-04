@@ -13,6 +13,8 @@ class DeviceStatus {
   double inputVoltage;
   double inputVoltagePercent = 0;
 
+  bool sendAqHistory;
+
   MemoryStatus? memory;
 
   DeviceStatus({
@@ -24,6 +26,7 @@ class DeviceStatus {
     this.rssi = 0,
     this.rtcTime,
     this.inputVoltage = 0,
+    this.sendAqHistory = false,
     this.memory,
   }) {
     inputVoltagePercent = calculateInputVoltagePercent(inputVoltage);
@@ -67,6 +70,7 @@ class DeviceStatus {
       rssi: json['rssi'],
       rtcTime: DateTime.parse(json['date_time']),
       inputVoltage: inputVoltage / 1000.0,
+      sendAqHistory: json['send_aq_history'],
       memory: MemoryStatus(
         heapSize: _toKB(heapSize),
         usedHeap: _toKB(usedHeap),

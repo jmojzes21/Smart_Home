@@ -447,6 +447,15 @@ class AdvancedPage extends StatelessWidget {
             DropdownMenuEntry(value: 10 * 60, label: '60 minuta'),
           ],
         ),
+
+        SizedBox(height: 20),
+        SwitchListTile(
+          value: model.deviceStatus!.sendAqHistory,
+          controlAffinity: ListTileControlAffinity.leading,
+          dense: true,
+          title: Text('Šalji povijesna mjerenja'),
+          onChanged: (value) => model.updateSendAirQualityHistory(value),
+        ),
       ],
     );
   }

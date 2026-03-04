@@ -39,6 +39,7 @@ class RestController {
   void handleGetSensorDataRequest(AsyncWebServerRequest* request);
   void handleGetAqHistoryRequest(AsyncWebServerRequest* request);
   void handleDeleteAqHistoryRequest(AsyncWebServerRequest* request);
+  void handleSendAqHistoryRequest(AsyncWebServerRequest* request, JsonVariant &jsonv);
 
   void handleGetConfigRequest(AsyncWebServerRequest* request);
   void handlePatchConfigRequest(AsyncWebServerRequest* request, JsonVariant &jsonv);

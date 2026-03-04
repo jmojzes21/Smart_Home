@@ -164,6 +164,8 @@ void SensorController::saveRecentHistory() {
 
 void SensorController::saveHistory() {
 
+  if(!sendAqHistory) return;
+
   AirQualityHistory aqHistory;
 
   xSemaphoreTake(aqDataMutex, portMAX_DELAY);
@@ -214,6 +216,14 @@ void SensorController::setOnSensorData(SensorDataHandler handler) {
 
 void SensorController::setOnSaveHistoryData(SaveHistoryDataHandler handler) {
   onSaveHistoryData = handler;
+}
+
+bool SensorController::isSendingAirQualityHistory() {
+  return sendAqHistory;
+}
+
+void SensorController::setSendingAirQualityHistory(bool value) {
+  sendAqHistory = value;
 }
 
 void readAirQualityTask(void* param) {

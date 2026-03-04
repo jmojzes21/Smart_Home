@@ -43,6 +43,14 @@ class DeviceService extends IDeviceService {
   }
 
   @override
+  Future<bool> updateSendAirQualityHistory(bool send) async {
+    var json = await client.httpPost('/send-aq-history', {'value': send});
+
+    bool result = json['value'];
+    return result;
+  }
+
+  @override
   Future<void> restartDevice() async {
     await client.httpPost('/restart', {}, statusCode: 201);
   }

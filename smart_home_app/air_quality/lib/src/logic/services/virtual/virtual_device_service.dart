@@ -6,6 +6,8 @@ import '../interfaces/device_service.dart';
 class VirtualDeviceService extends IDeviceService {
   final AqDevice device;
 
+  bool _sendAqHistory = false;
+
   VirtualDeviceService(this.device);
 
   @override
@@ -19,6 +21,7 @@ class VirtualDeviceService extends IDeviceService {
       rssi: -20,
       rtcTime: DateTime.now(),
       inputVoltage: 4.1,
+      sendAqHistory: _sendAqHistory,
       memory: MemoryStatus(
         heapSize: 200,
         usedHeap: 50,
@@ -55,6 +58,12 @@ class VirtualDeviceService extends IDeviceService {
   @override
   Future<DateTime> updateRtcTime(DateTime time) async {
     return DateTime.now();
+  }
+
+  @override
+  Future<bool> updateSendAirQualityHistory(bool send) async {
+    _sendAqHistory = send;
+    return send;
   }
 
   @override

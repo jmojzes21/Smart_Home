@@ -75,7 +75,7 @@ class AirQualityService extends IAirQualityService {
 
   @override
   Future<List<AqHistory>> getRecentHistory() async {
-    var json = await client.httpGet('/aq-history');
+    var json = await client.httpGet('/aq-recent-history');
 
     var bootTime = DateTime.parse(json['boot_time']);
     var aqHistory = json['aq_history'] as List<dynamic>;
@@ -86,7 +86,7 @@ class AirQualityService extends IAirQualityService {
 
   @override
   Future<void> clearRecentHistory() async {
-    await client.httpDelete('/aq-history', statusCode: 200);
+    await client.httpDelete('/aq-recent-history', statusCode: 200);
   }
 
   @override
