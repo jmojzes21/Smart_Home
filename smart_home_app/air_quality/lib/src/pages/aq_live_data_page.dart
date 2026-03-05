@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_home_core/extensions.dart';
-import 'package:smart_home_core/formats.dart';
 import 'package:smart_home_core/models.dart';
 import 'package:smart_home_core/widgets.dart';
 
