@@ -91,7 +91,7 @@ class TemperatureChart extends _BaseMetricsChart {
   const TemperatureChart({required super.aqData}) : super(lineColor: const Color(0xFFFF485D));
 
   @override
-  AqMetrics getMetrics(AqHistoryChart aq) {
+  AqMetrics getMetrics(AqHistoryChartData aq) {
     return aq.temperature;
   }
 
@@ -101,7 +101,7 @@ class TemperatureChart extends _BaseMetricsChart {
   }
 
   @override
-  List<TextSpan> getTooltipItems(AqHistoryChart aq) {
+  List<TextSpan> getTooltipItems(AqHistoryChartData aq) {
     return [
       TextSpan(
         text: '${aq.temperature.average.toStringAsFixed(1)} °C',
@@ -115,7 +115,7 @@ class HumidityChart extends _BaseMetricsChart {
   const HumidityChart({required super.aqData}) : super(lineColor: const Color(0xFF0A64EA));
 
   @override
-  AqMetrics getMetrics(AqHistoryChart aq) {
+  AqMetrics getMetrics(AqHistoryChartData aq) {
     return aq.humidity;
   }
 
@@ -125,7 +125,7 @@ class HumidityChart extends _BaseMetricsChart {
   }
 
   @override
-  List<TextSpan> getTooltipItems(AqHistoryChart aq) {
+  List<TextSpan> getTooltipItems(AqHistoryChartData aq) {
     return [
       TextSpan(
         text: '${aq.humidity.average.round()} %',
@@ -139,7 +139,7 @@ class PressureChart extends _BaseMetricsChart {
   const PressureChart({required super.aqData}) : super(lineColor: const Color(0xFFFCCA05));
 
   @override
-  AqMetrics getMetrics(AqHistoryChart aq) {
+  AqMetrics getMetrics(AqHistoryChartData aq) {
     return aq.pressure;
   }
 
@@ -149,7 +149,7 @@ class PressureChart extends _BaseMetricsChart {
   }
 
   @override
-  List<TextSpan> getTooltipItems(AqHistoryChart aq) {
+  List<TextSpan> getTooltipItems(AqHistoryChartData aq) {
     return [
       TextSpan(
         text: '${aq.pressure.average.toStringAsFixed(1)} hPa',
@@ -163,7 +163,7 @@ class Pm25Chart extends _BaseMetricsChart {
   const Pm25Chart({required super.aqData}) : super(lineColor: const Color(0xFF0094FF));
 
   @override
-  AqMetrics getMetrics(AqHistoryChart aq) {
+  AqMetrics getMetrics(AqHistoryChartData aq) {
     return aq.pm25;
   }
 
@@ -173,7 +173,7 @@ class Pm25Chart extends _BaseMetricsChart {
   }
 
   @override
-  List<TextSpan> getTooltipItems(AqHistoryChart aq) {
+  List<TextSpan> getTooltipItems(AqHistoryChartData aq) {
     return [
       TextSpan(
         text: '${aq.pm25.average.round()} µg/m',
@@ -193,9 +193,9 @@ abstract class _BaseMetricsChart extends StatelessWidget {
 
   const _BaseMetricsChart({required this.aqData, required this.lineColor});
 
-  AqMetrics getMetrics(AqHistoryChart aq);
+  AqMetrics getMetrics(AqHistoryChartData aq);
   List<double> getYRange(AqChartData data);
-  List<TextSpan> getTooltipItems(AqHistoryChart aq);
+  List<TextSpan> getTooltipItems(AqHistoryChartData aq);
 
   @override
   Widget build(BuildContext context) {

@@ -2,15 +2,15 @@ import 'dart:math' as math;
 
 import 'aq_history.dart';
 
-class AqHistoryChart extends AqHistory {
+class AqHistoryChartData extends AqHistory {
   double x = 0;
 
-  AqHistoryChart(AqHistory aq)
+  AqHistoryChartData(AqHistory aq)
     : super(time: aq.time, temperature: aq.temperature, humidity: aq.humidity, pressure: aq.pressure, pm25: aq.pm25);
 }
 
 class AqChartData {
-  List<AqHistoryChart> data = [];
+  List<AqHistoryChartData> data = [];
 
   List<double> xRange = [0, 0];
   List<double> temperatureRange = [0, 0];
@@ -23,7 +23,12 @@ class AqChartData {
   double _startTime = 0;
 
   AqChartData(List<AqHistory> data, {this.tooltipShowDate = true}) {
-    this.data = data.map((e) => AqHistoryChart(e)).toList();
+    if (data is List<AqHistoryChartData>) {
+      this.data = data;
+    } else {
+      this.data = data.map((e) => AqHistoryChartData(e)).toList();
+    }
+
     calculateValues();
   }
 

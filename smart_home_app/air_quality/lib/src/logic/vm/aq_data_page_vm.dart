@@ -1,9 +1,13 @@
+import 'dart:async';
+import 'dart:collection';
 import 'dart:io';
 
 import 'package:smart_home_core/exceptions.dart';
 import 'package:smart_home_core/view_model.dart';
 
+import '../../models/air_quality.dart';
 import '../../models/aq_chart_data.dart';
+import '../../models/aq_history.dart';
 import '../helpers/aq_history_csv_converter.dart';
 import '../services/interfaces/air_quality_service.dart';
 
@@ -16,6 +20,10 @@ class AirQualityDataPageViewModel extends ViewModel {
 
   bool _isLoading = false;
   AqChartData? _aqData;
+
+  StreamSubscription<AirQuality>? _liveAqSub;
+  final Queue<AqHistoryChartData> _liveAqQueue = ListQueue();
+  final int _liveAqQueueMaxSize = 200;
 
   AirQualityDataPageViewModel({required this.aqService, required this.onShowMessage});
 
@@ -63,6 +71,34 @@ class AirQualityDataPageViewModel extends ViewModel {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  Future<void> showLiveData() async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+
+      await aqService.startLiveData();
+      _liveAqSub = aqService.getLiveDataStream().listen((data) => _onLiveData(data));
+    } catch (e) {
+      String msg = Exceptions.getMessage(e);
+      onShowMessage(msg);
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  void _onLiveData(AirQuality aq) {
+    var aqh = AqHistoryChartData(_liveAqToHistory(aq));
+
+    if (_liveAqQueue.length >= _liveAqQueueMaxSize) {
+      _liveAqQueue.removeFirst();
+    }
+    _liveAqQueue.addLast(aqh);
+
+    _aqData = AqChartData(_liveAqQueue.toList(), tooltipShowDate: false);
+    notifyListeners();
   }
 
   Future<void> saveData(String path) async {
@@ -127,4 +163,21 @@ class AirQualityDataPageViewModel extends ViewModel {
 
   bool get isLoading => _isLoading;
   AqChartData? get aqData => _aqData;
+
+  @override
+  void dispose() {
+    _liveAqSub?.cancel();
+    _liveAqSub = null;
+    super.dispose();
+  }
+
+  AqHistory _liveAqToHistory(AirQuality aq) {
+    return AqHistory(
+      time: DateTime.now(),
+      temperature: AqMetrics.live(aq.temperature),
+      humidity: AqMetrics.live(aq.humidity),
+      pressure: AqMetrics.live(aq.pressure),
+      pm25: AqMetrics.live(aq.pm25.toDouble()),
+    );
+  }
 }

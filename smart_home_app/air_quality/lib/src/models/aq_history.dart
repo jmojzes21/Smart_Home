@@ -5,6 +5,8 @@ class AqMetrics {
 
   AqMetrics({required this.average, required this.min, required this.max});
 
+  AqMetrics.live(double value) : average = value, min = value, max = value;
+
   factory AqMetrics.fromJson(Map<String, dynamic> json) {
     return AqMetrics(average: json['average'].toDouble(), min: json['min'].toDouble(), max: json['max'].toDouble());
   }
