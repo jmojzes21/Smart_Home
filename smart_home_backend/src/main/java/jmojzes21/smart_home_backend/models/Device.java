@@ -3,9 +3,11 @@ package jmojzes21.smart_home_backend.models;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import java.util.UUID;
 
@@ -14,7 +16,8 @@ import java.util.UUID;
 public class Device {
 
   @Id
-  @GeneratedValue()
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "device_seq")
+  @SequenceGenerator(name = "device_seq", sequenceName = "device_seq", allocationSize = 1)
   @Column(name = "uuid", nullable = false)
   private UUID uuid;
 

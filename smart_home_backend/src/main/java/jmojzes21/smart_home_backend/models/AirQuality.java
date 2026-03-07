@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -17,12 +18,13 @@ import java.util.UUID;
 @Entity
 @Table(name = "air_quality", schema = "public")
 public class AirQuality {
-
+  
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "air_quality_id_seq")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "air_quality_seq")
+  @SequenceGenerator(name = "air_quality_seq", sequenceName = "air_quality_id_seq", allocationSize = 1)
   @Column(name = "id")
   @JsonIgnore
-  private long id;
+  private Long id;
 
   @Column(name = "time")
   @NotNull
