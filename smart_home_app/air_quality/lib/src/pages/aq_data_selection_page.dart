@@ -41,13 +41,6 @@ class AqDataSelectionPage extends StatelessWidget {
               title: Text('Povijesni podaci'),
               subtitle: Text('Prikaži povijesne podatke pohranjene u bazi podataka.'),
             ),
-            ListTile(
-              onTap: () {},
-              titleTextStyle: titleStyle,
-              leading: FaIcon(FontAwesomeIcons.upload),
-              title: Text('Učitaj podatke'),
-              subtitle: Text('Učitaj podatke iz csv datoteke.'),
-            ),
           ],
         ),
       ),

@@ -453,7 +453,7 @@ class AdvancedPage extends StatelessWidget {
           value: model.deviceStatus!.sendAqHistory,
           controlAffinity: ListTileControlAffinity.leading,
           dense: true,
-          title: Text('Šalji povijesna mjerenja'),
+          title: Text('Spremi povijesna mjerenja'),
           onChanged: (value) => model.updateSendAirQualityHistory(value),
         ),
       ],
