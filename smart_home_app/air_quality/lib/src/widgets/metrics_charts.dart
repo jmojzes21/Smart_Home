@@ -332,7 +332,7 @@ class _MetricsChart extends StatelessWidget {
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 40,
+            reservedSize: 45,
             minIncluded: false,
             maxIncluded: false,
             getTitlesWidget: (value, meta) {
