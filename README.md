@@ -6,6 +6,8 @@ mreže. Sustav omogućuje upravljanje uređajima preko desktop ili mobilne aplik
 Trenutno sustav uključuje uređaje za mjerenje kvalitete zraka i pametnu rasvjetu.
 Sustav je osmišljen na način da u budućnosti podrži dodavanje novih uređaja te
 da postoji samo jedna aplikacija za sve uređaje.
+Komunikacija s uređajima odvija se koristeći
+HTTP protokol i WebSocket tehnologiju.
 
 ### Mjerenje kvalitete zraka
 
@@ -51,6 +53,48 @@ u bazu.
 * Java, Quarkus
 * C++, Arduino ESP32
 * PostgreSQL
+
+## Slike aplikacije
+
+#### Početna stranica za povezivanje uređaja
+
+<img height="700" alt="Uređaji" src="misc/images/devices_page.jpg">
+
+#### Kvaliteta zraka - početna
+
+<img height="700" alt="Kvaliteta zraka" src="misc/images/aq_home.jpg">
+
+#### Kvaliteta zraka - mjerenja
+
+Uživo mjerenje kvaliete zraka kako pristižu podaci s uređaja.
+
+<img width="700" alt="Mjerenja" src="misc/images/aq_live.png">
+
+Prikaz nedavnih mjerenja pohranjenih lokalno na uređaju.
+
+<img width="700" alt="Mjerenja" src="misc/images/aq_recent.png">
+
+Povijesni podaci pohranjeni u bazi podataka.
+
+<img width="700" alt="Mjerenja" src="misc/images/aq_history.png">
+
+#### Kvaliteta zraka - napredno
+
+<img width="700" alt="Napredno" src="misc/images/aq_advanced_1.jpg">
+
+<img width="700" alt="Napredno" src="misc/images/aq_advanced_2.jpg">
+
+#### Pametna rasvjeta - početna
+
+<img width="700" alt="Mjerenja" src="misc/images/leds_home.png">
+
+#### Pametna rasvjeta - senzor energije
+
+<img width="700" alt="Mjerenja" src="misc/images/leds_power.png">
+
+#### Pametna rasvjeta - postavke i OTA ažuriranje
+
+<img width="700" alt="Mjerenja" src="misc/images/leds_ota.png">
 
 ## Struktura repozitorija
 
