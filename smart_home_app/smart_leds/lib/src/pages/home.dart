@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Početna')),
+      appBar: AppBar(title: const Text('Pametne LEDice')),
       drawer: const AppNavigationDrawer(),
       floatingActionButton: IconButton.filled(
         padding: const EdgeInsets.all(20),
