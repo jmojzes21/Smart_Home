@@ -1,45 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../pages/home.dart';
-import '../../pages/power_sensor.dart';
-import '../../pages/settings.dart';
 
 class AppNavigationDrawer extends StatelessWidget {
   const AppNavigationDrawer({super.key});
 
   void openHomePage(BuildContext context) {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) {
-          return const HomePage();
-        },
-      ),
-    );
+    context.go('/leds/home');
   }
 
   void openPowerSensorPage(BuildContext context) {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) {
-          return const PowerSensorPage();
-        },
-      ),
-    );
+    context.go('/leds/power');
   }
 
   void openSettings(BuildContext context) {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) {
-          return const SettingsPage();
-        },
-      ),
-    );
+    context.go('/leds/settings');
   }
 
-  void closeDevice(BuildContext context) async {
-    if (!context.mounted) return;
-    context.replace('/');
+  void closeDevice(BuildContext context) {
+    context.go('/');
   }
 
   @override
