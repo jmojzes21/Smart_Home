@@ -24,7 +24,12 @@ class HomePage extends StatelessWidget {
         onPressed: () => BrightnessDialog.show(context),
         icon: const Icon(Icons.light_mode, size: 26),
       ),
-      body: Padding(padding: const EdgeInsets.all(40), child: _Patterns()),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(40),
+          child: Center(child: _Patterns()),
+        ),
+      ),
     );
   }
 }

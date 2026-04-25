@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_home_core/extensions.dart';
 import 'package:smart_home_core/formats.dart';
+import 'package:smart_home_core/models.dart';
 import 'package:smart_home_core/widgets.dart';
 
 import '../logic/vm/advanced_page_vm.dart';
@@ -50,6 +51,7 @@ class AdvancedPage extends StatelessWidget {
       return Center(child: CircularProgressIndicator());
     }
 
+    bool isMobile = AppContext.instance.isMobile;
     var enableButtons = !model.isLoading;
 
     return SingleChildScrollView(
@@ -71,10 +73,12 @@ class AdvancedPage extends StatelessWidget {
               icon: FaIcon(FontAwesomeIcons.arrowRotateLeft),
               label: Text('Ponovno pokreni uređaj'),
             ),
-
             SizedBox(height: 20),
-            Row(
-              spacing: 20,
+
+            Flex(
+              mainAxisSize: MainAxisSize.min,
+              spacing: isMobile ? 10 : 20,
+              direction: isMobile ? Axis.vertical : Axis.horizontal,
               children: [
                 FilledButton(
                   onPressed: enableButtons && model.shouldSaveChanges
