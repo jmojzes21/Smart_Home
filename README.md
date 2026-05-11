@@ -65,4 +65,4 @@ This mono repository contains several projects that make up the whole system.
 | misc | Some scripts and helper tools. |
 
 ## Project gallery
-* [Link to project gallery](https://jmojzes21.github.io/portfolio_page/projects/smart-home#gallery)
+* [Link to project gallery](https://jmojzes21.github.io/portfolio_page/#/projects/smart-home#gallery)
