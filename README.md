@@ -40,7 +40,7 @@
 ## Technology stack
 <ul>
   <li><b>Frontend:</b> Flutter (Android, Windows)</li>
-  <li><b>Backend:</b> Java Quarkus</li>
+  <li><b>Backend:</b> Java Quarkus, Hibernate ORM</li>
   <li><b>Embedded:</b> C++, Arduino, ESP32 microcontroller</li>
   <li><b>Database:</b> PostgreSQL</li>
 </ul>
