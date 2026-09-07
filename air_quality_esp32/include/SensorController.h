@@ -58,7 +58,7 @@ class AirQualityMetrics {
 
 
 typedef std::function<void(AirQualityData& aqData)> SensorDataHandler;
-typedef std::function<void(struct tm time, AirQualityHistory& aqData)> SaveHistoryDataHandler;
+typedef std::function<void(struct tm time, AirQualityHistory& aqData)> SaveDataAqmHandler;
 
 
 class SensorController {
@@ -73,8 +73,8 @@ class SensorController {
 
   AirQualityData aqData;
   AirQualityMetrics recentAqMetrics;
-  AirQualityMetrics historyAqMetrics;
-  bool sendAqHistory = false;
+  AirQualityMetrics aqmMetrics;
+  bool aqmSaveData = false;
 
   SemaphoreHandle_t aqDataMutex;
   SemaphoreHandle_t aqRecentHistoryMutex;
@@ -86,7 +86,7 @@ class SensorController {
   std::list<AirQualityHistory> aqRecentHistoryList;
 
   SensorDataHandler onSensorData = nullptr;
-  SaveHistoryDataHandler onSaveHistoryData = nullptr;
+  SaveDataAqmHandler onSaveDataAqm = nullptr;
 
   public:
   
@@ -102,7 +102,7 @@ class SensorController {
   uint32_t readInputVoltage();
   
   void saveRecentHistory();
-  void saveHistory();
+  void saveDataAqm();
 
   void takeRecentHistoryMutex();
   void giveRecentHistoryMutex();
@@ -111,9 +111,9 @@ class SensorController {
   std::list<AirQualityHistory>& getRecentHistory();
 
   void setOnSensorData(SensorDataHandler handler);
-  void setOnSaveHistoryData(SaveHistoryDataHandler handler);
+  void setOnSaveDataAqm(SaveDataAqmHandler handler);
 
-  bool isSendingAirQualityHistory();
-  void setSendingAirQualityHistory(bool value);
+  bool isSavingDataAqm();
+  void setSaveDataAqm(bool value);
 
 };

@@ -10,6 +10,9 @@
 
 #define DEVICE_RESTART_DELAY 2000
 
+#define AQM_CONNECT_TIMEOUT_MS 10000
+#define AQM_TCP_TIMEOUT_MS 5000
+
 void sensorDataToJson(AirQualityData& aqData, JsonDocument& doc, bool showDetails);
 void metricsToJson(Metrics& metrics, JsonObject& jsonObj);
 
@@ -43,10 +46,6 @@ void RestController::init() {
 
   httpServer->on("/aq-recent-history", HTTP_DELETE, [&](AsyncWebServerRequest* request) {
     handleDeleteAqHistoryRequest(request);
-  });
-
-  httpServer->on("/send-aq-history", HTTP_POST, [&](AsyncWebServerRequest* request, JsonVariant &jsonv) {
-    handleSendAqHistoryRequest(request, jsonv);
   });
 
   httpServer->on("/config", HTTP_GET, [&](AsyncWebServerRequest* request) {
@@ -93,8 +92,8 @@ void RestController::init() {
     onSensorData(aqData);
   });
 
-  sensorController->setOnSaveHistoryData([&](struct tm time, AirQualityHistory& aqData) {
-    sendHistoryData(time, aqData);
+  sensorController->setOnSaveDataAqm([&](struct tm time, AirQualityHistory& aqData) {
+    saveMeasurementsAqm(time, aqData);
   });
 
 }
@@ -107,7 +106,6 @@ void RestController::handleGetDeviceRequest(AsyncWebServerRequest* request) {
 
   doc["name"] = config.deviceName;
   doc["hostname"] = config.hostname;
-  doc["uuid"] = config.deviceUuid;
   doc["type"] = DEVICE_TYPE;
   doc["version"] = DEVICE_VERSION;
   
@@ -134,7 +132,6 @@ void RestController::handleGetDeviceStatusRequest(AsyncWebServerRequest* request
 
   doc["name"] = config.deviceName;
   doc["hostname"] = config.hostname;
-  doc["uuid"] = config.deviceUuid;
   doc["type"] = DEVICE_TYPE;
   doc["version"] = DEVICE_VERSION;
   
@@ -144,8 +141,6 @@ void RestController::handleGetDeviceStatusRequest(AsyncWebServerRequest* request
 
   std::string dateTimeText = DateFormats::formatDateTime(dateTime);
   doc["date_time"] = dateTimeText;
-
-  doc["send_aq_history"] = sensorController->isSendingAirQualityHistory();
 
   if(showRamUsage) {
     JsonObject ram = doc["ram"].to<JsonObject>();
@@ -223,21 +218,6 @@ void RestController::handleDeleteAqHistoryRequest(AsyncWebServerRequest *request
   sensorController->clearRecentHistory();
 
   request->send(200);
-}
-
-void RestController::handleSendAqHistoryRequest(AsyncWebServerRequest *request, JsonVariant &jsonv) {
-
-  
-  JsonObject json = jsonv.as<JsonObject>();
-
-  bool send = json["value"].as<bool>();
-  sensorController->setSendingAirQualityHistory(send);
-
-  JsonDocument doc;
-  doc["value"] = send;
-
-  respondJson(request, doc);
-
 }
 
 void RestController::handleGetConfigRequest(AsyncWebServerRequest *request) {
@@ -368,30 +348,30 @@ void RestController::respondJson(AsyncWebServerRequest *request, std::string &js
 
 }
 
-void RestController::sendHistoryData(tm time, AirQualityHistory &aqData) {
+void RestController::saveMeasurementsAqm(tm time, AirQualityHistory &aqData) {
+
+  auto& config = deviceController->getConfig();
 
   std::string timeText = DateFormats::formatDateTime(time);
   
   JsonDocument doc;
+
+  doc["station_id"] = config.aqmDeviceUuid;
   doc["time"] = timeText;
 
-  JsonObject temp = doc["temperature"].to<JsonObject>();
-  JsonObject hum = doc["humidity"].to<JsonObject>();
-  JsonObject press = doc["pressure"].to<JsonObject>();
-  JsonObject pm = doc["pm25"].to<JsonObject>();
-
-  metricsToJson(aqData.temperatureMetrics, temp);
-  metricsToJson(aqData.humidityMetrics, hum);
-  metricsToJson(aqData.pressureMetrics, press);
-  metricsToJson(aqData.pm25Metrics, pm);
+  doc["temp_c"] = aqData.temperatureMetrics.getAverage();
+  doc["press_hpa"] = aqData.pressureMetrics.getAverage();
+  doc["hum_p"] = aqData.humidityMetrics.getAverage();
+  doc["pm2p5_ugm3"] = aqData.pm25Metrics.getAverage();
 
   std::string body = "";
   serializeJson(doc, body);
 
-  auto& config = deviceController->getConfig();
-  std::string url = config.backendAddress + "/api/air_quality/device/" + config.deviceUuid;
+  std::string url = config.aqmBackendAddress + "/api/air-quality";
   
   HTTPClient client;
+  client.setConnectTimeout(AQM_CONNECT_TIMEOUT_MS);
+  client.setTimeout(AQM_TCP_TIMEOUT_MS);
   client.begin(url.c_str());
 
   log_i("HTTP POST %s", url.c_str());

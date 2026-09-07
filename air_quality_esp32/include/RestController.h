@@ -39,7 +39,6 @@ class RestController {
   void handleGetSensorDataRequest(AsyncWebServerRequest* request);
   void handleGetAqHistoryRequest(AsyncWebServerRequest* request);
   void handleDeleteAqHistoryRequest(AsyncWebServerRequest* request);
-  void handleSendAqHistoryRequest(AsyncWebServerRequest* request, JsonVariant &jsonv);
 
   void handleGetConfigRequest(AsyncWebServerRequest* request);
   void handlePatchConfigRequest(AsyncWebServerRequest* request, JsonVariant &jsonv);
@@ -54,6 +53,6 @@ class RestController {
   void respondJson(AsyncWebServerRequest* request, JsonDocument& doc);
   void respondJson(AsyncWebServerRequest* request, std::string& json);
 
-  void sendHistoryData(struct tm time, AirQualityHistory& aqData);
+  void saveMeasurementsAqm(struct tm time, AirQualityHistory& aqData);
 
 };

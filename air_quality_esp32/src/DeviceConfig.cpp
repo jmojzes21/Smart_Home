@@ -2,11 +2,13 @@
 #include "DeviceConfig.h"
 #include <ArduinoJson.h>
 
-#define RECENT_DATA_MIN_PERIOD_SEC (30)
-#define RECENT_DATA_MAX_PERIOD_SEC (10 * 60)
+#define RECENT_DATA_MIN_PERIOD_SEC 30
+#define RECENT_DATA_MAX_PERIOD_SEC 600
 
-#define HISTORY_DATA_MIN_PERIOD_SEC (5 * 60)
-#define HISTORY_DATA_MAX_PERIOD_SEC (60 * 60)
+#define AQM_MEASUREMENTS_MIN_PERIOD_SEC 300
+#define AQM_MEASUREMENTS_MAX_PERIOD_SEC 3600
+
+#define CLAMP(x, min, max) (x > max ? max : (x < min ? min : x) )
 
 bool DeviceConfig::parse(std::string configJson) {
 
@@ -19,31 +21,25 @@ bool DeviceConfig::parse(std::string configJson) {
     return false;
   }
 
+  JsonObject aqm = doc["aqm"];
+
   hostname = doc["hostname"].as<std::string>();
   deviceName = doc["device_name"].as<std::string>();
-  deviceUuid = doc["device_uuid"].as<std::string>();
-  backendAddress = doc["backend_addr"].as<std::string>();
 
   if(hostname.empty() || deviceName.empty()) {
     return false;
   }
 
   uint32_t recentPeriod = doc["recent_data_period"].as<uint32_t>();
-  if(recentPeriod < RECENT_DATA_MIN_PERIOD_SEC) {
-    recentPeriod = RECENT_DATA_MIN_PERIOD_SEC;
-  }else if(recentPeriod > RECENT_DATA_MAX_PERIOD_SEC) {
-    recentPeriod = RECENT_DATA_MAX_PERIOD_SEC;
-  }
+  this->recentDataPeriod = CLAMP(recentPeriod, RECENT_DATA_MIN_PERIOD_SEC, RECENT_DATA_MAX_PERIOD_SEC);
 
-  uint32_t historyPeriod = doc["history_data_period"].as<uint32_t>();
-  if(historyPeriod < HISTORY_DATA_MIN_PERIOD_SEC) {
-    historyPeriod = HISTORY_DATA_MIN_PERIOD_SEC;
-  }else if(historyPeriod > HISTORY_DATA_MAX_PERIOD_SEC) {
-    historyPeriod = HISTORY_DATA_MAX_PERIOD_SEC;
-  }
+  aqmDeviceUuid = aqm["device_uuid"].as<std::string>();
+  aqmBackendAddress = aqm["backend_addr"].as<std::string>();
 
-  this->recentDataPeriod = recentPeriod;
-  this->historyDataPeriod = historyPeriod;
+  uint32_t aqmPeriod = aqm["measurement_period"].as<uint32_t>();
+  this->aqmMeasurementPeriod = CLAMP(aqmPeriod, AQM_MEASUREMENTS_MIN_PERIOD_SEC, AQM_MEASUREMENTS_MAX_PERIOD_SEC);
+
+  aqmSaveMeasurements = aqm["save_measurements"].as<bool>();
 
   JsonArray networksJson = doc["wifi_networks"].as<JsonArray>();
 
@@ -68,12 +64,14 @@ std::string DeviceConfig::toJson() {
 
   doc["hostname"] = hostname;
   doc["device_name"] = deviceName;
-  doc["device_uuid"] = deviceUuid;
-  doc["backend_addr"] = backendAddress;
-
   doc["recent_data_period"] = recentDataPeriod;
-  doc["history_data_period"] = historyDataPeriod;
 
+  JsonObject aqm = doc["aqm"].to<JsonObject>();
+  aqm["device_uuid"] = aqmDeviceUuid;
+  aqm["backend_addr"] = aqmBackendAddress;
+  aqm["measurement_period"] = aqmMeasurementPeriod;
+  aqm["save_measurements"] = aqmSaveMeasurements;
+  
   JsonArray networksJson = doc["wifi_networks"].to<JsonArray>();
   
   for(auto& net : networks) {

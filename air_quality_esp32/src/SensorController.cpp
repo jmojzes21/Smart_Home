@@ -41,6 +41,9 @@ void SensorController::init() {
 
   pinMode(VIN_ADC_PIN, INPUT);
 
+  auto& config = deviceController->getConfig();
+  setSaveDataAqm(config.aqmSaveMeasurements);
+
   xTaskCreateUniversal(readAirQualityTask, "aqTask", 8192, this, 1, &pmsTaskHandle, ARDUINO_RUNNING_CORE);
   xTaskCreateUniversal(aqHistoryTask, "aqHistory", 8192, this, 1, &aqHistoryTaskHandle, ARDUINO_RUNNING_CORE);
 
@@ -84,9 +87,9 @@ void SensorController::readSensorData() {
   recentAqMetrics.humidityMetrics.addValue(aqData.humidity);
   recentAqMetrics.pressureMetrics.addValue(aqData.pressure);
 
-  historyAqMetrics.temperatureMetrics.addValue(aqData.temperature);
-  historyAqMetrics.humidityMetrics.addValue(aqData.humidity);
-  historyAqMetrics.pressureMetrics.addValue(aqData.pressure);
+  aqmMetrics.temperatureMetrics.addValue(aqData.temperature);
+  aqmMetrics.humidityMetrics.addValue(aqData.humidity);
+  aqmMetrics.pressureMetrics.addValue(aqData.pressure);
 
   xSemaphoreGive(aqDataMutex);
 
@@ -97,7 +100,7 @@ void SensorController::readSensorData() {
 
     aqData.pms = pmsTemp;
     recentAqMetrics.pm25Metrics.addValue(aqData.pms.pm_25_env);
-    historyAqMetrics.pm25Metrics.addValue(aqData.pms.pm_25_env);
+    aqmMetrics.pm25Metrics.addValue(aqData.pms.pm_25_env);
 
     xSemaphoreGive(aqDataMutex);
 
@@ -162,20 +165,20 @@ void SensorController::saveRecentHistory() {
 
 }
 
-void SensorController::saveHistory() {
+void SensorController::saveDataAqm() {
 
-  if(!sendAqHistory) return;
+  if(!isSavingDataAqm()) return;
 
   AirQualityHistory aqHistory;
 
   xSemaphoreTake(aqDataMutex, portMAX_DELAY);
 
-  aqHistory.temperatureMetrics = historyAqMetrics.temperatureMetrics;
-  aqHistory.humidityMetrics = historyAqMetrics.humidityMetrics;
-  aqHistory.pressureMetrics = historyAqMetrics.pressureMetrics;
-  aqHistory.pm25Metrics = historyAqMetrics.pm25Metrics;
+  aqHistory.temperatureMetrics = aqmMetrics.temperatureMetrics;
+  aqHistory.humidityMetrics = aqmMetrics.humidityMetrics;
+  aqHistory.pressureMetrics = aqmMetrics.pressureMetrics;
+  aqHistory.pm25Metrics = aqmMetrics.pm25Metrics;
 
-  historyAqMetrics.reset();
+  aqmMetrics.reset();
 
   xSemaphoreGive(aqDataMutex);
 
@@ -186,8 +189,8 @@ void SensorController::saveHistory() {
 
   struct tm currentTime = deviceController->getDateTime();
 
-  if(onSaveHistoryData != nullptr) {
-    onSaveHistoryData(currentTime, aqHistory);
+  if(onSaveDataAqm != nullptr) {
+    onSaveDataAqm(currentTime, aqHistory);
   }
 
 }
@@ -214,16 +217,16 @@ void SensorController::setOnSensorData(SensorDataHandler handler) {
   onSensorData = handler;
 }
 
-void SensorController::setOnSaveHistoryData(SaveHistoryDataHandler handler) {
-  onSaveHistoryData = handler;
+void SensorController::setOnSaveDataAqm(SaveDataAqmHandler handler) {
+  onSaveDataAqm = handler;
 }
 
-bool SensorController::isSendingAirQualityHistory() {
-  return sendAqHistory;
+bool SensorController::isSavingDataAqm() {
+  return aqmSaveData;
 }
 
-void SensorController::setSendingAirQualityHistory(bool value) {
-  sendAqHistory = value;
+void SensorController::setSaveDataAqm(bool value) {
+  aqmSaveData = value;
 }
 
 void readAirQualityTask(void* param) {
@@ -244,10 +247,10 @@ void aqHistoryTask(void* param) {
 
   auto& config = deviceController->getConfig();
   uint32_t saveRecentPeriod = config.recentDataPeriod * 1000;
-  uint32_t saveHistoryPeriod = config.historyDataPeriod * 1000;
+  uint32_t aqmSavePeriod = config.aqmMeasurementPeriod * 1000;
 
   uint32_t t1 = millis() + saveRecentPeriod;
-  uint32_t t2 = millis() + saveHistoryPeriod;
+  uint32_t t2 = millis() + aqmSavePeriod;
 
   while(true) {
 
@@ -259,8 +262,8 @@ void aqHistoryTask(void* param) {
 
     now = millis();
     if(now >= t2) {
-      t2 = now + saveHistoryPeriod;
-      sensorController->saveHistory();
+      t2 = now + aqmSavePeriod;
+      sensorController->saveDataAqm();
     }
 
     delay(2000);
