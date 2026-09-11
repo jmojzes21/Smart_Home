@@ -367,20 +367,27 @@ void RestController::saveMeasurementsAqm(tm time, AirQualityHistory &aqData) {
   std::string body = "";
   serializeJson(doc, body);
 
-  std::string url = config.aqmBackendAddress + "/api/air-quality";
+  auto& aqmHost = config.aqmBackendAddress;
+  auto& apiKey = config.aqmApiKey;
+  std::string url = aqmHost + "/api/air-quality";
   
+  log_i("POST %s", url.c_str());
+  log_i("Body %s", body.c_str());
+
+  url += "?apiKey=" + apiKey;
+
   HTTPClient client;
   client.setConnectTimeout(AQM_CONNECT_TIMEOUT_MS);
   client.setTimeout(AQM_TCP_TIMEOUT_MS);
   client.begin(url.c_str());
 
-  log_i("HTTP POST %s", url.c_str());
-  log_i("Body %s", body.c_str());
-
   int statusCode = client.POST((uint8_t*)body.c_str(), body.length());
-  String response = client.getString();
+  log_i("Status: %d", statusCode);
 
-  log_i("%d %s", statusCode, response.c_str());
+  if(statusCode != 204) {
+    String response = client.getString();
+    log_e("%s", response.c_str());
+  }
 
   client.end();
 

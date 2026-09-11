@@ -37,6 +37,9 @@ class DeviceConfig {
   /// @brief AQM backend address
   std::string aqmBackendAddress;
 
+  /// @brief AQM api key
+  std::string aqmApiKey;
+
   /// @brief Time period in seconds for saving measurements to the AQM system
   uint32_t aqmMeasurementPeriod = 0;
 

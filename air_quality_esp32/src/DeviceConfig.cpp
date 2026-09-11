@@ -35,6 +35,7 @@ bool DeviceConfig::parse(std::string configJson) {
 
   aqmDeviceUuid = aqm["device_uuid"].as<std::string>();
   aqmBackendAddress = aqm["backend_addr"].as<std::string>();
+  aqmApiKey = aqm["api_key"].as<std::string>();
 
   uint32_t aqmPeriod = aqm["measurement_period"].as<uint32_t>();
   this->aqmMeasurementPeriod = CLAMP(aqmPeriod, AQM_MEASUREMENTS_MIN_PERIOD_SEC, AQM_MEASUREMENTS_MAX_PERIOD_SEC);
@@ -69,6 +70,7 @@ std::string DeviceConfig::toJson() {
   JsonObject aqm = doc["aqm"].to<JsonObject>();
   aqm["device_uuid"] = aqmDeviceUuid;
   aqm["backend_addr"] = aqmBackendAddress;
+  aqm["api_key"] = aqmApiKey;
   aqm["measurement_period"] = aqmMeasurementPeriod;
   aqm["save_measurements"] = aqmSaveMeasurements;
   
