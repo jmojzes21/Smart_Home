@@ -13,17 +13,30 @@ DeviceController::DeviceController() {
 
 void DeviceController::init() {
 
+  // init rtc
   rtcMutex = xSemaphoreCreateMutex();
-
   rtc.begin();
+
+  // get boot time
   bootTime = getDateTime();
 
+  // init rgb led
   DasduinoLed::init();
   DasduinoLed::setBrightness(20);
 
-  LittleFS.begin(true);
+  // read config
   readConfig();
   
+  // init esp time
+
+  struct tm timeInfo = getDateTime();
+  time_t epoch = mktime(&timeInfo);
+
+  struct timeval tv;
+  tv.tv_sec = epoch;
+  tv.tv_usec = 0;
+  settimeofday(&tv, NULL);
+
 }
 
 DeviceConfig& DeviceController::getConfig() {
