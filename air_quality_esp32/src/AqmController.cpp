@@ -106,13 +106,15 @@ bool AqmController::sendBufferedMeasurements() {
     return false;
   }
 
-  std::string data;
-  data.reserve(file.size() + 4);
+  size_t fileSize = file.size();
 
-  data += "[";
-  file.readBytes(&data[0], data.length());
+  std::vector<char> data;
+  data.resize(fileSize + 4, 0);
+
+  data[0] = '[';
+  file.readBytes(&data[1], fileSize);
   file.close();
-  data += "]";
+  data[fileSize + 1] = ']';
 
   // send request
 
@@ -132,7 +134,7 @@ bool AqmController::sendBufferedMeasurements() {
     return false;
   }
 
-  int statusCode = client.POST((uint8_t*)data.c_str(), data.length());
+  int statusCode = client.POST((uint8_t*)data.data(), fileSize + 2);
   log_i("Status: %d", statusCode);
 
   if(statusCode != 204) {
