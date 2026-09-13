@@ -19,4 +19,12 @@ class AqmController {
 
   void sendMeasurement(struct tm time, AirQualityHistory& aqData);
 
+  private:
+
+  void sendMeasurement(std::string& data);
+
+  bool sendBufferedMeasurements();
+
+  void saveMeasurementToBuffer(std::string& data);
+
 };
