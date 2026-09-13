@@ -2,17 +2,19 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <LedColors.h>
+#include <LittleFS.h>
 
 #include "DeviceController.h"
 #include "SensorController.h"
 #include "WifiController.h"
 #include "RestController.h"
-
+#include "AqmController.h"
 
 DeviceController* deviceController;
 SensorController* sensorController;
 WifiController* wifiController;
 RestController* restController;
+AqmController* aqmController;
 
 void setup() {
 
@@ -24,6 +26,9 @@ void setup() {
   sensorController = new SensorController(deviceController);
   wifiController = new WifiController(deviceController);
   restController = new RestController(deviceController, sensorController, wifiController);
+  aqmController = new AqmController(deviceController, sensorController);
+
+  LittleFS.begin(true);
 
   deviceController->init();
   sensorController->init();
@@ -32,9 +37,9 @@ void setup() {
 
   wifiController->connect();
   restController->init();
+  aqmController->init();
 
   wifiController->initMdns();
-
   deviceController->clearLed();
 
 }
