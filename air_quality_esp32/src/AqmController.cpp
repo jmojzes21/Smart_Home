@@ -5,7 +5,7 @@
 #include <HTTPClient.h>
 #include <LittleFS.h>
 
-#include "helpers/DateFormats.h"
+#include "helpers/DateTime.h"
 
 #define AQM_CONNECT_TIMEOUT_MS 5000
 #define AQM_TCP_TIMEOUT_MS 5000
@@ -22,24 +22,18 @@ AqmController::AqmController(DeviceController* deviceController, SensorControlle
 
 void AqmController::init() {
 
-  sensorController->setOnSaveDataAqm([&](struct tm time, AirQualityHistory& aqData) {
+  sensorController->setOnSaveDataAqm([&](DateTime time, AirQualityHistory& aqData) {
     sendMeasurement(time, aqData);
     sendLogs();
   });
 
 }
 
-void AqmController::sendMeasurement(tm time, AirQualityHistory &aqData) {
+void AqmController::sendMeasurement(DateTime time, AirQualityHistory &aqData) {
 
-  auto& config = deviceController->getConfig();
-
-  std::string timeText = DateFormats::formatDateTime(time);
-  
   JsonDocument doc;
 
-  doc["station_id"] = config.aqmDeviceUuid;
-  doc["time"] = timeText;
-
+  doc["time"] = time.toString();
   doc["temp_c"] = aqData.temperatureMetrics.getAverage();
   doc["press_hpa"] = aqData.pressureMetrics.getAverage();
   doc["hum_p"] = aqData.humidityMetrics.getAverage();
@@ -61,15 +55,15 @@ void AqmController::sendMeasurement(std::string& data) {
   }
 
   auto& config = deviceController->getConfig();
+  auto& deviceUuid = config.aqmDeviceUuid;
   auto& aqmHost = config.aqmBackendAddress;
   auto& apiKey = config.aqmApiKey;
 
-  std::string url = aqmHost + "/api/air-quality";
+  std::string url = aqmHost + "/api/air-quality/" + deviceUuid;
+  std::string url2 = url + "?apiKey=" + apiKey;
   
   log_i("POST %s", url.c_str());
   log_i("Body %s", data.c_str());
-
-  url += "?apiKey=" + apiKey;
 
   // send request
 
@@ -77,7 +71,7 @@ void AqmController::sendMeasurement(std::string& data) {
   client.setConnectTimeout(AQM_CONNECT_TIMEOUT_MS);
   client.setTimeout(AQM_TCP_TIMEOUT_MS);
 
-  if(!client.begin(url.c_str())) {
+  if(!client.begin(url2.c_str())) {
     saveMeasurementToBuffer(data);
     return;
   }
@@ -89,7 +83,7 @@ void AqmController::sendMeasurement(std::string& data) {
     std::string message = getErrorMessage(statusCode, client);
     log_e("%s", message.c_str());
 
-    logs->logError("Nije moguće poslati izmjerene vrijednosti, POST /api/air-quality, status: %d, greška: %s", statusCode, message.c_str());
+    logs->logError("Nije moguće poslati izmjerene vrijednosti, POST %s, status: %d, greška: %s", url.c_str(), statusCode, message.c_str());
     saveMeasurementToBuffer(data);
   }
 
@@ -124,18 +118,20 @@ bool AqmController::sendBufferedMeasurements() {
   // send request
 
   auto& config = deviceController->getConfig();
+  auto& deviceUuid = config.aqmDeviceUuid;
   auto& aqmHost = config.aqmBackendAddress;
   auto& apiKey = config.aqmApiKey;
 
-  std::string url = aqmHost + "/api/air-quality/bulk";
+  std::string url = aqmHost + "/api/air-quality/" + deviceUuid + "/bulk";
+  std::string url2 = url + "?apiKey=" + apiKey;
+
   log_i("POST %s", url.c_str());
-  url += "?apiKey=" + apiKey;
 
   HTTPClient client;
   client.setConnectTimeout(AQM_CONNECT_TIMEOUT_MS);
   client.setTimeout(AQM_TCP_TIMEOUT_MS);
 
-  if(!client.begin(url.c_str())) {
+  if(!client.begin(url2.c_str())) {
     return false;
   }
 
@@ -146,7 +142,7 @@ bool AqmController::sendBufferedMeasurements() {
     std::string message = getErrorMessage(statusCode, client);
     log_e("%s", message.c_str());
 
-    logs->logError("Nije moguće poslati mjerenja iz međuspremnika, POST /api/air-quality/bulk, status: %d, greška: %s", statusCode, message.c_str());
+    logs->logError("Nije moguće poslati mjerenja iz međuspremnika, POST %s, status: %d, greška: %s", url.c_str(), statusCode, message.c_str());
 
     client.end();
     return false;
@@ -225,15 +221,16 @@ void AqmController::sendLogsInternal() {
   auto& deviceUuid = config.aqmDeviceUuid;
   auto& apiKey = config.aqmApiKey;
 
-  std::string url = aqmHost + "/api/station-log/" + deviceUuid;
+  std::string url = aqmHost + "/api/station-logs/" + deviceUuid;
+  std::string url2 = url + "?apiKey=" + apiKey;
+
   log_i("POST %s", url.c_str());
-  url += "?apiKey=" + apiKey;
 
   HTTPClient client;
   client.setConnectTimeout(AQM_CONNECT_TIMEOUT_MS);
   client.setTimeout(AQM_TCP_TIMEOUT_MS);
 
-  if(!client.begin(url.c_str())) {
+  if(!client.begin(url2.c_str())) {
     return;
   }
 
@@ -244,7 +241,7 @@ void AqmController::sendLogsInternal() {
     std::string message = getErrorMessage(statusCode, client);
     log_e("%s", message.c_str());
 
-    logs->logError("Nije moguće poslati logove, POST /api/station-log, status: %d, greška: %s", statusCode, message.c_str());
+    logs->logError("Nije moguće poslati logove, POST %s, status: %d, greška: %s", url.c_str(), statusCode, message.c_str());
 
     client.end();
     return;

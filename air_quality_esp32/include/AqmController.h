@@ -21,7 +21,7 @@ class AqmController {
 
   void init();
 
-  void sendMeasurement(struct tm time, AirQualityHistory& aqData);
+  void sendMeasurement(DateTime time, AirQualityHistory& aqData);
   void sendLogs();
 
   private:
