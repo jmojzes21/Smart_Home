@@ -10,11 +10,32 @@
 #define HTTP_SERVER_PORT 80
 
 class WifiNetwork {
-
   public:
 
   std::string ssid;
   std::string password;
+};
+
+class AqmConfig {
+  public:
+
+  /// @brief Device UUID
+  std::string deviceUuid;
+
+  /// @brief Backend address
+  std::string backendAddress;
+
+  /// @brief Api key
+  std::string apiKey;
+
+  /// @brief Save air quality measurements or not
+  bool saveMeasurements = false;
+
+  /// @brief Send measurements and logs to the backend or not
+  bool sendData = false;
+
+  /// @brief Time period in seconds for saving measurements
+  uint32_t measurementPeriod = 0;
 
 };
 
@@ -31,20 +52,8 @@ class DeviceConfig {
   /// @brief Time period in seconds for saving measurements to recent data
   uint32_t recentDataPeriod = 0;
 
-  /// @brief AQM device UUID
-  std::string aqmDeviceUuid;
-
-  /// @brief AQM backend address
-  std::string aqmBackendAddress;
-
-  /// @brief AQM api key
-  std::string aqmApiKey;
-
-  /// @brief Time period in seconds for saving measurements to the AQM system
-  uint32_t aqmMeasurementPeriod = 0;
-
-  /// @brief Save measurements to the AQM system or not
-  bool aqmSaveMeasurements = false;
+  /// @brief Config data for the AQM system
+  AqmConfig aqmConfig;
 
   /// @brief List of wifi networks to connect
   std::vector<WifiNetwork> networks;

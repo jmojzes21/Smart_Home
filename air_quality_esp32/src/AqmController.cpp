@@ -23,13 +23,19 @@ AqmController::AqmController(DeviceController* deviceController, SensorControlle
 void AqmController::init() {
 
   sensorController->setOnSaveDataAqm([&](DateTime time, AirQualityHistory& aqData) {
-    sendMeasurement(time, aqData);
-    sendLogs();
+    auto& config = deviceController->getAqmConfig();
+    bool shouldSend = config.sendData;
+
+    saveMeasurement(time, aqData, shouldSend);
+
+    if(shouldSend) {
+      sendLogs();
+    }
   });
 
 }
 
-void AqmController::sendMeasurement(DateTime time, AirQualityHistory &aqData) {
+void AqmController::saveMeasurement(DateTime time, AirQualityHistory &aqData, bool shouldSend) {
 
   JsonDocument doc;
 
@@ -42,7 +48,13 @@ void AqmController::sendMeasurement(DateTime time, AirQualityHistory &aqData) {
   std::string body = "";
   serializeJson(doc, body);
 
+  if(!shouldSend) {
+    saveMeasurementToBuffer(body);
+    return;
+  }
+
   sendMeasurement(body);
+
 }
 
 void AqmController::sendMeasurement(std::string& data) {
@@ -54,12 +66,12 @@ void AqmController::sendMeasurement(std::string& data) {
     return;
   }
 
-  auto& config = deviceController->getConfig();
-  auto& deviceUuid = config.aqmDeviceUuid;
-  auto& aqmHost = config.aqmBackendAddress;
-  auto& apiKey = config.aqmApiKey;
+  auto& config = deviceController->getAqmConfig();
+  auto& deviceUuid = config.deviceUuid;
+  auto& host = config.backendAddress;
+  auto& apiKey = config.apiKey;
 
-  std::string url = aqmHost + "/api/air-quality/" + deviceUuid;
+  std::string url = host + "/api/air-quality/" + deviceUuid;
   std::string url2 = url + "?apiKey=" + apiKey;
   
   log_i("POST %s", url.c_str());
@@ -117,12 +129,12 @@ bool AqmController::sendBufferedMeasurements() {
 
   // send request
 
-  auto& config = deviceController->getConfig();
-  auto& deviceUuid = config.aqmDeviceUuid;
-  auto& aqmHost = config.aqmBackendAddress;
-  auto& apiKey = config.aqmApiKey;
+  auto& config = deviceController->getAqmConfig();
+  auto& deviceUuid = config.deviceUuid;
+  auto& host = config.backendAddress;
+  auto& apiKey = config.apiKey;
 
-  std::string url = aqmHost + "/api/air-quality/" + deviceUuid + "/bulk";
+  std::string url = host + "/api/air-quality/" + deviceUuid + "/bulk";
   std::string url2 = url + "?apiKey=" + apiKey;
 
   log_i("POST %s", url.c_str());
@@ -216,12 +228,12 @@ void AqmController::sendLogsInternal() {
 
   // send request
 
-  auto& config = deviceController->getConfig();
-  auto& aqmHost = config.aqmBackendAddress;
-  auto& deviceUuid = config.aqmDeviceUuid;
-  auto& apiKey = config.aqmApiKey;
+  auto& config = deviceController->getAqmConfig();
+  auto& deviceUuid = config.deviceUuid;
+  auto& host = config.backendAddress;
+  auto& apiKey = config.apiKey;
 
-  std::string url = aqmHost + "/api/station-logs/" + deviceUuid;
+  std::string url = host + "/api/station-logs/" + deviceUuid;
   std::string url2 = url + "?apiKey=" + apiKey;
 
   log_i("POST %s", url.c_str());

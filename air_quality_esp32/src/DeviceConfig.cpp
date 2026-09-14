@@ -33,14 +33,15 @@ bool DeviceConfig::parse(std::string configJson) {
   uint32_t recentPeriod = doc["recent_data_period"].as<uint32_t>();
   this->recentDataPeriod = CLAMP(recentPeriod, RECENT_DATA_MIN_PERIOD_SEC, RECENT_DATA_MAX_PERIOD_SEC);
 
-  aqmDeviceUuid = aqm["device_uuid"].as<std::string>();
-  aqmBackendAddress = aqm["backend_addr"].as<std::string>();
-  aqmApiKey = aqm["api_key"].as<std::string>();
+  aqmConfig.deviceUuid = aqm["device_uuid"].as<std::string>();
+  aqmConfig.backendAddress = aqm["backend_addr"].as<std::string>();
+  aqmConfig.apiKey = aqm["api_key"].as<std::string>();
+
+  aqmConfig.saveMeasurements = aqm["save_measurements"].as<bool>();
+  aqmConfig.sendData = aqm["send_data"].as<bool>();
 
   uint32_t aqmPeriod = aqm["measurement_period"].as<uint32_t>();
-  this->aqmMeasurementPeriod = CLAMP(aqmPeriod, AQM_MEASUREMENTS_MIN_PERIOD_SEC, AQM_MEASUREMENTS_MAX_PERIOD_SEC);
-
-  aqmSaveMeasurements = aqm["save_measurements"].as<bool>();
+  aqmConfig.measurementPeriod = CLAMP(aqmPeriod, AQM_MEASUREMENTS_MIN_PERIOD_SEC, AQM_MEASUREMENTS_MAX_PERIOD_SEC);
 
   JsonArray networksJson = doc["wifi_networks"].as<JsonArray>();
 
@@ -68,11 +69,12 @@ std::string DeviceConfig::toJson() {
   doc["recent_data_period"] = recentDataPeriod;
 
   JsonObject aqm = doc["aqm"].to<JsonObject>();
-  aqm["device_uuid"] = aqmDeviceUuid;
-  aqm["backend_addr"] = aqmBackendAddress;
-  aqm["api_key"] = aqmApiKey;
-  aqm["measurement_period"] = aqmMeasurementPeriod;
-  aqm["save_measurements"] = aqmSaveMeasurements;
+  aqm["device_uuid"] = aqmConfig.deviceUuid;
+  aqm["backend_addr"] = aqmConfig.backendAddress;
+  aqm["api_key"] = aqmConfig.apiKey;
+  aqm["save_measurements"] = aqmConfig.saveMeasurements;
+  aqm["save_data"] = aqmConfig.sendData;
+  aqm["measurement_period"] = aqmConfig.measurementPeriod;
   
   JsonArray networksJson = doc["wifi_networks"].to<JsonArray>();
   

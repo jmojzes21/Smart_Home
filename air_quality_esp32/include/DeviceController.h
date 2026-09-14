@@ -27,6 +27,7 @@ class DeviceController {
   void init();
 
   DeviceConfig& getConfig();
+  AqmConfig& getAqmConfig();
 
   void readConfig();
   void saveConfig();

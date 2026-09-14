@@ -21,7 +21,7 @@ class AqmController {
 
   void init();
 
-  void sendMeasurement(DateTime time, AirQualityHistory& aqData);
+  void saveMeasurement(DateTime time, AirQualityHistory& aqData, bool shouldSend);
   void sendLogs();
 
   private:

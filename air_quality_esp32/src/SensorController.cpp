@@ -40,9 +40,6 @@ void SensorController::init() {
 
   pinMode(VIN_ADC_PIN, INPUT);
 
-  auto& config = deviceController->getConfig();
-  setSaveDataAqm(config.aqmSaveMeasurements);
-
   xTaskCreateUniversal(readAirQualityTask, "aqTask", 8192, this, 1, &pmsTaskHandle, ARDUINO_RUNNING_CORE);
   xTaskCreateUniversal(aqHistoryTask, "aqHistory", 8192, this, 1, &aqHistoryTaskHandle, ARDUINO_RUNNING_CORE);
 
@@ -167,7 +164,8 @@ void SensorController::saveRecentHistory() {
 
 void SensorController::saveDataAqm() {
 
-  if(!isSavingDataAqm()) return;
+  auto& config = deviceController->getAqmConfig();
+  if(!config.saveMeasurements) return;
 
   AirQualityHistory aqHistory;
 
@@ -221,14 +219,6 @@ void SensorController::setOnSaveDataAqm(SaveDataAqmHandler handler) {
   onSaveDataAqm = handler;
 }
 
-bool SensorController::isSavingDataAqm() {
-  return aqmSaveData;
-}
-
-void SensorController::setSaveDataAqm(bool value) {
-  aqmSaveData = value;
-}
-
 void readAirQualityTask(void* param) {
 
   auto sensorController = (SensorController*)param;
@@ -247,7 +237,7 @@ void aqHistoryTask(void* param) {
 
   auto& config = deviceController->getConfig();
   uint32_t saveRecentPeriod = config.recentDataPeriod * 1000;
-  uint32_t aqmSavePeriod = config.aqmMeasurementPeriod * 1000;
+  uint32_t aqmSavePeriod = config.aqmConfig.measurementPeriod * 1000;
 
   uint32_t t1 = millis() + saveRecentPeriod;
   uint32_t t2 = millis() + aqmSavePeriod;

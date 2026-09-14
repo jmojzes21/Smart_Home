@@ -75,7 +75,6 @@ class SensorController {
   AirQualityData aqData;
   AirQualityMetrics recentAqMetrics;
   AirQualityMetrics aqmMetrics;
-  bool aqmSaveData = false;
 
   SemaphoreHandle_t aqDataMutex;
   SemaphoreHandle_t aqRecentHistoryMutex;
@@ -113,8 +112,5 @@ class SensorController {
 
   void setOnSensorData(SensorDataHandler handler);
   void setOnSaveDataAqm(SaveDataAqmHandler handler);
-
-  bool isSavingDataAqm();
-  void setSaveDataAqm(bool value);
 
 };

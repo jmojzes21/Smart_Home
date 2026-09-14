@@ -58,6 +58,9 @@ DeviceConfig& DeviceController::getConfig() {
   return config;
 }
 
+AqmConfig& DeviceController::getAqmConfig() {
+  return config.aqmConfig;
+}
 
 void DeviceController::readConfig() {
   auto configJson = readConfigFile();
