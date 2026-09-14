@@ -10,6 +10,7 @@
 #include "RestController.h"
 #include "AqmController.h"
 #include "DeviceLogger.h"
+#include "DeviceTelemetry.h"
 
 DeviceLogger* logs;
 DeviceController* deviceController;
@@ -17,6 +18,7 @@ SensorController* sensorController;
 WifiController* wifiController;
 RestController* restController;
 AqmController* aqmController;
+DeviceTelemetry* deviceTelemetry;
 
 void setup() {
 
@@ -30,6 +32,7 @@ void setup() {
   wifiController = new WifiController(deviceController);
   restController = new RestController(deviceController, sensorController, wifiController);
   aqmController = new AqmController(deviceController, sensorController, logs);
+  deviceTelemetry = new DeviceTelemetry(sensorController, wifiController, logs);
 
   LittleFS.begin(true);
 
@@ -42,6 +45,7 @@ void setup() {
   wifiController->connect();
   restController->init();
   aqmController->init();
+  deviceTelemetry->init();
 
   wifiController->initMdns();
   deviceController->clearLed();

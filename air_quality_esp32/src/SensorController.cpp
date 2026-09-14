@@ -120,6 +120,7 @@ uint32_t SensorController::readInputVoltage() {
   uint32_t adcVoltage = 0;
   for(int i = 0; i < 8; i++) {
     adcVoltage += analogReadMilliVolts(VIN_ADC_PIN);
+    delay(10);
   }
 
   xSemaphoreGive(vinAdcMutex);
