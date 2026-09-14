@@ -9,6 +9,7 @@
 
 #include "DeviceController.h"
 #include "Metrics.h"
+#include "helpers/DateTime.h"
 
 
 struct Bme280SensorData {
@@ -58,7 +59,7 @@ class AirQualityMetrics {
 
 
 typedef std::function<void(AirQualityData& aqData)> SensorDataHandler;
-typedef std::function<void(struct tm time, AirQualityHistory& aqData)> SaveDataAqmHandler;
+typedef std::function<void(DateTime time, AirQualityHistory& aqData)> SaveDataAqmHandler;
 
 
 class SensorController {

@@ -2,7 +2,6 @@
 #include "SensorController.h"
 
 #include <LedColors.h>
-#include "helpers/DateFormats.h"
 
 #define PMS_RX_PIN 14
 #define PMS_TX_PIN 15
@@ -188,7 +187,7 @@ void SensorController::saveDataAqm() {
   aqHistory.pressureMetrics.calculateAverage();
   aqHistory.pm25Metrics.calculateAverage();
 
-  struct tm currentTime = deviceController->getDateTime();
+  DateTime currentTime = deviceController->getDateTime();
 
   if(onSaveDataAqm != nullptr) {
     onSaveDataAqm(currentTime, aqHistory);

@@ -5,8 +5,7 @@
 #include <cstdarg>
 #include <LittleFS.h>
 #include <ArduinoJson.h>
-
-#include "helpers/DateFormats.h"
+#include <time.h>
 
 #define DEVICE_LOG_INFO "I"
 #define DEVICE_LOG_WARNING "W"
@@ -29,7 +28,7 @@ void DeviceLogger::init() {
 
 void DeviceLogger::logInfo(const char* format, ...) {
 
-  struct tm timeInfo = getTime();
+  DateTime time = getTime();
 
   va_list args;
   va_start(args, format);
@@ -37,12 +36,12 @@ void DeviceLogger::logInfo(const char* format, ...) {
   va_end(args);
 
   log_i("%s", body.c_str());
-  saveLog(timeInfo, DEVICE_LOG_INFO, body);
+  saveLog(time, DEVICE_LOG_INFO, body);
 }
 
 void DeviceLogger::logWarning(const char* format, ...) {
 
-  struct tm timeInfo = getTime();
+  DateTime time = getTime();
 
   va_list args;
   va_start(args, format);
@@ -50,12 +49,12 @@ void DeviceLogger::logWarning(const char* format, ...) {
   va_end(args);
 
   log_w("%s", body.c_str());
-  saveLog(timeInfo, DEVICE_LOG_WARNING, body);
+  saveLog(time, DEVICE_LOG_WARNING, body);
 }
 
 void DeviceLogger::logError(const char* format, ...) {
 
-  struct tm timeInfo = getTime();
+  DateTime time = getTime();
 
   va_list args;
   va_start(args, format);
@@ -63,17 +62,15 @@ void DeviceLogger::logError(const char* format, ...) {
   va_end(args);
 
   log_e("%s", body.c_str());
-  saveLog(timeInfo, DEVICE_LOG_ERROR, body);
+  saveLog(time, DEVICE_LOG_ERROR, body);
 }
 
-void DeviceLogger::saveLog(struct tm timeInfo, const char* level, std::string& body) {
-
-  std::string timeText = DateFormats::formatDateTime(timeInfo);
+void DeviceLogger::saveLog(DateTime& time, const char* level, std::string& body) {
 
   JsonDocument doc;
-  doc.add(timeText);
-  doc.add(level);
-  doc.add(body);
+  doc["time"] = time.toString();
+  doc["level"] = level;
+  doc["msg"] = body;
 
   doc.shrinkToFit();
 
@@ -84,14 +81,18 @@ void DeviceLogger::saveLog(struct tm timeInfo, const char* level, std::string& b
 
 }
 
-tm DeviceLogger::getTime() {
+DateTime DeviceLogger::getTime() {
   time_t timeNow;
-  struct tm timeInfo;
+  struct tm t;
 
   time(&timeNow);
-  localtime_r(&timeNow, &timeInfo);
+  localtime_r(&timeNow, &t);
 
-  return timeInfo;
+  DateTime dt;
+  dt.setDate(t.tm_wday, t.tm_mday, t.tm_mon + 1, t.tm_year + 1900);
+  dt.setTime(t.tm_hour, t.tm_min, t.tm_sec);
+
+  return dt;
 }
 
 std::string DeviceLogger::formatString(const char *format, va_list args) {

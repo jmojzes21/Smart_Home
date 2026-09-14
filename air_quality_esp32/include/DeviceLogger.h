@@ -2,8 +2,8 @@
 #pragma once
 
 #include <string>
-#include <time.h>
 #include <Arduino.h>
+#include "helpers/DateTime.h"
 
 #define LOGS_FILE_PATH "/logs.txt"
 
@@ -31,9 +31,9 @@ class DeviceLogger {
 
   private:
 
-  void saveLog(struct tm timeInfo, const char* level, std::string& body);
+  void saveLog(DateTime& time, const char* level, std::string& body);
 
-  struct tm getTime();
+  DateTime getTime();
   std::string formatString(const char *format, va_list args);
 
 

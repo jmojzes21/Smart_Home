@@ -4,7 +4,7 @@
 #include <ArduinoJson.h>
 #include <HTTPClient.h>
 
-#include "helpers/DateFormats.h"
+#include "helpers/DateTime.h"
 #include "helpers/PSRAMAllocator.h"
 #include "helpers/Jwt.h"
 
@@ -119,7 +119,7 @@ void RestController::handleGetDeviceStatusRequest(AsyncWebServerRequest* request
   bool showInputVoltage = vinParam != nullptr && vinParam->value() == "true"; 
 
   auto& config = deviceController->getConfig();
-  struct tm dateTime = deviceController->getDateTime();
+  DateTime dateTime = deviceController->getDateTime();
 
   JsonDocument doc;
 
@@ -132,8 +132,7 @@ void RestController::handleGetDeviceStatusRequest(AsyncWebServerRequest* request
   doc["ssid"] = wifiController->getSSID();
   doc["rssi"] = wifiController->getRSSI();
 
-  std::string dateTimeText = DateFormats::formatDateTime(dateTime);
-  doc["date_time"] = dateTimeText;
+  doc["date_time"] = dateTime.toString();
 
   if(showRamUsage) {
     JsonObject ram = doc["ram"].to<JsonObject>();
@@ -175,9 +174,8 @@ void RestController::handleGetAqHistoryRequest(AsyncWebServerRequest* request) {
   SpiRamAllocator allocator;
   JsonDocument doc(&allocator);
 
-  tm bootTime = deviceController->getBootTime();
-  std::string bootTimeText = DateFormats::formatDateTime(bootTime);
-  doc["boot_time"] = bootTimeText;
+  DateTime bootTime = deviceController->getBootTime();
+  doc["boot_time"] = bootTime.toString();
 
   JsonArray aqHistoryJson = doc["aq_history"].to<JsonArray>();
 
@@ -245,22 +243,20 @@ void RestController::handleSyncTimeRequest(AsyncWebServerRequest *request, JsonV
 
   JsonObject json = jsonv.as<JsonObject>();
 
-  tm t = {0};
-  t.tm_wday = (int)json["week_day"];
-  t.tm_mday = (int)json["month_day"];
-  t.tm_mon = (int)json["month"] - 1;
-  t.tm_year = (int)json["year"] - 1900;
-  t.tm_hour = (int)json["hour"];
-  t.tm_min = (int)json["minute"];
-  t.tm_sec = (int)json["second"];
+  DateTime t;
+  t.weekday = (int)json["week_day"];
+  t.day = (int)json["month_day"];
+  t.month = (int)json["month"];
+  t.year = (int)json["year"];
+  t.hour = (int)json["hour"];
+  t.minute = (int)json["minute"];
+  t.second = (int)json["second"];
 
   deviceController->setDateTime(t);
   t = deviceController->getDateTime();
 
   JsonDocument doc;
-
-  std::string dateTime = DateFormats::formatDateTime(t);
-  doc["date_time"] = dateTime;
+  doc["date_time"] = t.toString();
 
   respondJson(request, doc);
 

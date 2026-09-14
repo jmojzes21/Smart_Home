@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "DeviceConfig.h"
+#include "helpers/DateTime.h"
 
 class DeviceController {
 
@@ -17,7 +18,7 @@ class DeviceController {
   PCF85063A rtc;
   SemaphoreHandle_t rtcMutex;
 
-  struct tm bootTime;
+  DateTime bootTime;
 
   public:
 
@@ -33,10 +34,10 @@ class DeviceController {
   std::string readConfigFile();
   void writeConfigFile(std::string& configJson);
 
-  struct tm getDateTime();
-  void setDateTime(struct tm t);
+  DateTime getDateTime();
+  void setDateTime(DateTime t);
 
-  struct tm getBootTime();
+  DateTime getBootTime();
 
   void clearLed();
   void showColor(uint32_t color);

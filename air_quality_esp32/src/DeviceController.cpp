@@ -11,6 +11,27 @@ DeviceController::DeviceController() {
 
 }
 
+static void setEspDateTime(DateTime dt) {
+  struct tm t = {0};
+  t.tm_wday = dt.weekday;
+  t.tm_mday = dt.day;
+  t.tm_mon = dt.month - 1;
+  t.tm_year = dt.year - 1900;
+
+  t.tm_hour = dt.hour;
+  t.tm_min = dt.minute;
+  t.tm_sec = dt.second;
+
+  time_t epoch = mktime(&t);
+
+  struct timeval tv;
+  tv.tv_sec = epoch;
+  tv.tv_usec = 0;
+
+  settimeofday(&tv, NULL);
+
+}
+
 void DeviceController::init() {
 
   // init rtc
@@ -28,14 +49,8 @@ void DeviceController::init() {
   readConfig();
   
   // init esp time
-
-  struct tm timeInfo = getDateTime();
-  time_t epoch = mktime(&timeInfo);
-
-  struct timeval tv;
-  tv.tv_sec = epoch;
-  tv.tv_usec = 0;
-  settimeofday(&tv, NULL);
+  DateTime now = getDateTime();
+  setEspDateTime(now);
 
 }
 
@@ -90,37 +105,33 @@ void DeviceController::writeConfigFile(std::string& configJson) {
 
 }
 
-struct tm DeviceController::getDateTime() {
+DateTime DeviceController::getDateTime() {
 
   xSemaphoreTake(rtcMutex, portMAX_DELAY);
 
   rtc.readTime();
 
-  tm t;
-  t.tm_mday = rtc.getDay();
-  t.tm_mon = rtc.getMonth() - 1;
-  t.tm_year = rtc.getYear() - 1900;
-  t.tm_hour = rtc.getHour();
-  t.tm_min = rtc.getMinute();
-  t.tm_sec = rtc.getSecond();
+  DateTime t;
+  t.setDate(rtc.getWeekday(), rtc.getDay(), rtc.getMonth(), rtc.getYear());
+  t.setTime(rtc.getHour(), rtc.getMinute(), rtc.getSecond());
 
   xSemaphoreGive(rtcMutex);
 
   return t;
 }
 
-void DeviceController::setDateTime(struct tm t) {
+void DeviceController::setDateTime(DateTime t) {
 
   xSemaphoreTake(rtcMutex, portMAX_DELAY);
 
-  rtc.setDate(t.tm_wday, t.tm_mday, t.tm_mon + 1, t.tm_year + 1900);
-  rtc.setTime(t.tm_hour, t.tm_min, t.tm_sec);
+  rtc.setDate(t.weekday, t.day, t.month, t.year);
+  rtc.setTime(t.hour, t.minute, t.second);
 
   xSemaphoreGive(rtcMutex);
 
 }
 
-tm DeviceController::getBootTime() {
+DateTime DeviceController::getBootTime() {
   return bootTime;
 }
 
