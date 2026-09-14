@@ -12,6 +12,8 @@
 
 #define MEASUREMENTS_BUFFER_FILE_PATH "/buffer.txt"
 
+static std::string getErrorMessage(int code, HTTPClient& client); 
+
 AqmController::AqmController(DeviceController* deviceController, SensorController* sensorController, DeviceLogger* logs) {
   this->deviceController = deviceController;
   this->sensorController = sensorController;
@@ -84,10 +86,10 @@ void AqmController::sendMeasurement(std::string& data) {
   log_i("Status: %d", statusCode);
 
   if(statusCode != 204) {
-    String response = statusCode > 0 ? client.getString() : client.errorToString(statusCode);
-    log_e("%s", response.c_str());
+    std::string message = getErrorMessage(statusCode, client);
+    log_e("%s", message.c_str());
 
-    logs->logError("Nije moguće poslati izmjerene vrijednosti, POST /api/air-quality, status: %d, odgovor: %s", statusCode, response.c_str());
+    logs->logError("Nije moguće poslati izmjerene vrijednosti, POST /api/air-quality, status: %d, greška: %s", statusCode, message.c_str());
     saveMeasurementToBuffer(data);
   }
 
@@ -141,10 +143,10 @@ bool AqmController::sendBufferedMeasurements() {
   log_i("Status: %d", statusCode);
 
   if(statusCode != 201) {
-    String response = statusCode > 0 ? client.getString() : client.errorToString(statusCode);
-    log_e("%s", response.c_str());
+    std::string message = getErrorMessage(statusCode, client);
+    log_e("%s", message.c_str());
 
-    logs->logError("Nije moguće poslati mjerenja iz međuspremnika, POST /api/air-quality/bulk, status: %d, odgovor: %s", statusCode, response.c_str());
+    logs->logError("Nije moguće poslati mjerenja iz međuspremnika, POST /api/air-quality/bulk, status: %d, greška: %s", statusCode, message.c_str());
 
     client.end();
     return false;
@@ -239,10 +241,10 @@ void AqmController::sendLogsInternal() {
   log_i("Status: %d", statusCode);
 
   if(statusCode != 201) {
-    String response = statusCode > 0 ? client.getString() : client.errorToString(statusCode);
-    log_e("%s", response.c_str());
+    std::string message = getErrorMessage(statusCode, client);
+    log_e("%s", message.c_str());
 
-    logs->logError("Nije moguće poslati logove, POST /api/station-log, status: %d, odgovor: %s", statusCode, response.c_str());
+    logs->logError("Nije moguće poslati logove, POST /api/station-log, status: %d, greška: %s", statusCode, message.c_str());
 
     client.end();
     return;
@@ -251,4 +253,59 @@ void AqmController::sendLogsInternal() {
   client.end();
   LittleFS.remove(LOGS_FILE_PATH);
   
+}
+
+std::string getErrorMessage(int code, HTTPClient& client) {
+
+  if(code > 0) {
+
+    if(code == 204) {
+      return "";
+    }
+
+    int bodySize = client.getSize();
+    if(bodySize <= 0 || bodySize >= 4096) {
+      return "";
+    }
+    
+    String body = client.getString();
+    return std::string(body.c_str(), body.length());
+  }
+
+  switch(code) {
+  case HTTPC_ERROR_CONNECTION_REFUSED:
+    return PROGMEM("povezivanje nije uspjelo");
+
+  case HTTPC_ERROR_SEND_HEADER_FAILED:
+    return PROGMEM("slanje zaglavlja nije uspjelo");
+
+  case HTTPC_ERROR_SEND_PAYLOAD_FAILED:
+    return PROGMEM("slanje podataka nije uspjelo");
+
+  case HTTPC_ERROR_NOT_CONNECTED:
+    return PROGMEM("nije povezano");
+
+  case HTTPC_ERROR_CONNECTION_LOST:
+    return PROGMEM("veza izgubljena");
+
+  case HTTPC_ERROR_NO_STREAM:
+    return PROGMEM("nema toka");
+
+  case HTTPC_ERROR_NO_HTTP_SERVER:
+    return PROGMEM("nema http poslužitelja");
+
+  case HTTPC_ERROR_TOO_LESS_RAM:
+    return PROGMEM("nema dovoljno RAM memorije");
+
+  case HTTPC_ERROR_ENCODING:
+    return PROGMEM("kodiranje nije podržano");
+
+  case HTTPC_ERROR_STREAM_WRITE:
+    return PROGMEM("greška u pisanju podataka");
+
+  case HTTPC_ERROR_READ_TIMEOUT:
+    return PROGMEM("timeout za čitanje je istekao");
+  }
+
+  return "nepoznata greška";
 }
