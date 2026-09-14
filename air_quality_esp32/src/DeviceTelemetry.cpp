@@ -56,11 +56,18 @@ void DeviceTelemetry::logData() {
 void logTelemetryTask(void* p) {
 
   DeviceTelemetry* telemetry = (DeviceTelemetry*)p;
-  uint32_t d = LOG_TELEMETRY_DATA_DELAY_SECONDS * 1000;
-
+  uint32_t period = LOG_TELEMETRY_DATA_DELAY_SECONDS * 1000;
+  uint32_t t1 = millis() + period;
+ 
   while(true) {
-    telemetry->logData();
-    delay(d);
+
+    uint32_t now = millis();
+    if(now >= t1) {
+      t1 = now + period;
+      telemetry->logData();
+    }
+
+    delay(10000);
   }
 
 }
