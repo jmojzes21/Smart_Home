@@ -2,11 +2,10 @@
 #pragma once
 
 #include <string>
-#include <vector>
-#include <Arduino.h>
 
 #include "DeviceController.h"
 #include "SensorController.h"
+#include "DeviceLogger.h"
 
 class AqmController {
 
@@ -14,24 +13,15 @@ class AqmController {
 
   DeviceController* deviceController;
   SensorController* sensorController;
-
-  QueueHandle_t logQueue;
-  TaskHandle_t saveLogsTaskHandle;
-
-  SemaphoreHandle_t logFileMutex;
+  DeviceLogger* logs;
 
   public:
 
-  AqmController(DeviceController* deviceController, SensorController* sensorController);
+  AqmController(DeviceController* deviceController, SensorController* sensorController, DeviceLogger* logs);
 
   void init();
 
   void sendMeasurement(struct tm time, AirQualityHistory& aqData);
-
-  void logInfo(const char* format, ...);
-  void logWarning(const char* format, ...);
-  void logError(const char* format, ...);
-
   void sendLogs();
 
   private:
@@ -40,9 +30,6 @@ class AqmController {
   bool sendBufferedMeasurements();
   void saveMeasurementToBuffer(std::string& data);
 
-  void saveLog(const char* level, std::string& body);
   void sendLogsInternal();
-
-  friend void saveLogsTask(void* p);
 
 };

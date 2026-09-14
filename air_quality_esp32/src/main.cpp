@@ -9,7 +9,9 @@
 #include "WifiController.h"
 #include "RestController.h"
 #include "AqmController.h"
+#include "DeviceLogger.h"
 
+DeviceLogger* logs;
 DeviceController* deviceController;
 SensorController* sensorController;
 WifiController* wifiController;
@@ -22,14 +24,16 @@ void setup() {
 
   Wire.begin();
 
+  logs = new DeviceLogger();
   deviceController = new DeviceController();
   sensorController = new SensorController(deviceController);
   wifiController = new WifiController(deviceController);
   restController = new RestController(deviceController, sensorController, wifiController);
-  aqmController = new AqmController(deviceController, sensorController);
+  aqmController = new AqmController(deviceController, sensorController, logs);
 
   LittleFS.begin(true);
 
+  logs->init();
   deviceController->init();
   sensorController->init();
   

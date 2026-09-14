@@ -4,8 +4,6 @@
 #include <ArduinoJson.h>
 #include <HTTPClient.h>
 #include <LittleFS.h>
-#include <memory>
-#include <cstdarg>
 
 #include "helpers/DateFormats.h"
 
@@ -13,27 +11,14 @@
 #define AQM_TCP_TIMEOUT_MS 5000
 
 #define MEASUREMENTS_BUFFER_FILE_PATH "/buffer.txt"
-#define LOGS_FILE_PATH "/logs.txt"
 
-#define AQM_LOG_INFO "I"
-#define AQM_LOG_WARNING "W"
-#define AQM_LOG_ERROR "E"
-
-#define LOG_QUEUE_SIZE 100
-
-std::string formatString(const char *format, va_list args);
-
-AqmController::AqmController(DeviceController* deviceController, SensorController* sensorController) {
+AqmController::AqmController(DeviceController* deviceController, SensorController* sensorController, DeviceLogger* logs) {
   this->deviceController = deviceController;
   this->sensorController = sensorController;
+  this->logs = logs;
 }
 
 void AqmController::init() {
-
-  logQueue = xQueueCreate(LOG_QUEUE_SIZE, sizeof(std::string*));
-  logFileMutex = xSemaphoreCreateMutex();
-
-  xTaskCreateUniversal(saveLogsTask, "saveLogs", 8192, this, 1, &saveLogsTaskHandle, ARDUINO_RUNNING_CORE);
 
   sensorController->setOnSaveDataAqm([&](struct tm time, AirQualityHistory& aqData) {
     sendMeasurement(time, aqData);
@@ -102,7 +87,7 @@ void AqmController::sendMeasurement(std::string& data) {
     String response = statusCode > 0 ? client.getString() : client.errorToString(statusCode);
     log_e("%s", response.c_str());
 
-    logError("Nije moguće poslati izmjerene vrijednosti, POST /api/air-quality, status: %d, odgovor: %s", statusCode, response.c_str());
+    logs->logError("Nije moguće poslati izmjerene vrijednosti, POST /api/air-quality, status: %d, odgovor: %s", statusCode, response.c_str());
     saveMeasurementToBuffer(data);
   }
 
@@ -159,7 +144,7 @@ bool AqmController::sendBufferedMeasurements() {
     String response = statusCode > 0 ? client.getString() : client.errorToString(statusCode);
     log_e("%s", response.c_str());
 
-    logError("Nije moguće poslati mjerenja iz međuspremnika, POST /api/air-quality/bulk, status: %d, odgovor: %s", statusCode, response.c_str());
+    logs->logError("Nije moguće poslati mjerenja iz međuspremnika, POST /api/air-quality/bulk, status: %d, odgovor: %s", statusCode, response.c_str());
 
     client.end();
     return false;
@@ -172,7 +157,7 @@ bool AqmController::sendBufferedMeasurements() {
   deserializeJson(doc, response);
   
   int count = doc["count"];
-  logInfo("Mjerenja iz međuspremnika su uspješno poslana, ukupno: %d", count);
+  logs->logInfo("Mjerenja iz međuspremnika su uspješno poslana, ukupno: %d", count);
 
   LittleFS.remove(MEASUREMENTS_BUFFER_FILE_PATH);
   return true;
@@ -181,7 +166,7 @@ bool AqmController::sendBufferedMeasurements() {
 void AqmController::saveMeasurementToBuffer(std::string& data) {
   
   log_i("Save measurement to buffer %s", data.c_str());
-  logInfo("Spremi izmjerene vrijednosti međuspremnik");
+  logs->logInfo("Spremi izmjerene vrijednosti u međuspremnik");
 
   bool append = LittleFS.exists(MEASUREMENTS_BUFFER_FILE_PATH);
 
@@ -201,65 +186,10 @@ void AqmController::saveMeasurementToBuffer(std::string& data) {
 }
 
 
-void AqmController::logInfo(const char* format, ...) {
-  va_list args;
-  va_start(args, format);
-  std::string body = formatString(format, args);
-  va_end(args);
-
-  log_i("%s", body.c_str());
-  saveLog(AQM_LOG_INFO, body);
-}
-
-void AqmController::logWarning(const char* format, ...) {
-  va_list args;
-  va_start(args, format);
-  std::string body = formatString(format, args);
-  va_end(args);
-
-  log_w("%s", body.c_str());
-  saveLog(AQM_LOG_WARNING, body);
-}
-
-void AqmController::logError(const char* format, ...) {
-  va_list args;
-  va_start(args, format);
-  std::string body = formatString(format, args);
-  va_end(args);
-
-  log_e("%s", body.c_str());
-  saveLog(AQM_LOG_ERROR, body);
-}
-
-void AqmController::saveLog(const char* level, std::string& body) {
-
-  time_t timeNow;
-  struct tm timeInfo;
-
-  time(&timeNow);
-  localtime_r(&timeNow, &timeInfo);
-
-  std::string timeText = DateFormats::formatDateTime(timeInfo);
-
-  JsonDocument doc;
-  doc.add(timeText);
-  doc.add(level);
-  doc.add(body);
-
-  doc.shrinkToFit();
-
-  std::string* data = new std::string("");
-  serializeJson(doc, *data);
-
-  xQueueSend(logQueue, &data, portMAX_DELAY);
-
-}
-
-
 void AqmController::sendLogs() {
-  xSemaphoreTake(logFileMutex, portMAX_DELAY);
+  logs->takeLogFileMutex();
   sendLogsInternal();
-  xSemaphoreGive(logFileMutex);
+  logs->giveLogFileMutex();
 }
 
 void AqmController::sendLogsInternal() {
@@ -312,7 +242,7 @@ void AqmController::sendLogsInternal() {
     String response = statusCode > 0 ? client.getString() : client.errorToString(statusCode);
     log_e("%s", response.c_str());
 
-    logError("Nije moguće poslati logove, POST /api/station-log, status: %d, odgovor: %s", statusCode, response.c_str());
+    logs->logError("Nije moguće poslati logove, POST /api/station-log, status: %d, odgovor: %s", statusCode, response.c_str());
 
     client.end();
     return;
@@ -321,60 +251,4 @@ void AqmController::sendLogsInternal() {
   client.end();
   LittleFS.remove(LOGS_FILE_PATH);
   
-}
-
-
-void saveLogsTask(void* p) {
-
-  AqmController* aqmController = (AqmController*)p;
-
-  QueueHandle_t queue = aqmController->logQueue;
-  SemaphoreHandle_t logFileMutex = aqmController->logFileMutex;
-
-  while(true) {
-
-    std::string* data;
-    xQueueReceive(queue, &data, portMAX_DELAY);
-
-    xSemaphoreTake(logFileMutex, portMAX_DELAY);
-
-    bool append = LittleFS.exists(LOGS_FILE_PATH);
-
-    File file = LittleFS.open(LOGS_FILE_PATH, append ? FILE_APPEND : FILE_WRITE);
-    if(!file) {
-      log_e("Can't open file %s", LOGS_FILE_PATH);
-      return;
-    }
-
-    if(append) {
-      file.print(',');
-    }
-    
-    file.print(data->c_str());
-    file.close();
-
-    xSemaphoreGive(logFileMutex);
-
-  }
-
-}
-
-
-std::string formatString(const char *format, va_list args) {
-
-  std::vector<char> buffer;
-  buffer.resize(64, 0);
-
-  va_list argsCopy;
-  va_copy(argsCopy, args);
-
-  size_t len = vsnprintf(buffer.data(), buffer.size(), format, argsCopy);
-  va_end(argsCopy);
-
-  if(len >= buffer.size()) {
-    buffer.resize(len + 1, 0);
-    vsnprintf(buffer.data(), buffer.size(), format, args);
-  }
-
-  return std::string(buffer.data());
 }
