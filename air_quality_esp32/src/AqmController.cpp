@@ -166,8 +166,11 @@ bool AqmController::sendBufferedMeasurements() {
   JsonDocument doc;
   deserializeJson(doc, response);
   
-  int count = doc["count"];
-  logs->logInfo("Mjerenja iz međuspremnika su uspješno poslana, ukupno: %d", count);
+  int inserted = doc["inserted"];
+  int skipped = doc["skipped"];
+  int total = doc["total"];
+  
+  logs->logInfo("Mjerenja iz međuspremnika su uspješno poslana, dodano: %d, preskočeno: %d, ukupno: %d", inserted, skipped, total);
 
   LittleFS.remove(MEASUREMENTS_BUFFER_FILE_PATH);
   return true;
