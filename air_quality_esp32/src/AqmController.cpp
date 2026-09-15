@@ -190,7 +190,7 @@ void AqmController::saveMeasurementToBuffer(std::string& data) {
     file.print(',');
   }
   
-  file.print(data.c_str());
+  file.write((uint8_t*)data.c_str(), data.length());
   file.close();
 
 }

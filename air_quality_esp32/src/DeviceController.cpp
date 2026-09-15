@@ -87,7 +87,7 @@ std::string DeviceController::readConfigFile() {
   }
 
   std::string configJson(file.size(), ' ');
-  file.readBytes((char*)configJson.data(), configJson.length());
+  file.readBytes((char*)configJson.data(), file.size());
   file.close();
 
   return configJson;
