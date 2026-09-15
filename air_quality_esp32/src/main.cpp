@@ -32,7 +32,7 @@ void setup() {
   wifiController = new WifiController(deviceController);
   restController = new RestController(deviceController, sensorController, wifiController);
   aqmController = new AqmController(deviceController, sensorController, logs);
-  deviceTelemetry = new DeviceTelemetry(sensorController, wifiController, logs);
+  deviceTelemetry = new DeviceTelemetry(deviceController, sensorController, wifiController, logs);
 
   LittleFS.begin(true);
 
