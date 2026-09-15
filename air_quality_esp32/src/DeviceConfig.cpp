@@ -8,6 +8,21 @@
 #define AQM_MEASUREMENTS_MIN_PERIOD_SEC 300
 #define AQM_MEASUREMENTS_MAX_PERIOD_SEC 3600
 
+#define JSON_HOSTNAME "hostname"
+#define JSON_DEVICE_NAME "device_name"
+#define JSON_RECENT_PERIOD "recent_data_period"
+#define JSON_WIFI_NETWORKS "wifi_networks"
+#define JSON_WIFI_SSID "ssid"
+#define JSON_WIFI_PASSWORD "password"
+
+#define JSON_AQM "aqm"
+#define JSON_AQM_DEVICE_UUID "device_uuid"
+#define JSON_AQM_BACKEND_ADDR "backend_addr"
+#define JSON_AQM_API_KEY "api_key"
+#define JSON_AQM_SAVE_MEASUREMENTS "save_measurements"
+#define JSON_AQM_SEND_DATA "send_data"
+#define JSON_AQM_MEASUREMENT_PERIOD "measurement_period"
+
 #define CLAMP(x, min, max) (x > max ? max : (x < min ? min : x) )
 
 bool DeviceConfig::parse(std::string configJson) {
@@ -21,34 +36,34 @@ bool DeviceConfig::parse(std::string configJson) {
     return false;
   }
 
-  JsonObject aqm = doc["aqm"];
+  JsonObject aqm = doc[JSON_AQM];
 
-  hostname = doc["hostname"].as<std::string>();
-  deviceName = doc["device_name"].as<std::string>();
+  hostname = doc[JSON_HOSTNAME].as<std::string>();
+  deviceName = doc[JSON_DEVICE_NAME].as<std::string>();
 
   if(hostname.empty() || deviceName.empty()) {
     return false;
   }
 
-  uint32_t recentPeriod = doc["recent_data_period"].as<uint32_t>();
+  uint32_t recentPeriod = doc[JSON_RECENT_PERIOD].as<uint32_t>();
   this->recentDataPeriod = CLAMP(recentPeriod, RECENT_DATA_MIN_PERIOD_SEC, RECENT_DATA_MAX_PERIOD_SEC);
 
-  aqmConfig.deviceUuid = aqm["device_uuid"].as<std::string>();
-  aqmConfig.backendAddress = aqm["backend_addr"].as<std::string>();
-  aqmConfig.apiKey = aqm["api_key"].as<std::string>();
+  aqmConfig.deviceUuid = aqm[JSON_AQM_DEVICE_UUID].as<std::string>();
+  aqmConfig.backendAddress = aqm[JSON_AQM_BACKEND_ADDR].as<std::string>();
+  aqmConfig.apiKey = aqm[JSON_AQM_API_KEY].as<std::string>();
 
-  aqmConfig.saveMeasurements = aqm["save_measurements"].as<bool>();
-  aqmConfig.sendData = aqm["send_data"].as<bool>();
+  aqmConfig.saveMeasurements = aqm[JSON_AQM_SAVE_MEASUREMENTS].as<bool>();
+  aqmConfig.sendData = aqm[JSON_AQM_SEND_DATA].as<bool>();
 
-  uint32_t aqmPeriod = aqm["measurement_period"].as<uint32_t>();
+  uint32_t aqmPeriod = aqm[JSON_AQM_MEASUREMENT_PERIOD].as<uint32_t>();
   aqmConfig.measurementPeriod = CLAMP(aqmPeriod, AQM_MEASUREMENTS_MIN_PERIOD_SEC, AQM_MEASUREMENTS_MAX_PERIOD_SEC);
 
-  JsonArray networksJson = doc["wifi_networks"].as<JsonArray>();
+  JsonArray networksJson = doc[JSON_WIFI_NETWORKS].as<JsonArray>();
 
   for(JsonObject e : networksJson) {
     WifiNetwork network;
-    network.ssid = e["ssid"].as<std::string>();
-    network.password = e["password"].as<std::string>();
+    network.ssid = e[JSON_WIFI_SSID].as<std::string>();
+    network.password = e[JSON_WIFI_PASSWORD].as<std::string>();
 
     if(network.ssid.empty()) {
       continue;
@@ -64,24 +79,24 @@ std::string DeviceConfig::toJson() {
 
   JsonDocument doc;
 
-  doc["hostname"] = hostname;
-  doc["device_name"] = deviceName;
-  doc["recent_data_period"] = recentDataPeriod;
+  doc[JSON_HOSTNAME] = hostname;
+  doc[JSON_DEVICE_NAME] = deviceName;
+  doc[JSON_RECENT_PERIOD] = recentDataPeriod;
 
-  JsonObject aqm = doc["aqm"].to<JsonObject>();
-  aqm["device_uuid"] = aqmConfig.deviceUuid;
-  aqm["backend_addr"] = aqmConfig.backendAddress;
-  aqm["api_key"] = aqmConfig.apiKey;
-  aqm["save_measurements"] = aqmConfig.saveMeasurements;
-  aqm["save_data"] = aqmConfig.sendData;
-  aqm["measurement_period"] = aqmConfig.measurementPeriod;
+  JsonObject aqm = doc[JSON_AQM].to<JsonObject>();
+  aqm[JSON_AQM_DEVICE_UUID] = aqmConfig.deviceUuid;
+  aqm[JSON_AQM_BACKEND_ADDR] = aqmConfig.backendAddress;
+  aqm[JSON_AQM_API_KEY] = aqmConfig.apiKey;
+  aqm[JSON_AQM_SAVE_MEASUREMENTS] = aqmConfig.saveMeasurements;
+  aqm[JSON_AQM_SEND_DATA] = aqmConfig.sendData;
+  aqm[JSON_AQM_MEASUREMENT_PERIOD] = aqmConfig.measurementPeriod;
   
-  JsonArray networksJson = doc["wifi_networks"].to<JsonArray>();
+  JsonArray networksJson = doc[JSON_WIFI_NETWORKS].to<JsonArray>();
   
   for(auto& net : networks) {
     JsonObject netJson = networksJson.add<JsonObject>();
-    netJson["ssid"] = net.ssid;
-    netJson["password"] = net.password;
+    netJson[JSON_WIFI_SSID] = net.ssid;
+    netJson[JSON_WIFI_PASSWORD] = net.password;
   }
 
   std::string configJson = "";
