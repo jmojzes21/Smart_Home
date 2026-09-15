@@ -8,7 +8,7 @@
 #include "helpers/DateTime.h"
 
 #define AQM_CONNECT_TIMEOUT_MS 5000
-#define AQM_TCP_TIMEOUT_MS 5000
+#define AQM_TCP_TIMEOUT_MS 20000
 
 #define MEASUREMENTS_BUFFER_FILE_PATH "/buffer.txt"
 
