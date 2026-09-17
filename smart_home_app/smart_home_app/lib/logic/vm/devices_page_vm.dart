@@ -98,8 +98,8 @@ class DevicesPageViewModel extends ViewModel {
       devices.addAll(_getVirtualDevices());
       _devices = devices;
 
-      String msg = 'Uređaji su uspješno dohvaćeni.';
-      onShowMessage(msg);
+      //String msg = 'Uređaji su uspješno dohvaćeni.';
+      //onShowMessage(msg);
     } catch (e) {
       String msg = 'Dohvaćanje uređaji nije uspjelo. ${Exceptions.getMessage(e)}';
       onShowMessage(msg);
@@ -131,7 +131,7 @@ class DevicesPageViewModel extends ViewModel {
   }
 
   void _onDeviceFound(Device newDevice) {
-    int index = _devices.indexWhere((e) => e.uuid == newDevice.uuid);
+    int index = _devices.indexWhere((e) => e.hostname == newDevice.hostname);
     if (index == -1) return;
 
     var device = _devices[index];

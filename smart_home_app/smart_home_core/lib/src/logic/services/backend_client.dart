@@ -1,15 +1,12 @@
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
-
-import '../../models/app_context.dart';
-import '../../models/exceptions.dart';
-
 class BackendClient {
-  final Duration _timeout = Duration(seconds: 10);
+  //final Duration _timeout = Duration(seconds: 10);
 
-  Future<dynamic> httpGet(String path, [Map<String, dynamic>? queryParameters]) async {
-    var hostname = AppContext.instance.backendHostname;
+  Future<dynamic> httpGet(
+    String path, [
+    Map<String, dynamic>? queryParameters,
+  ]) async {
+    throw UnimplementedError();
+    /*var hostname = AppContext.instance.backendHostname;
     var url = Uri.http(hostname, path, queryParameters);
     var response = await http.get(url).timeout(_timeout);
 
@@ -17,11 +14,12 @@ class BackendClient {
       throw AppException(response.body);
     }
 
-    return jsonDecode(response.body);
+    return jsonDecode(response.body);*/
   }
 
   Future<dynamic> httpPost(String path, Object body) async {
-    var headers = {'Content-Type': 'application/json'};
+    throw UnimplementedError();
+    /*var headers = {'Content-Type': 'application/json'};
     String bodyJson = jsonEncode(body);
 
     var hostname = AppContext.instance.backendHostname;
@@ -33,6 +31,6 @@ class BackendClient {
       throw AppException(response.body);
     }
 
-    return jsonDecode(response.body);
+    return jsonDecode(response.body);*/
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_home_core/device.dart';
 import 'package:smart_home_core/extensions.dart';
@@ -56,7 +55,7 @@ class DevicesPage extends StatelessWidget {
       );
     }
 
-    var enableButtons = !model.isLoading;
+    //var enableButtons = !model.isLoading;
 
     return Stack(
       fit: StackFit.expand,
@@ -99,7 +98,7 @@ class DevicesPage extends StatelessWidget {
             ),
           ),
         ),
-        Align(
+        /*Align(
           alignment: AlignmentGeometry.bottomRight,
           child: Padding(
             padding: EdgeInsets.all(20),
@@ -108,7 +107,7 @@ class DevicesPage extends StatelessWidget {
               child: FaIcon(FontAwesomeIcons.arrowsRotate),
             ),
           ),
-        ),
+        ),*/
       ],
     );
   }

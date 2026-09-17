@@ -46,13 +46,16 @@ class AuthService implements IAuthService {
   @override
   Future<bool> loadSession() async {
     try {
-      File file = _getSessionFie();
-      if ((await file.exists()) == false) return false;
+      //File file = _getSessionFie();
+      //if ((await file.exists()) == false) return false;
 
-      dynamic sessionJson = jsonDecode(await file.readAsString());
+      //dynamic sessionJson = jsonDecode(await file.readAsString());
 
-      String hostname = sessionJson['hostname'];
-      User user = User.fromJson(sessionJson['user']);
+      //String hostname = sessionJson['hostname'];
+      //User user = User.fromJson(sessionJson['user']);
+
+      var hostname = '';
+      var user = User(username: 'josip', firstName: 'Josip', lastName: 'Mojzeš');
 
       var appContext = AppContext.instance;
       appContext.backendHostname = hostname.trim();

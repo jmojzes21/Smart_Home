@@ -1,10 +1,4 @@
-import 'dart:convert';
-import 'dart:developer';
-import 'dart:io';
-
-import 'package:path/path.dart';
 import 'package:smart_home_core/models.dart';
-import 'package:smart_home_core/services.dart';
 
 import '../../models/generic_device.dart';
 import 'interfaces/device_service.dart';
@@ -12,7 +6,16 @@ import 'interfaces/device_service.dart';
 class DeviceService implements IDeviceService {
   @override
   Future<List<ScannedDevice>> getDevices() async {
-    var username = AppContext.instance.currentUser.username;
+    return [
+      ScannedDevice(
+        type: DeviceType.airQuality,
+        name: 'Kvaliteta zraka',
+        hostname: 'air-quality-station.local',
+        uuid: '',
+      ),
+    ];
+
+    /*var username = AppContext.instance.currentUser.username;
 
     var client = BackendClient();
     var response = await client.httpGet('/api/users/$username/devices');
@@ -20,12 +23,13 @@ class DeviceService implements IDeviceService {
     var devices = _parseDevices(response);
     devices.sort((a, b) => a.name.compareTo(b.name));
 
-    return devices;
+    return devices;*/
   }
 
   @override
   Future<List<ScannedDevice>> getDevicesFromCache() async {
-    var file = _getDevicesFile();
+    return [];
+    /*var file = _getDevicesFile();
     if ((await file.exists()) == false) {
       return [];
     }
@@ -34,26 +38,27 @@ class DeviceService implements IDeviceService {
     var json = jsonDecode(data);
     var devices = _parseDevices(json);
 
-    return devices;
+    return devices;*/
   }
 
   @override
   Future<void> saveDevicesToCache(List<ScannedDevice> devices) async {
-    var file = _getDevicesFile();
+    /*var file = _getDevicesFile();
     var data = devices.map((e) => e.toJson()).toList();
     var json = jsonEncode(data);
 
-    await file.writeAsString(json);
+    await file.writeAsString(json);*/
   }
 
   @override
   Future<void> deleteDevicesFromCache() async {
-    var file = _getDevicesFile();
+    /*var file = _getDevicesFile();
     if ((await file.exists())) {
       await file.delete();
-    }
+    }*/
   }
 
+  /*
   File _getDevicesFile() {
     var appDir = AppContext.instance.appDirectory;
     return File(join(appDir, 'devices.json'));
@@ -70,5 +75,5 @@ class DeviceService implements IDeviceService {
       }
     }
     return devices;
-  }
+  }*/
 }
