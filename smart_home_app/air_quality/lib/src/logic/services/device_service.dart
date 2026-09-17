@@ -10,7 +10,10 @@ class DeviceService extends IDeviceService {
 
   @override
   Future<DeviceStatus> getDeviceStatus() async {
-    var json = await client.httpGet('/device-status', {'ram_usage': 'true', 'input_voltage': 'true'});
+    var json = await client.httpGet('/device-status', {
+      'ram_usage': 'true',
+      'input_voltage': 'true',
+    });
     return DeviceStatus.fromJson(json);
   }
 
@@ -40,14 +43,6 @@ class DeviceService extends IDeviceService {
     String dtText = json['date_time'];
 
     return DateTime.parse(dtText);
-  }
-
-  @override
-  Future<bool> updateSendAirQualityHistory(bool send) async {
-    var json = await client.httpPost('/send-aq-history', {'value': send});
-
-    bool result = json['value'];
-    return result;
   }
 
   @override

@@ -32,15 +32,17 @@ class AqDataSelectionPage extends StatelessWidget {
               titleTextStyle: titleStyle,
               leading: FaIcon(FontAwesomeIcons.clockRotateLeft),
               title: Text('Nedavni podaci'),
-              subtitle: Text('Prikaži nedavne podatke pohranjene lokalno na uređaju.'),
+              subtitle: Text(
+                'Prikaži nedavne podatke pohranjene lokalno na uređaju.',
+              ),
             ),
-            ListTile(
+            /*ListTile(
               onTap: () => context.go('/aq/data/history'),
               titleTextStyle: titleStyle,
               leading: FaIcon(FontAwesomeIcons.book),
               title: Text('Povijesni podaci'),
               subtitle: Text('Prikaži povijesne podatke pohranjene u bazi podataka.'),
-            ),
+            ),*/
           ],
         ),
       ),

@@ -6,8 +6,6 @@ import '../interfaces/device_service.dart';
 class VirtualDeviceService extends IDeviceService {
   final AqDevice device;
 
-  bool _sendAqHistory = false;
-
   VirtualDeviceService(this.device);
 
   @override
@@ -21,7 +19,6 @@ class VirtualDeviceService extends IDeviceService {
       rssi: -20,
       rtcTime: DateTime.now(),
       inputVoltage: 4.1,
-      sendAqHistory: _sendAqHistory,
       memory: MemoryStatus(
         heapSize: 200,
         usedHeap: 50,
@@ -38,10 +35,15 @@ class VirtualDeviceService extends IDeviceService {
     return DeviceConfig(
       hostname: device.hostname,
       deviceName: device.name,
-      deviceUuid: '',
-      backendAddress: 'localhost:8080',
+      aqmConfig: AqmConfig(
+        deviceUuid: '',
+        backendAddress: 'localhost:8080',
+        apiKey: '',
+        saveMeasurements: true,
+        sendData: false,
+        measurementPeriod: 300,
+      ),
       recentPeriod: 60,
-      historyPeriod: 300,
       wifiNetworks: [
         WifiNetwork(name: 'wifi1', password: 'wifi1'),
         WifiNetwork(name: 'wifi2', password: 'wifi2'),
@@ -58,12 +60,6 @@ class VirtualDeviceService extends IDeviceService {
   @override
   Future<DateTime> updateRtcTime(DateTime time) async {
     return DateTime.now();
-  }
-
-  @override
-  Future<bool> updateSendAirQualityHistory(bool send) async {
-    _sendAqHistory = send;
-    return send;
   }
 
   @override

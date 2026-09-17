@@ -31,7 +31,9 @@ class AqLiveDataPage extends StatelessWidget {
 
           return model;
         },
-        child: Consumer<AirQualityDataPageViewModel>(builder: (context, model, child) => buildBody(context, model)),
+        child: Consumer<AirQualityDataPageViewModel>(
+          builder: (context, model, child) => buildBody(context, model),
+        ),
       ),
     );
   }
@@ -45,7 +47,7 @@ class AqLiveDataPage extends StatelessWidget {
 
     return SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.all(isMobile ? 20 : 40),
+        padding: EdgeInsets.all(isMobile ? 0 : 40),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

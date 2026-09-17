@@ -14,7 +14,8 @@ import '../../models/air_quality.dart';
 class AirQualityService extends IAirQualityService {
   final DeviceClient client;
 
-  final StreamController<AirQuality> _liveDataController = StreamController.broadcast();
+  final StreamController<AirQuality> _liveDataController =
+      StreamController.broadcast();
 
   bool _isLiveDataListening = false;
   WebSocketChannel? _wsChannel;
@@ -80,7 +81,9 @@ class AirQualityService extends IAirQualityService {
     var bootTime = DateTime.parse(json['boot_time']);
     var aqHistory = json['aq_history'] as List<dynamic>;
 
-    var data = aqHistory.map((e) => _parseRecentAqHistory(bootTime, e)).toList();
+    var data = aqHistory
+        .map((e) => _parseRecentAqHistory(bootTime, e))
+        .toList();
     return data;
   }
 
@@ -106,7 +109,10 @@ class AirQualityService extends IAirQualityService {
     return aqData;
   }
 
-  AqHistory _parseRecentAqHistory(DateTime bootTime, Map<String, dynamic> json) {
+  AqHistory _parseRecentAqHistory(
+    DateTime bootTime,
+    Map<String, dynamic> json,
+  ) {
     int timeSeconds = json['time'];
     DateTime time = bootTime.add(Duration(seconds: timeSeconds));
 
@@ -115,7 +121,7 @@ class AirQualityService extends IAirQualityService {
       temperature: AqMetrics.fromJson(json['temperature']),
       humidity: AqMetrics.fromJson(json['humidity']),
       pressure: AqMetrics.fromJson(json['pressure']),
-      pm25: AqMetrics.fromJson(json['pm25']),
+      pm25: AqMetrics.fromJson(json['pm2.5']),
     );
   }
 

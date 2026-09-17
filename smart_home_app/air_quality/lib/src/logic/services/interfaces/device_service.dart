@@ -14,7 +14,5 @@ abstract class IDeviceService {
     return updateRtcTime(time);
   }
 
-  Future<bool> updateSendAirQualityHistory(bool send);
-
   Future<void> restartDevice();
 }

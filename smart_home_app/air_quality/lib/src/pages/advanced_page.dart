@@ -105,7 +105,10 @@ class AdvancedPage extends StatelessWidget {
     );
   }
 
-  Widget buildBasicInfoSection(BuildContext context, AdvancedPageViewModel model) {
+  Widget buildBasicInfoSection(
+    BuildContext context,
+    AdvancedPageViewModel model,
+  ) {
     var device = model.deviceStatus!;
 
     var textTheme = context.textTheme;
@@ -125,7 +128,11 @@ class AdvancedPage extends StatelessWidget {
       initiallyExpanded: false,
       children: [
         Table(
-          columnWidths: {0: IntrinsicColumnWidth(), 1: FixedColumnWidth(20), 2: FlexColumnWidth()},
+          columnWidths: {
+            0: IntrinsicColumnWidth(),
+            1: FixedColumnWidth(20),
+            2: FlexColumnWidth(),
+          },
           children: [
             TableRow(
               children: [
@@ -166,7 +173,10 @@ class AdvancedPage extends StatelessWidget {
                     ),
                     ConstrainedBox(
                       constraints: BoxConstraints(maxWidth: lpiMaxWidth),
-                      child: LinearProgressIndicator(value: device.inputVoltagePercent, minHeight: lpiHeight),
+                      child: LinearProgressIndicator(
+                        value: device.inputVoltagePercent,
+                        minHeight: lpiHeight,
+                      ),
                     ),
                   ],
                 ),
@@ -202,7 +212,11 @@ class AdvancedPage extends StatelessWidget {
     );
   }
 
-  Widget buildWifiSection(BuildContext context, AdvancedPageViewModel model, bool enableButtons) {
+  Widget buildWifiSection(
+    BuildContext context,
+    AdvancedPageViewModel model,
+    bool enableButtons,
+  ) {
     var textTheme = context.textTheme;
     var sectionStyle = textTheme.titleMedium;
 
@@ -240,7 +254,11 @@ class AdvancedPage extends StatelessWidget {
     );
   }
 
-  Widget buildRtcSection(BuildContext context, AdvancedPageViewModel model, bool enableButtons) {
+  Widget buildRtcSection(
+    BuildContext context,
+    AdvancedPageViewModel model,
+    bool enableButtons,
+  ) {
     var textTheme = context.textTheme;
     var sectionStyle = textTheme.titleMedium;
     var keyStyle = textTheme.titleMedium;
@@ -258,13 +276,20 @@ class AdvancedPage extends StatelessWidget {
       initiallyExpanded: false,
       children: [
         Table(
-          columnWidths: {0: IntrinsicColumnWidth(), 1: FixedColumnWidth(20), 2: FlexColumnWidth()},
+          columnWidths: {
+            0: IntrinsicColumnWidth(),
+            1: FixedColumnWidth(20),
+            2: FlexColumnWidth(),
+          },
           children: [
             TableRow(
               children: [
                 Text('Trenutno', style: keyStyle),
                 columnSpacing,
-                Text(Formats.formatDateTime(model.currentTime), style: valueStyle),
+                Text(
+                  Formats.formatDateTime(model.currentTime),
+                  style: valueStyle,
+                ),
               ],
             ),
             rowDivider,
@@ -272,7 +297,10 @@ class AdvancedPage extends StatelessWidget {
               children: [
                 Text('Uređaj', style: keyStyle),
                 columnSpacing,
-                Text(Formats.formatDateTime(model.deviceStatus!.rtcTime), style: valueStyle),
+                Text(
+                  Formats.formatDateTime(model.deviceStatus!.rtcTime),
+                  style: valueStyle,
+                ),
               ],
             ),
           ],
@@ -308,7 +336,11 @@ class AdvancedPage extends StatelessWidget {
       initiallyExpanded: false,
       children: [
         Table(
-          columnWidths: {0: IntrinsicColumnWidth(), 1: FixedColumnWidth(20), 2: FlexColumnWidth()},
+          columnWidths: {
+            0: IntrinsicColumnWidth(),
+            1: FixedColumnWidth(20),
+            2: FlexColumnWidth(),
+          },
           children: [
             TableRow(
               children: [
@@ -319,25 +351,42 @@ class AdvancedPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Iskorišteno', style: textTheme.titleSmall),
-                    Text(memoryUsageText(memory.usedHeap, memory.heapSize, memory.usedHeapPercent), style: valueStyle),
-                    SizedBox(height: 10),
-
-                    ConstrainedBox(
-                      constraints: BoxConstraints(maxWidth: lpiMaxWidth),
-                      child: LinearProgressIndicator(value: memory.usedHeapPercent, minHeight: lpiHeight),
-                    ),
-                    SizedBox(height: 10),
-
-                    Text('Max iskorišteno', style: textTheme.titleSmall),
                     Text(
-                      memoryUsageText(memory.maxUsedHeap, memory.heapSize, memory.maxUsedHeapPercent),
+                      memoryUsageText(
+                        memory.usedHeap,
+                        memory.heapSize,
+                        memory.usedHeapPercent,
+                      ),
                       style: valueStyle,
                     ),
                     SizedBox(height: 10),
 
                     ConstrainedBox(
                       constraints: BoxConstraints(maxWidth: lpiMaxWidth),
-                      child: LinearProgressIndicator(value: memory.maxUsedHeapPercent, minHeight: lpiHeight),
+                      child: LinearProgressIndicator(
+                        value: memory.usedHeapPercent,
+                        minHeight: lpiHeight,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+
+                    Text('Max iskorišteno', style: textTheme.titleSmall),
+                    Text(
+                      memoryUsageText(
+                        memory.maxUsedHeap,
+                        memory.heapSize,
+                        memory.maxUsedHeapPercent,
+                      ),
+                      style: valueStyle,
+                    ),
+                    SizedBox(height: 10),
+
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: lpiMaxWidth),
+                      child: LinearProgressIndicator(
+                        value: memory.maxUsedHeapPercent,
+                        minHeight: lpiHeight,
+                      ),
                     ),
                     SizedBox(height: 10),
                   ],
@@ -355,27 +404,41 @@ class AdvancedPage extends StatelessWidget {
                   children: [
                     Text('Iskorišteno', style: textTheme.titleSmall),
                     Text(
-                      memoryUsageText(memory.usedPsram, memory.psramSize, memory.usedPsramPercent),
+                      memoryUsageText(
+                        memory.usedPsram,
+                        memory.psramSize,
+                        memory.usedPsramPercent,
+                      ),
                       style: valueStyle,
                     ),
                     SizedBox(height: 10),
 
                     ConstrainedBox(
                       constraints: BoxConstraints(maxWidth: lpiMaxWidth),
-                      child: LinearProgressIndicator(value: memory.usedPsramPercent, minHeight: lpiHeight),
+                      child: LinearProgressIndicator(
+                        value: memory.usedPsramPercent,
+                        minHeight: lpiHeight,
+                      ),
                     ),
                     SizedBox(height: 10),
 
                     Text('Max iskorišteno', style: textTheme.titleSmall),
                     Text(
-                      memoryUsageText(memory.maxUsedPsram, memory.psramSize, memory.maxUsedPsramPercent),
+                      memoryUsageText(
+                        memory.maxUsedPsram,
+                        memory.psramSize,
+                        memory.maxUsedPsramPercent,
+                      ),
                       style: valueStyle,
                     ),
                     SizedBox(height: 10),
 
                     ConstrainedBox(
                       constraints: BoxConstraints(maxWidth: lpiMaxWidth),
-                      child: LinearProgressIndicator(value: memory.maxUsedPsramPercent, minHeight: lpiHeight),
+                      child: LinearProgressIndicator(
+                        value: memory.maxUsedPsramPercent,
+                        minHeight: lpiHeight,
+                      ),
                     ),
                     SizedBox(height: 10),
                   ],
@@ -388,7 +451,10 @@ class AdvancedPage extends StatelessWidget {
     );
   }
 
-  Widget buildSettingsSection(BuildContext context, AdvancedPageViewModel model) {
+  Widget buildSettingsSection(
+    BuildContext context,
+    AdvancedPageViewModel model,
+  ) {
     var textTheme = context.textTheme;
     var sectionStyle = textTheme.titleMedium;
 
@@ -400,18 +466,12 @@ class AdvancedPage extends StatelessWidget {
       childrenPadding: EdgeInsets.all(20),
       initiallyExpanded: false,
       children: [
-        TextField(
-          controller: model.tecBackendAddr,
-          onChanged: (value) {
-            model.onUpdatedBackendAddress(value);
-          },
-          textInputAction: TextInputAction.next,
-          decoration: InputDecoration(label: Text('Backend poslužitelj'), isDense: true, border: OutlineInputBorder()),
-        ),
-        SizedBox(height: 20),
         DropdownMenu(
           initialSelection: model.deviceConfig!.recentPeriod,
-          inputDecorationTheme: InputDecorationThemeData(isDense: true, border: OutlineInputBorder()),
+          inputDecorationTheme: InputDecorationThemeData(
+            isDense: true,
+            border: OutlineInputBorder(),
+          ),
           enableSearch: false,
           requestFocusOnTap: false,
           enableFilter: false,
@@ -427,44 +487,75 @@ class AdvancedPage extends StatelessWidget {
             DropdownMenuEntry(value: 2 * 60, label: '2 minute'),
             DropdownMenuEntry(value: 3 * 60, label: '3 minute'),
             DropdownMenuEntry(value: 5 * 60, label: '5 minuta'),
-            DropdownMenuEntry(value: 10 * 60, label: '10 minuta'),
           ],
         ),
         SizedBox(height: 20),
+
+        Text('AQM postavke', style: textTheme.titleMedium),
+        SizedBox(height: 20),
+
+        TextField(
+          controller: model.tecBackendAddr,
+          onChanged: (value) {
+            model.onUpdatedAqmBackendAddress(value);
+          },
+          textInputAction: TextInputAction.next,
+          decoration: InputDecoration(
+            label: Text('Adresa poslužitelja'),
+            isDense: true,
+            border: OutlineInputBorder(),
+          ),
+        ),
+
+        SizedBox(height: 20),
         DropdownMenu(
-          initialSelection: model.deviceConfig!.historyPeriod,
-          inputDecorationTheme: InputDecorationThemeData(isDense: true, border: OutlineInputBorder()),
+          initialSelection: model.deviceConfig!.aqmConfig.measurementPeriod,
+          inputDecorationTheme: InputDecorationThemeData(
+            isDense: true,
+            border: OutlineInputBorder(),
+          ),
           enableSearch: false,
           requestFocusOnTap: false,
           enableFilter: false,
-          label: Text('Period za povijesna mjerenja'),
+          label: Text('Period za spremanje mjerenja'),
           onSelected: (int? value) {
             if (value != null) {
-              model.updateHistoryPeriod(value);
+              model.updateAqmMeasurementPeriod(value);
             }
           },
           dropdownMenuEntries: [
+            DropdownMenuEntry(value: 3 * 60, label: '3 minute'),
             DropdownMenuEntry(value: 5 * 60, label: '5 minuta'),
             DropdownMenuEntry(value: 10 * 60, label: '10 minuta'),
-            DropdownMenuEntry(value: 10 * 60, label: '15 minuta'),
-            DropdownMenuEntry(value: 10 * 60, label: '30 minuta'),
-            DropdownMenuEntry(value: 10 * 60, label: '60 minuta'),
           ],
         ),
 
         SizedBox(height: 20),
         SwitchListTile(
-          value: model.deviceStatus!.sendAqHistory,
+          value: model.deviceConfig!.aqmConfig.saveMeasurements,
           controlAffinity: ListTileControlAffinity.leading,
           dense: true,
-          title: Text('Spremi povijesna mjerenja'),
-          onChanged: (value) => model.updateSendAirQualityHistory(value),
+          title: Text('Spremaj mjerenja'),
+          onChanged: (value) => model.updateAqmSaveMeasurements(value),
+        ),
+
+        SizedBox(height: 20),
+        SwitchListTile(
+          value: model.deviceConfig!.aqmConfig.sendData,
+          controlAffinity: ListTileControlAffinity.leading,
+          dense: true,
+          title: Text('Šalji mjerenja'),
+          onChanged: (value) => model.updateAqmSendData(value),
         ),
       ],
     );
   }
 
-  void showEditNetworkDialog(BuildContext context, AdvancedPageViewModel model, WifiNetwork? network) {
+  void showEditNetworkDialog(
+    BuildContext context,
+    AdvancedPageViewModel model,
+    WifiNetwork? network,
+  ) {
     showDialog(
       context: context,
       fullscreenDialog: true,

@@ -19,7 +19,10 @@ class AdvancedPageViewModel extends ViewModel {
   DeviceConfig? _deviceConfig;
   DateTime? _currentTime;
 
-  AdvancedPageViewModel({required this.deviceService, required this.onShowMessage}) {
+  AdvancedPageViewModel({
+    required this.deviceService,
+    required this.onShowMessage,
+  }) {
     refresh();
   }
 
@@ -88,7 +91,9 @@ class AdvancedPageViewModel extends ViewModel {
     try {
       _checkNetwork(network);
 
-      WifiNetwork toUpdate = wifiNetworks.firstWhere((e) => e.name == network.name);
+      WifiNetwork toUpdate = wifiNetworks.firstWhere(
+        (e) => e.name == network.name,
+      );
       toUpdate.password = network.password;
 
       _shouldSaveChanges = true;
@@ -128,30 +133,26 @@ class AdvancedPageViewModel extends ViewModel {
     notifyListeners();
   }
 
-  void updateHistoryPeriod(int value) {
-    _deviceConfig!.historyPeriod = value;
+  void updateAqmMeasurementPeriod(int value) {
+    _deviceConfig!.aqmConfig.measurementPeriod = value;
     _shouldSaveChanges = true;
     notifyListeners();
   }
 
-  Future<void> updateSendAirQualityHistory(bool value) async {
-    _isLoading = true;
+  void updateAqmSaveMeasurements(bool value) {
+    _deviceConfig!.aqmConfig.saveMeasurements = value;
+    _shouldSaveChanges = true;
     notifyListeners();
-
-    try {
-      bool result = await deviceService.updateSendAirQualityHistory(value);
-      deviceStatus!.sendAqHistory = result;
-    } catch (e) {
-      String msg = Exceptions.getMessage(e);
-      onShowMessage(msg);
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
   }
 
-  void onUpdatedBackendAddress(String value) {
-    bool shouldSave = value != _deviceConfig!.backendAddress;
+  void updateAqmSendData(bool value) {
+    _deviceConfig!.aqmConfig.sendData = value;
+    _shouldSaveChanges = true;
+    notifyListeners();
+  }
+
+  void onUpdatedAqmBackendAddress(String value) {
+    bool shouldSave = value != _deviceConfig!.aqmConfig.backendAddress;
 
     if (shouldSave != _shouldSaveChanges) {
       _shouldSaveChanges = shouldSave;
@@ -165,9 +166,11 @@ class AdvancedPageViewModel extends ViewModel {
 
     try {
       String backendAddr = _tecBackendAddr.text.trim();
-      _deviceConfig!.backendAddress = backendAddr;
+      _deviceConfig!.aqmConfig.backendAddress = backendAddr;
 
-      var updatedConfig = await deviceService.updateDeviceConfig(_deviceConfig!);
+      var updatedConfig = await deviceService.updateDeviceConfig(
+        _deviceConfig!,
+      );
       _deviceConfig = updatedConfig;
 
       _shouldSaveChanges = false;
@@ -205,7 +208,7 @@ class AdvancedPageViewModel extends ViewModel {
   Future<void> _getDeviceConfig() async {
     var config = await deviceService.getDeviceConfig();
     _deviceConfig = config;
-    _tecBackendAddr.text = config.backendAddress;
+    _tecBackendAddr.text = config.aqmConfig.backendAddress;
   }
 
   bool get isLoading => _isLoading;

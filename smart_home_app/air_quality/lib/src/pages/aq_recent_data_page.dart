@@ -16,8 +16,14 @@ import 'aq_data_common.dart';
 class AqRecentDataPage extends StatelessWidget {
   const AqRecentDataPage({super.key});
 
-  void clearData(BuildContext context, AirQualityDataPageViewModel model) async {
-    bool result = await Dialogs.showConfirmDialog(context, 'Jeste li sigurni da želite obrisati nedavnu povijest?');
+  void clearData(
+    BuildContext context,
+    AirQualityDataPageViewModel model,
+  ) async {
+    bool result = await Dialogs.showConfirmDialog(
+      context,
+      'Jeste li sigurni da želite obrisati nedavnu povijest?',
+    );
     if (!result || !context.mounted) return;
 
     model.clearRecentHistory();
@@ -41,7 +47,9 @@ class AqRecentDataPage extends StatelessWidget {
 
           return model;
         },
-        child: Consumer<AirQualityDataPageViewModel>(builder: (context, model, child) => buildBody(context, model)),
+        child: Consumer<AirQualityDataPageViewModel>(
+          builder: (context, model, child) => buildBody(context, model),
+        ),
       ),
     );
   }
@@ -61,7 +69,12 @@ class AqRecentDataPage extends StatelessWidget {
     if (aqData.data.isEmpty) {
       return Padding(
         padding: EdgeInsets.symmetric(vertical: 20),
-        child: Center(child: Text('Nema podataka za prikazati.', style: context.textTheme.titleLarge)),
+        child: Center(
+          child: Text(
+            'Nema podataka za prikazati.',
+            style: context.textTheme.titleLarge,
+          ),
+        ),
       );
     }
 
@@ -69,12 +82,15 @@ class AqRecentDataPage extends StatelessWidget {
 
     return SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.all(isMobile ? 20 : 40),
+        padding: EdgeInsets.all(isMobile ? 0 : 40),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Datum', style: textTheme.titleLarge),
-            Text(Formats.formatDate(model.getRecentHistoryDate()), style: textTheme.titleMedium),
+            Text(
+              Formats.formatDate(model.getRecentHistoryDate()),
+              style: textTheme.titleMedium,
+            ),
 
             SizedBox(height: 40),
 
