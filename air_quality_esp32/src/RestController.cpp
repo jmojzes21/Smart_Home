@@ -189,12 +189,14 @@ void RestController::handleGetAqHistoryRequest(AsyncWebServerRequest* request) {
     JsonObject temp = jsonObj["temperature"].to<JsonObject>();
     JsonObject hum = jsonObj["humidity"].to<JsonObject>();
     JsonObject press = jsonObj["pressure"].to<JsonObject>();
-    JsonObject pm = jsonObj["pm25"].to<JsonObject>();
+    JsonObject pm2p5 = jsonObj["pm2.5"].to<JsonObject>();
+    JsonObject pm10 = jsonObj["pm10"].to<JsonObject>();
 
     metricsToJson(e.temperatureMetrics, temp);
     metricsToJson(e.humidityMetrics, hum);
     metricsToJson(e.pressureMetrics, press);
-    metricsToJson(e.pm25Metrics, pm);
+    metricsToJson(e.pm2p5Metrics, pm2p5);
+    metricsToJson(e.pm10Metrics, pm10);
   }
 
   sensorController->giveRecentHistoryMutex();
@@ -344,6 +346,7 @@ void sensorDataToJson(AirQualityData& aqData, JsonDocument& doc, bool showDetail
   doc["humidity"] = aqData.humidity;
   doc["pressure"] = aqData.pressure;
   doc["pm2.5"] = aqData.pms.pm_25_env;
+  doc["pm10"] = aqData.pms.pm_100_env;
 
   if(showDetails) {
     JsonObject bme280 = doc["bme280"].to<JsonObject>();
