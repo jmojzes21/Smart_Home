@@ -65,19 +65,26 @@ void SensorController::readSensorData() {
   auto& bme280Data = aqData.bme280;
   auto& shtc3Data = aqData.shtc3;
 
+  // read temperature, humidity, pressure
+
   xSemaphoreTake(aqDataMutex, portMAX_DELAY);
 
+  // bme280
   bme280Data.temperature = bme280Sensor.readTemperature();
   bme280Data.humidity = bme280Sensor.readHumidity();
   bme280Data.pressure = bme280Sensor.readPressure() / 100.0f;
 
+  // shtc3
   shtc3Sensor.sample();
   shtc3Data.temperature = shtc3Sensor.readTempC();
   shtc3Data.humidity = shtc3Sensor.readHumidity();
 
+  // set current data
   aqData.temperature = (bme280Data.temperature + shtc3Data.temperature) / 2.0;
   aqData.humidity = (bme280Data.humidity + shtc3Data.humidity) / 2.0;
   aqData.pressure = bme280Data.pressure;
+
+  // add to recent and aqm metrics
 
   recentAqMetrics.temperatureMetrics.addValue(aqData.temperature);
   recentAqMetrics.humidityMetrics.addValue(aqData.humidity);
@@ -89,14 +96,22 @@ void SensorController::readSensorData() {
 
   xSemaphoreGive(aqDataMutex);
 
+  // read PM.25, PM10
+
   PMS5003_Data pmsTemp;
   if(pms5003Sensor.read(&pmsTemp)) {
 
     xSemaphoreTake(aqDataMutex, portMAX_DELAY);
 
     aqData.pms = pmsTemp;
-    recentAqMetrics.pm25Metrics.addValue(aqData.pms.pm_25_env);
-    aqmMetrics.pm25Metrics.addValue(aqData.pms.pm_25_env);
+
+    // add to recent and aqm metrics
+
+    recentAqMetrics.pm2p5Metrics.addValue(aqData.pms.pm_25_env);
+    recentAqMetrics.pm10Metrics.addValue(aqData.pms.pm_100_env);
+
+    aqmMetrics.pm2p5Metrics.addValue(aqData.pms.pm_25_env);
+    aqmMetrics.pm10Metrics.addValue(aqData.pms.pm_100_env);
 
     xSemaphoreGive(aqDataMutex);
 
@@ -134,21 +149,29 @@ void SensorController::saveRecentHistory() {
   AirQualityHistory aqHistory;
   aqHistory.timeSeconds = timeSeconds;
 
+  // get metrics
+
   xSemaphoreTake(aqDataMutex, portMAX_DELAY);
 
   aqHistory.temperatureMetrics = recentAqMetrics.temperatureMetrics;
   aqHistory.humidityMetrics = recentAqMetrics.humidityMetrics;
   aqHistory.pressureMetrics = recentAqMetrics.pressureMetrics;
-  aqHistory.pm25Metrics = recentAqMetrics.pm25Metrics;
+
+  aqHistory.pm2p5Metrics = recentAqMetrics.pm2p5Metrics;
+  aqHistory.pm10Metrics = recentAqMetrics.pm10Metrics;
 
   recentAqMetrics.reset();
 
   xSemaphoreGive(aqDataMutex);
 
+  // calculate average
+
   aqHistory.temperatureMetrics.calculateAverage();
   aqHistory.humidityMetrics.calculateAverage();
   aqHistory.pressureMetrics.calculateAverage();
-  aqHistory.pm25Metrics.calculateAverage();
+
+  aqHistory.pm2p5Metrics.calculateAverage();
+  aqHistory.pm10Metrics.calculateAverage();
 
   takeRecentHistoryMutex();
 
@@ -167,28 +190,36 @@ void SensorController::saveDataAqm() {
   auto& config = deviceController->getAqmConfig();
   if(!config.saveMeasurements) return;
 
-  AirQualityHistory aqHistory;
+  AirQualityHistory measurement;
+
+  // get metrics
 
   xSemaphoreTake(aqDataMutex, portMAX_DELAY);
 
-  aqHistory.temperatureMetrics = aqmMetrics.temperatureMetrics;
-  aqHistory.humidityMetrics = aqmMetrics.humidityMetrics;
-  aqHistory.pressureMetrics = aqmMetrics.pressureMetrics;
-  aqHistory.pm25Metrics = aqmMetrics.pm25Metrics;
+  measurement.temperatureMetrics = aqmMetrics.temperatureMetrics;
+  measurement.humidityMetrics = aqmMetrics.humidityMetrics;
+  measurement.pressureMetrics = aqmMetrics.pressureMetrics;
+
+  measurement.pm2p5Metrics = aqmMetrics.pm2p5Metrics;
+  measurement.pm10Metrics = aqmMetrics.pm10Metrics;
 
   aqmMetrics.reset();
 
   xSemaphoreGive(aqDataMutex);
 
-  aqHistory.temperatureMetrics.calculateAverage();
-  aqHistory.humidityMetrics.calculateAverage();
-  aqHistory.pressureMetrics.calculateAverage();
-  aqHistory.pm25Metrics.calculateAverage();
+  // calculate average
+
+  measurement.temperatureMetrics.calculateAverage();
+  measurement.humidityMetrics.calculateAverage();
+  measurement.pressureMetrics.calculateAverage();
+
+  measurement.pm2p5Metrics.calculateAverage();
+  measurement.pm10Metrics.calculateAverage();
 
   DateTime currentTime = deviceController->getDateTime();
 
   if(onSaveDataAqm != nullptr) {
-    onSaveDataAqm(currentTime, aqHistory);
+    onSaveDataAqm(currentTime, measurement);
   }
 
 }
@@ -266,5 +297,7 @@ void AirQualityMetrics::reset() {
   temperatureMetrics.reset();
   humidityMetrics.reset();
   pressureMetrics.reset();
-  pm25Metrics.reset();
+
+  pm2p5Metrics.reset();
+  pm10Metrics.reset();
 }

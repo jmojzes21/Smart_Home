@@ -41,7 +41,9 @@ struct AirQualityHistory {
   Metrics temperatureMetrics;
   Metrics humidityMetrics;
   Metrics pressureMetrics;
-  Metrics pm25Metrics;
+
+  Metrics pm2p5Metrics;
+  Metrics pm10Metrics;
   
 };
 
@@ -51,7 +53,9 @@ class AirQualityMetrics {
   Metrics temperatureMetrics;
   Metrics humidityMetrics;
   Metrics pressureMetrics;
-  Metrics pm25Metrics;
+
+  Metrics pm2p5Metrics;
+  Metrics pm10Metrics;
 
   void reset();
 

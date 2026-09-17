@@ -43,7 +43,9 @@ void AqmController::saveMeasurement(DateTime time, AirQualityHistory &aqData, bo
   doc["temp_c"] = aqData.temperatureMetrics.getAverage();
   doc["press_hpa"] = aqData.pressureMetrics.getAverage();
   doc["hum_p"] = aqData.humidityMetrics.getAverage();
-  doc["pm2p5_ugm3"] = aqData.pm25Metrics.getAverage();
+
+  doc["pm2p5_ugm3"] = aqData.pm2p5Metrics.getAverage();
+  doc["pm10_ugm3"] = aqData.pm10Metrics.getAverage();
 
   std::string body = "";
   serializeJson(doc, body);
