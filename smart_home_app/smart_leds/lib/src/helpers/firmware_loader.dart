@@ -51,7 +51,7 @@ class FirmwareLoader {
     }
   }
 
-  Future<Uint8List> _readFileBytes(String path) async {
+  Future<Uint8List> _readFileBytes(String path) {
     try {
       File file = File(path);
       return file.readAsBytes();
