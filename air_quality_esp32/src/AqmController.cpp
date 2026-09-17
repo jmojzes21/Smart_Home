@@ -179,7 +179,6 @@ bool AqmController::sendBufferedMeasurements() {
 void AqmController::saveMeasurementToBuffer(std::string& data) {
   
   log_i("Save measurement to buffer %s", data.c_str());
-  logs->logInfo("Spremi izmjerene vrijednosti u međuspremnik");
 
   bool append = LittleFS.exists(MEASUREMENTS_BUFFER_FILE_PATH);
 
