@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:smart_home_core/device.dart';
 import 'package:smart_home_core/exceptions.dart';
 import 'package:smart_home_core/handler.dart';
@@ -54,6 +56,13 @@ class DevicesPageViewModel extends ViewModel {
       String msg = Exceptions.getMessage(e);
       onShowMessage(msg);
     }
+  }
+
+  Future<void> connectDeviceDirectly(ScannedDevice device, InternetAddress address) async {
+    device.ipAddress = address;
+    notifyListeners();
+
+    connectDevice(device);
   }
 
   Future<void> startScan() async {

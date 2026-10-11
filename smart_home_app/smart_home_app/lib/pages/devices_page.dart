@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_home_core/device.dart';
@@ -9,6 +11,7 @@ import '../logic/services/device_service.dart';
 import '../logic/vm/devices_page_vm.dart';
 
 import '../models/generic_device.dart';
+import '../widgets/ip_address_dialog.dart';
 
 class DevicesPage extends StatelessWidget {
   final DeviceHandlers deviceHandlers;
@@ -79,6 +82,9 @@ class DevicesPage extends StatelessWidget {
                         onConnect: () {
                           model.connectDevice(device);
                         },
+                        onConnectDirectly: (address) {
+                          model.connectDeviceDirectly(device, address);
+                        },
                       );
                     },
                   ),
@@ -117,8 +123,14 @@ class _DeviceWidget extends StatelessWidget {
   final ScannedDevice device;
   final bool isDiscovering;
   final VoidCallback onConnect;
+  final void Function(InternetAddress address)? onConnectDirectly;
 
-  const _DeviceWidget({required this.device, required this.isDiscovering, required this.onConnect});
+  const _DeviceWidget({
+    required this.device,
+    required this.isDiscovering,
+    required this.onConnect,
+    this.onConnectDirectly,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -134,11 +146,41 @@ class _DeviceWidget extends StatelessWidget {
       }
     }
 
+    Widget? trailing;
+    if (onConnectDirectly != null) {
+      trailing = MenuAnchor(
+        menuChildren: [
+          MenuItemButton(
+            onPressed: () async {
+              var address = await IpAddressDialog.open(context);
+              if (address != null) {
+                onConnectDirectly!(address);
+              }
+            },
+            child: Text('Izravno povezivanje'),
+          ),
+        ],
+        builder: (context, controller, child) {
+          return IconButton(
+            onPressed: () {
+              if (controller.isOpen) {
+                controller.close();
+              } else {
+                controller.open();
+              }
+            },
+            icon: Icon(Icons.more_vert),
+          );
+        },
+      );
+    }
+
     return ListTile(
       onTap: () => onConnect(),
       leading: Icon(Icons.devices),
       title: Text(device.name),
       subtitle: subtitle,
+      trailing: trailing,
     );
   }
 }
